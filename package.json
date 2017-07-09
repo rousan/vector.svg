@@ -1,0 +1,32 @@
+{
+  "name": "vector.svg",
+  "version": "1.0.0",
+  "description": "A Javascript library for creating vector graphics using SVG",
+  "main": "dist/vector.svg.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "gulp",
+    "test": "node ./test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ariyankhan/vector.svg.git"
+  },
+  "keywords": [
+    "svg",
+    "javascript",
+    "vector",
+    "graphics",
+    "svg-animations",
+    "animate",
+    "svg-manipulating"
+  ],
+  "author": "Ariyan Khan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ariyankhan/vector.svg/issues"
+  },
+  "homepage": "https://github.com/ariyankhan/vector.svg#readme"
+}
