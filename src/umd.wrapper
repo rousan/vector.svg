@@ -1,0 +1,24 @@
+(function(root, factory) {
+
+    "use strict";
+
+    if (typeof define === "function" && define.amd) {
+        // For AMD module loader
+        define(function(){
+            return factory(root)
+        })
+    } else if (typeof exports === "object" && typeof module.exports === "object") {
+        // For the environment like CommonJS etc where module or
+        // module.exports objects are available
+        module.exports = factory(global);
+    } else {
+        // For browser context, where global object is window
+        root.Vector = factory(global);
+    }
+}(typeof window !== "undefined" ? window : this, function(root) {
+
+    <%= contents %>
+
+    return Vector;
+
+}));

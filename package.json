@@ -1,6 +1,7 @@
 {
   "name": "vector.svg",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "url": "https://github.com/ariyankhan/vector.svg",
   "description": "A Javascript library for creating vector graphics using SVG",
   "main": "dist/vector.svg.js",
   "directories": {
@@ -28,5 +29,16 @@
   "bugs": {
     "url": "https://github.com/ariyankhan/vector.svg/issues"
   },
-  "homepage": "https://github.com/ariyankhan/vector.svg#readme"
+  "homepage": "https://github.com/ariyankhan/vector.svg#readme",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-header": "^1.8.8",
+    "gulp-jsbeautifier": "^2.1.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-trimlines": "^1.0.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-wrap": "^0.13.0"
+  }
 }
