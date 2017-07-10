@@ -14,6 +14,7 @@ var header = [
     "* <%= pkg.name %> v<%= pkg.version %>",
     "* A Javascript library for creating vector graphics using SVG. It uses",
     "* SVG 1.1 W3C Spec and written in pure ES5.",
+    "* It provides SVG DOM manipulation, data visualization and animation.",
     "*",
     "* @license Copyright (c) 2017 Ariyan Khan, <%= pkg.license %> License",
     "*",
@@ -26,10 +27,13 @@ var header = [
 
 var parts = [
     "./src/header.js",
-    "./src/utility/*.js",
-    "./src/Vector.js",
+    "./src/utility/utils.js",
+    "./src/vector.js",
     "./src/container/*.js",
-    "./src/element/*.js",
+    "./src/element/element.js",
+    "./src/element/events.js",
+    "./src/element/graphics.js",
+    "./src/element/geometry.js",
     "./src/animation/*.js"
 ];
 

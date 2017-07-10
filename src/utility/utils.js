@@ -27,14 +27,8 @@ var isCallable = function (value) {
     return typeof value === "function";
 };
 
-// There is a 'symbol' primitive type in ES6, but
-// this module is written in ES5.
 var isPrimitive = function (value) {
-    return value === null
-        || value === undefined
-        || typeof value === "string"
-        || typeof value === "number"
-        || typeof value === "boolean";
+    return !isObject(value);
 };
 
 var setPrototypeOf = function (obj, prototype) {

@@ -4,24 +4,22 @@ try {
 
 
 
+  var t = function () {
+      console.log("clicked");
+  };
+
+  function A() {
+
+  }
+
+A.capture = "";
+
+  document.body.addEventListener("click", t, A);
 
 
-    var rect1 = document.getElementById("rect1");
-    EventTarget.prototype.addEventListener.apply(rect1, ["click", function () {
-        console.log("Ff");
-    }]);
+  document.body.removeEventListener("click", t, 54);
 
-
-    var a = {};
-
-    var b = {};
-
-    Vector.c(a, b);
-
-    console.log(Object.getPrototypeOf(a) === b);
-
-
-
+  console.log(Vector.Geometry.prototype.__proto__ === Vector.Graphics.prototype);
 
 
 

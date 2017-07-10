@@ -2,12 +2,13 @@
  * Vector.svg v1.1.0
  * A Javascript library for creating vector graphics using SVG. It uses
  * SVG 1.1 W3C Spec and written in pure ES5.
+ * It provides SVG DOM manipulation, data visualization and animation.
  *
  * @license Copyright (c) 2017 Ariyan Khan, MIT License
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Mon Jul 10 2017 18:30:31 GMT+0530 (IST)
+ * Date: Mon Jul 10 2017 21:36:37 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -59,14 +60,8 @@
         return typeof value === "function";
     };
 
-    // There is a 'symbol' primitive type in ES6, but
-    // this module is written in ES5.
     var isPrimitive = function(value) {
-        return value === null ||
-            value === undefined ||
-            typeof value === "string" ||
-            typeof value === "number" ||
-            typeof value === "boolean";
+        return !isObject(value);
     };
 
     var setPrototypeOf = function(obj, prototype) {
@@ -105,13 +100,13 @@
 
     /**
      * This method copies all own properties(enumerable and non-enumerable)
-     * carefully with descriptors from source objects to target.
-     * It does not make deep copy.
+     * carefully with descriptors from source objects to target and merges them.
+     * It does not make deep copy of properties.
      *
-     * @param target object which will be extended by sources
+     * @param target object which will be merged by sources
      * @returns target object
      */
-    Vector.extend = function(target) {
+    Vector.merge = function(target) {
         if (isNullOrUndefined(target))
             throw new TypeError("Target object can't be null or undefined");
         target = Object(target);
@@ -141,23 +136,42 @@
         this._domElement = null;
     };
 
-    Element.prototype.on = function() {
-        if (this._domElement === null)
-            return;
-        EventTarget.prototype.addEventListener.apply(this._domElement, slice.call(arguments));
-    };
 
+    Vector.merge(Element.prototype, {
 
+        addListener: function(eventName, listener, options) {
+            if (this._domElement === null)
+                return this;
+            this._domElement.addEventListener(eventName, listener, options);
+            return this;
+        },
 
-    var Geometry = Vector.Geometry = function Geometry() {
-        Graphics.apply(this, slice.call(arguments));
-    };
+        removeListener: function(eventName, listener, options) {
+            if (this._domElement === null)
+                return this;
+            this._domElement.removeEventListener(eventName, listener, options);
+            return this;
+        },
 
-    setPrototypeOf(Geometry, Graphics);
+        on: function(eventName, listener, options) {
+            return this.addListener(eventName, listener, options);
+        },
 
-    Geometry.prototype = create(Graphics.prototype);
+        once: function(eventName, listener, options) {
+            if (this._domElement === null)
+                return this;
+            if (isObject(options))
+                options.once = true;
+            else {
+                options = {
+                    once: true,
+                    capture: options
+                };
+            }
+            return this.addListener(eventName, listener, options);
+        }
 
-    Geometry.prototype.constructor = Geometry;
+    });
 
     var Graphics = Vector.Graphics = function Graphics() {
         Element.apply(this, slice.call(arguments));
@@ -170,6 +184,16 @@
     Graphics.prototype.constructor = Graphics;
 
 
+
+    var Geometry = Vector.Geometry = function Geometry() {
+        Graphics.apply(this, slice.call(arguments));
+    };
+
+    setPrototypeOf(Geometry, Graphics);
+
+    Geometry.prototype = create(Graphics.prototype);
+
+    Geometry.prototype.constructor = Geometry;
 
     return Vector;
 }));
