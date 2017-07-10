@@ -1,26 +1,12 @@
 
 
+function A() {
+    console.log(arguments);
+}
 
-var t = {};
-Object.defineProperty(t, "x", {
-    get: function () {
-
-    },
-    set: function (e) {
-
-    },
-    enumerable: true,
-    configurable: true
-});
+function B() {
+    A.apply(null, Array.prototype.slice.call(arguments));
+}
 
 
-console.log(Object.getOwnPropertyDescriptor(t, "x"));
-
-
-Object.defineProperty(t, "x", {
-    writable: true,
-    value: 4
-});
-
-Object.defineProperties(t, {});
-console.log(Object.getOwnPropertyDescriptor(t, "x"));
+B(345, 34,53);
