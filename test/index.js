@@ -4,26 +4,29 @@ try {
 
 
 
-  var t = function () {
-      console.log("clicked");
-  };
+    var yu = function (e) {
+        console.log(this);
+    };
 
-  function A() {
+    document.getElementById("btn").addEventListener("click", yu, true);
 
-  }
-
-A.capture = "";
-
-  document.body.addEventListener("click", t, A);
+    document.getElementById("btn").addEventListener("click", yu, false);
 
 
-  document.body.removeEventListener("click", t, 54);
-
-  console.log(Vector.Geometry.prototype.__proto__ === Vector.Graphics.prototype);
+    document.getElementById("btn").addEventListener("click", yu, false);
 
 
+    var event = new CustomEvent('click', { 'detail': "d" });
 
 
+    document.getElementById("btn").onclick = function () {
+        console.log(typeof Boolean({}));
+    }
+
+
+    setTimeout(function () {
+        document.getElementById("btn").dispatchEvent(event);
+    }, 1000);
 
 } catch (e) {
     console.log(e);

@@ -4,4 +4,5 @@
  */
 var Element = Vector.Element = function Element() {
     this._domElement = null;
+    this._events = {};
 };

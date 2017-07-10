@@ -1,36 +1,44 @@
 
 Vector.merge(Element.prototype, {
 
-    addListener: function (eventName, listener, options) {
+    // Old IE browsers does not support useCapture parameter and 'this' value
+    // in the listener, so to overcome this a wrapper listener is used.
+    on: function (eventName, listener, useCapture) {
         if (this._domElement === null)
             return this;
-        this._domElement.addEventListener(eventName, listener, options);
-        return this;
-    },
+        if (!isCallable(listener))
+            throw new TypeError("EventListener is not callable");
 
-    removeListener: function (eventName, listener, options) {
-        if (this._domElement === null)
-            return this;
-        this._domElement.removeEventListener(eventName, listener, options);
-        return this;
-    },
+        eventName = String(eventName);
+        useCapture = Boolean(useCapture);
 
-    on: function (eventName, listener, options) {
-        return this.addListener(eventName, listener, options);
-    },
+        var eventArr,
+            self = this,
+            wrapper,
+            i = 0;
 
-    once: function (eventName, listener, options) {
-        if (this._domElement === null)
-            return this;
-        if (isObject(options))
-            options.once = true;
-        else {
-            options = {
-                once: true,
-                capture: options
-            };
+        eventArr = this._events[eventName];
+        wrapper = function () {
+            listener.apply(self, slice.call(arguments));
+        };
+        if (eventArr) {
+            for (; i < eventArr.length; ++i) {
+                if (eventArr[i].listener === listener && eventArr[i].useCapture === useCapture)
+                    return this;
+            }
+        } else {
+            eventArr = this._events[eventName] = [];
         }
-        return this.addListener(eventName, listener, options);
+        eventArr.push({listener: listener, wrapperListener: wrapper, useCapture: useCapture});
+
+        if (this._domElement.addEventListener)
+            this._domElement.addEventListener(eventName, wrapper, useCapture);
+        else
+            this._domElement.attachEvent("on" + eventName, wrapper);
+
+        return self;
     }
+
+
 
 });
