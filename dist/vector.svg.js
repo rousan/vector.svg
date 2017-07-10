@@ -7,7 +7,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Mon Jul 10 2017 17:00:25 GMT+0530 (IST)
+ * Date: Mon Jul 10 2017 18:30:31 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -37,9 +37,9 @@
 
     var slice = Array.prototype.slice;
 
-    var window = window || root.window;
+    //var window = window || root.window;
 
-    var document = document || root.document;
+    //var document = document || root.document;
 
     var max = Math.max;
 
@@ -68,6 +68,29 @@
             typeof value === "number" ||
             typeof value === "boolean";
     };
+
+    var setPrototypeOf = function(obj, prototype) {
+        if (obj === undefined || obj === null)
+            throw new TypeError("setPrototypeOf called on null or undefined");
+        if (!(prototype === null || isObject(prototype)))
+            throw new TypeError("Object prototype may only be an Object or null: " + String(prototype));
+
+        var protoDesc = Object.getOwnPropertyDescriptor(Object.prototype, "__proto__");
+        // If Object.prototype.__proto__ does not exist or it is
+        // not an accessor property then just throw errors
+        if (protoDesc === undefined || !isCallable(protoDesc.set))
+            throw new TypeError("Object.prototype.__proto__ accessor property does not exist");
+
+        protoDesc.set.call(obj, prototype);
+        return obj;
+    };
+
+
+
+
+
+
+
 
 
     /**
@@ -111,9 +134,42 @@
         return target;
     };
 
-    var Element = function() {
-
+    /**
+     * Base class for all the SVG DOM wrapper elements.
+     */
+    var Element = Vector.Element = function Element() {
+        this._domElement = null;
     };
+
+    Element.prototype.on = function() {
+        if (this._domElement === null)
+            return;
+        EventTarget.prototype.addEventListener.apply(this._domElement, slice.call(arguments));
+    };
+
+
+
+    var Geometry = Vector.Geometry = function Geometry() {
+        Graphics.apply(this, slice.call(arguments));
+    };
+
+    setPrototypeOf(Geometry, Graphics);
+
+    Geometry.prototype = create(Graphics.prototype);
+
+    Geometry.prototype.constructor = Geometry;
+
+    var Graphics = Vector.Graphics = function Graphics() {
+        Element.apply(this, slice.call(arguments));
+    };
+
+    setPrototypeOf(Graphics, Element);
+
+    Graphics.prototype = create(Element.prototype);
+
+    Graphics.prototype.constructor = Graphics;
+
+
 
     return Vector;
 }));
