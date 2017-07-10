@@ -7,7 +7,7 @@
 
 * Codebase: https://github.com/ariyankhan/vector.svg
 * Homepage: https://github.com/ariyankhan/vector.svg#readme
-* Date: pkg.buildDate
+* Date:  Mon Jul 10 2017 12:20:23 GMT+0530 (IST)
 */
 (function(root, factory) {
 

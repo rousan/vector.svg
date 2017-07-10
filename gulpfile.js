@@ -15,26 +15,27 @@ var
     buildDate = new Date(),
     projectName = "Vector.svg";
 
-    header = [
-        "/*!",
-        "* <%= pkg.projectName %> pkg.version",
-        "* A Javascript library for creating vector graphics using SVG. It uses",
-        "* SVG 1.1 W3C Spec and written in ES5.",
-        "",
-        "* @license Copyright (c) 2017 Ariyan Khan, <%= pkg.license %> License",
-        "",
-        "* Codebase: <%= pkg.url %>",
-        "* Homepage: <%= pkg.homepage %>",
-        "* Date: pkg.buildDate",
-        "*/",
-        ""
-    ].join("\n"),
 
-    parts = [
-        "./src/header.js",
-        "./src/vector.js",
-        "./src/utils.js"
-    ];
+var header = [
+    "/*!",
+    "* <%= pkg.projectName %> pkg.version",
+    "* A Javascript library for creating vector graphics using SVG. It uses",
+    "* SVG 1.1 W3C Spec and written in ES5.",
+    "",
+    "* @license Copyright (c) 2017 Ariyan Khan, <%= pkg.license %> License",
+    "",
+    "* Codebase: <%= pkg.url %>",
+    "* Homepage: <%= pkg.homepage %>",
+    "* Date:  <%= pkg.buildDate %>",
+    "*/",
+    ""
+].join("\n");
+
+var parts = [
+    "./src/header.js",
+    "./src/vector.js",
+    "./src/utils.js"
+];
 
 
 pkg["buildDate"] = buildDate;
