@@ -1,58 +1,53 @@
 
-var
-    gulp = require("gulp"),
+var gulp = require("gulp"),
     gulpWrap = require("gulp-wrap"),
     gulpUglify = require("gulp-uglify"),
-    gulpTrim = require("gulp-trimlines"),
     gulpRename = require("gulp-rename"),
     gulpHeader = require("gulp-header"),
     gulpConcat = require("gulp-concat"),
-    prettify = require('gulp-jsbeautifier'),
-
+    gulpJsBeautifier = require('gulp-jsbeautifier'),
     del = require("del"),
-    pkg = require("./package.json"),
-    fs = require("fs"),
-    buildDate = new Date(),
-    projectName = "Vector.svg";
-
+    pkg = require("./package.json");
 
 var header = [
     "/*!",
-    "* <%= pkg.projectName %> pkg.version",
+    "* <%= pkg.name %> v<%= pkg.version %>",
     "* A Javascript library for creating vector graphics using SVG. It uses",
-    "* SVG 1.1 W3C Spec and written in ES5.",
-    "",
+    "* SVG 1.1 W3C Spec and written in pure ES5.",
+    "*",
     "* @license Copyright (c) 2017 Ariyan Khan, <%= pkg.license %> License",
-    "",
+    "*",
     "* Codebase: <%= pkg.url %>",
     "* Homepage: <%= pkg.homepage %>",
-    "* Date:  <%= pkg.buildDate %>",
+    "* Date: <%= pkg.buildDate %>",
     "*/",
     ""
 ].join("\n");
 
 var parts = [
     "./src/header.js",
-    "./src/vector.js",
-    "./src/utils.js"
+    "./src/utility/*.js",
+    "./src/Vector.js",
+    "./src/container/*.js",
+    "./src/element/*.js",
+    "./src/animation/*.js"
 ];
 
-
-pkg["buildDate"] = buildDate;
-pkg["projectName"] = projectName;
-
-
-gulp.task("clean", function () {
-    return del([ "dist/*" ]);
+pkg["buildDate"] = new Date();
+pkg["name"] = pkg.name.replace(/^v/, function (found) {
+    return found.toUpperCase();
 });
 
+gulp.task("clean", function () {
+    return del(["./dist/*"]);
+});
 
 gulp.task("join", ["clean"], function() {
     return gulp.src(parts)
         .pipe(gulpConcat("vector.svg.js", { newLine: '\n' }))
         .pipe(gulpWrap({ src: "./src/umd.wrapper"}))
         .pipe(gulpHeader(header, { pkg: pkg }))
-        .pipe(prettify())
+        .pipe(gulpJsBeautifier())
         .pipe(gulp.dest("./dist"));
 });
 
@@ -63,9 +58,4 @@ gulp.task("uglify", ["join"], function () {
         .pipe(gulp.dest("./dist"));
 });
 
-
-
-
 gulp.task("default", ["clean", "join", "uglify"]);
-
-

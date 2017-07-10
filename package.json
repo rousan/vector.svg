@@ -4,9 +4,6 @@
   "url": "https://github.com/ariyankhan/vector.svg",
   "description": "A Javascript library for creating vector graphics using SVG",
   "main": "./dist/vector.svg.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "build": "gulp",
     "test": "xdg-open ./test/index.html"
@@ -37,7 +34,6 @@
     "gulp-header": "^1.8.8",
     "gulp-jsbeautifier": "^2.1.1",
     "gulp-rename": "^1.2.2",
-    "gulp-trimlines": "^1.0.1",
     "gulp-uglify": "^3.0.0",
     "gulp-wrap": "^0.13.0"
   }

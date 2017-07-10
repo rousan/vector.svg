@@ -3,9 +3,9 @@
 A Javascript library for creating vector graphics using SVG. It uses SVG 1.1 W3C Spec 
 and written in pure ES5.
 
-## Installation
+## Install
 
-    `npm install es6-harmony`
+    `npm install vector.svg`
     
 ## Build
     
@@ -16,6 +16,7 @@ and written in pure ES5.
     `npm test`
      
 ## Contributors
+
    * [Ariyan Khan](https://github.com/ariyankhan)
    
    Contributions are welcome
