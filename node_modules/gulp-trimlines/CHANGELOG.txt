@@ -1,0 +1,3 @@
+Version   Changes
+1.0.0     Initial Version
+1.0.1     Added null pointer check to fix https://github.com/dougmartin/gulp-trimlines/issues/1
