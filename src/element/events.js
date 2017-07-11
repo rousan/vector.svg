@@ -29,6 +29,7 @@ Vector.merge(Element.prototype, {
                 if (eventArr[i].listener === listener && eventArr[i].useCapture === useCapture)
                     return this;
             }
+
         } else {
             eventArr = this._events[eventName] = [];
         }
@@ -60,6 +61,7 @@ Vector.merge(Element.prototype, {
                 });
             });
             this._events = {};
+
         } else if (arguments.length === 1) {
             eventName = String(eventName);
             if (!_events[eventName])
@@ -71,6 +73,7 @@ Vector.merge(Element.prototype, {
                     self._domElement.detachEvent("on" + eventName, event.wrapperListener);
             });
             delete _events[eventName];
+
         } else {
             if (!isCallable(listener))
                 throw new TypeError("EventListener is not callable");
@@ -128,6 +131,7 @@ Vector.merge(Element.prototype, {
                 if (eventArr[i].listener === listener && eventArr[i].useCapture === useCapture)
                     return this;
             }
+
         } else {
             eventArr = this._events[eventName] = [];
         }
@@ -158,9 +162,11 @@ Vector.merge(Element.prototype, {
                 bubbles: bubbles,
                 cancelable: true
             });
+
         } else if (isCallable(document.createEvent)) {
             event = document.createEvent("CustomEvent");
             event.initCustomEvent(eventName, bubbles, true, data);
+
         } else {
             event = document.createEventObject();
             event.detail = data;
@@ -493,6 +499,7 @@ var constructMouseEventObject = function (eventName) {
     } else if (isCallable(document.createEvent)) {
         event = document.createEvent("MouseEvent");
         event.initMouseEvent(eventName, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
     } else {
         event = document.createEventObject();
     }
@@ -537,6 +544,7 @@ var constructKeyboardEvent = function (eventName) {
                 event.initKeyboardEvent(eventName, true, true, window); //For webkit, blink and DOM Level 3 Draft Spec
         } else
             event.initKeyEvent(eventName, true, true, window, false, false, false, false, 0, 0); //For Gecko
+
     } else {
         event = document.createEventObject();
     }
@@ -556,11 +564,13 @@ var setEventAttribute = function (elem, eventAttr, listener, context) {
     if (listener === null) {
         elem._domElement[eventAttr] = null;
         return elem;
+
     } else if(isCallable(listener)) {
         wrapper = listener.bind(context);
         wrapper._listener = listener;
         elem._domElement[eventAttr] = wrapper;
         return elem;
+
     } else {
         wrapper = elem._domElement[eventAttr];
         if (isCallable(wrapper) && isCallable(wrapper._listener))
