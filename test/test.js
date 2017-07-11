@@ -1,13 +1,11 @@
 
 
 function A() {
-    console.log(arguments);
+    "use strict";
+    console.log(this);
 }
 
-function B() {
-    A.apply(null, Array.prototype.slice.call(arguments));
-}
+var a = A.bind();
 
-Object.A = A;
+a();
 
-console.log( /rv:11\.0/i.test("sefrv:11.0sefs") );

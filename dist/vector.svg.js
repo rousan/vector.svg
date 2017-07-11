@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Tue Jul 11 2017 19:42:00 GMT+0530 (IST)
+ * Date: Wed Jul 12 2017 01:49:50 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -125,7 +125,7 @@
                 descriptors[nextKey] = Object.getOwnPropertyDescriptor(source, nextKey);
                 return descriptors;
             }, {});
-            Object.defineProperties(target, descriptors);
+            defineProperties(target, descriptors);
         }
 
         return target;
@@ -145,7 +145,7 @@
         // Old IE browsers does not support useCapture parameter and 'this' value
         // in the listener, so to overcome this a wrapper listener is used instead of
         // actual listener.
-        on: function(eventName, listener, useCapture) {
+        on: function(eventName, listener, context, useCapture) {
             if (this._domElement === null)
                 return this;
             if (!isCallable(listener))
@@ -153,6 +153,7 @@
 
             eventName = String(eventName);
             useCapture = Boolean(useCapture);
+            context = arguments.length >= 3 ? context : this;
 
             var eventArr,
                 self = this,
@@ -161,7 +162,7 @@
 
             eventArr = this._events[eventName];
             wrapper = function() {
-                listener.apply(self, slice.call(arguments));
+                listener.apply(context, slice.call(arguments));
             };
             if (eventArr) {
                 for (; i < eventArr.length; ++i) {
@@ -246,7 +247,7 @@
             return self;
         },
 
-        once: function(eventName, listener, useCapture) {
+        once: function(eventName, listener, context, useCapture) {
             if (this._domElement === null)
                 return this;
             if (!isCallable(listener))
@@ -254,6 +255,7 @@
 
             eventName = String(eventName);
             useCapture = Boolean(useCapture);
+            context = arguments.length >= 3 ? context : this;
 
             var eventArr,
                 self = this,
@@ -262,7 +264,7 @@
 
             eventArr = this._events[eventName];
             wrapper = function() {
-                listener.apply(self, slice.call(arguments));
+                listener.apply(context, slice.call(arguments));
                 self.off(eventName, listener, useCapture);
             };
             if (eventArr) {
@@ -428,12 +430,190 @@
             return this;
         },
 
-        onclick: function(listener) {
+        // Listener should be null or callable,
+        // If no argument is passed then previously attached listener
+        // will be returned.
+        onclick: function(listener, context) {
             if (arguments.length >= 1 && listener !== null && !isCallable(listener))
                 throw new TypeError("Listener is not null or callable");
-            return setEventAttribute(this, "onclick", listener);
-        }
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onclick", listener, context);
+        },
 
+        ondblclick: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondblclick", listener, context);
+        },
+
+        onmousedown: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmousedown", listener, context);
+        },
+
+        onmousemove: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmousemove", listener, context);
+        },
+
+        onmouseout: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmouseout", listener, context);
+        },
+
+        onmouseover: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmouseover", listener, context);
+        },
+
+        onmouseup: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmouseup", listener, context);
+        },
+
+        onmouseenter: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmouseenter", listener, context);
+        },
+
+        onmouseleave: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onmouseleave", listener, context);
+        },
+
+        ontouchstart: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ontouchstart", listener, context);
+        },
+
+        ontouchend: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ontouchend", listener, context);
+        },
+
+        ontouchmove: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ontouchmove", listener, context);
+        },
+
+        ontouchcancel: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ontouchcancel", listener, context);
+        },
+
+        ondrag: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondrag", listener, context);
+        },
+
+        ondragend: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondragend", listener, context);
+        },
+
+        ondragenter: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondragenter", listener, context);
+        },
+
+        ondragleave: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondragleave", listener, context);
+        },
+
+        ondragover: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondragover", listener, context);
+        },
+
+        ondragstart: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "oondragstart", listener, context);
+        },
+
+        ondrop: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "ondrop", listener, context);
+        },
+
+        onblur: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onblur", listener, context);
+        },
+
+        onfocus: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onfocus", listener, context);
+        },
+
+        oncontextmenu: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "oncontextmenu", listener, context);
+        },
+
+        onkeydown: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onkeydown", listener, context);
+        },
+
+        onkeypress: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onkeypress", listener, context);
+        },
+
+        onkeyup: function(listener, context) {
+            if (arguments.length >= 1 && listener !== null && !isCallable(listener))
+                throw new TypeError("Listener is not null or callable");
+            context = arguments.length >= 2 ? context : this;
+            return setEventAttribute(this, "onkeyup", listener, context);
+        }
 
     });
 
@@ -519,13 +699,13 @@
             elem._domElement.fireEvent("on" + eventName, eventObj);
     };
 
-    var setEventAttribute = function(elem, eventAttr, listener) {
+    var setEventAttribute = function(elem, eventAttr, listener, context) {
         var wrapper;
         if (listener === null) {
             elem._domElement[eventAttr] = null;
             return elem;
         } else if (isCallable(listener)) {
-            wrapper = listener.bind(elem);
+            wrapper = listener.bind(context);
             wrapper._listener = listener;
             elem._domElement[eventAttr] = wrapper;
             return elem;

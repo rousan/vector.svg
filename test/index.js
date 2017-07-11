@@ -14,12 +14,17 @@ try {
     };
 
 
-
-    elem.onclick(fn);
-
-    console.log(elem.onclick(fn) === elem);
+    elem.onmouseover(function () {
+        rect.setAttribute("fill", "green");
+    }).onmouseout(function () {
+        rect.setAttribute("fill", "red");
+    });
 
     console.log(Object.getOwnPropertyNames(SVGElement.prototype));
+
+    console.log(SVGElement.prototype.hasOwnProperty("oncopy"));
+
+
 
 } catch (e) {
     console.log(e);

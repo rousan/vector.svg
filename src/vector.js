@@ -33,7 +33,7 @@ Vector.merge = function (target) {
             descriptors[nextKey] = Object.getOwnPropertyDescriptor(source, nextKey);
             return descriptors;
         }, {});
-        Object.defineProperties(target, descriptors);
+        defineProperties(target, descriptors);
     }
 
     return target;
