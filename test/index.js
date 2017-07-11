@@ -3,30 +3,23 @@ try {
 
 
 
+    var btn = document.getElementById("btn");
+    var rect = document.getElementById("rect");
+    var elem = new Vector.Element();
+    elem._domElement = rect;
 
-    var yu = function (e) {
-        console.log(this);
+
+    var fn = function (e) {
+        console.log(this === elem);
     };
 
-    document.getElementById("btn").addEventListener("click", yu, true);
-
-    document.getElementById("btn").addEventListener("click", yu, false);
 
 
-    document.getElementById("btn").addEventListener("click", yu, false);
+    elem.onclick(fn);
 
+    console.log(elem.onclick(fn) === elem);
 
-    var event = new CustomEvent('click', { 'detail': "d" });
-
-
-    document.getElementById("btn").onclick = function () {
-        console.log(typeof Boolean({}));
-    }
-
-
-    setTimeout(function () {
-        document.getElementById("btn").dispatchEvent(event);
-    }, 1000);
+    console.log(Object.getOwnPropertyNames(SVGElement.prototype));
 
 } catch (e) {
     console.log(e);

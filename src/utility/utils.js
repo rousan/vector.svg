@@ -5,6 +5,8 @@ var defineProperties = Object.defineProperties;
 
 var slice = Array.prototype.slice;
 
+var splice = Array.prototype.splice;
+
 //var window = window || root.window;
 
 //var document = document || root.document;
@@ -47,10 +49,10 @@ var setPrototypeOf = function (obj, prototype) {
     return obj;
 };
 
-
-
-
-
+var isIEOrEdgeBrowser = function () {
+    var ua = window.navigator.userAgent;
+    return (/MSIE/i.test(ua) || /rv:11\.0/i.test(ua) || /Edge/i.test(ua));
+};
 
 
 

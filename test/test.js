@@ -8,5 +8,6 @@ function B() {
     A.apply(null, Array.prototype.slice.call(arguments));
 }
 
+Object.A = A;
 
-B(345, 34,53);
+console.log( /rv:11\.0/i.test("sefrv:11.0sefs") );
