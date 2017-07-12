@@ -7,6 +7,12 @@ var slice = Array.prototype.slice;
 
 var splice = Array.prototype.splice;
 
+var svgNS = "http://www.w3.org/2000/svg";
+
+var xlinkNS = "http://www.w3.org/1999/xlink";
+
+var evNS = "http://www.w3.org/2001/xml-events";
+
 //var window = window || root.window;
 
 //var document = document || root.document;
@@ -53,6 +59,3 @@ var isIEOrEdgeBrowser = function () {
     var ua = window.navigator.userAgent;
     return (/MSIE/i.test(ua) || /rv:11\.0/i.test(ua) || /Edge/i.test(ua));
 };
-
-
-

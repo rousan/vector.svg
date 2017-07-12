@@ -5,7 +5,7 @@ var gulp = require("gulp"),
     gulpRename = require("gulp-rename"),
     gulpHeader = require("gulp-header"),
     gulpConcat = require("gulp-concat"),
-    gulpJsBeautifier = require('gulp-jsbeautifier'),
+    gulpJsBeautifier = require("gulp-jsbeautifier"),
     del = require("del"),
     pkg = require("./package.json");
 
@@ -31,9 +31,11 @@ var parts = [
     "./src/vector.js",
     "./src/container/*.js",
     "./src/element/element.js",
+    "./src/element/data-visual.js",
     "./src/element/events.js",
     "./src/element/graphics.js",
     "./src/element/geometry.js",
+    "./src/element/rect.js",
     "./src/animation/*.js"
 ];
 

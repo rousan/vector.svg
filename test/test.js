@@ -1,5 +1,7 @@
 
 
+
+
 function A() {
     "use strict";
     console.log(this);
@@ -8,4 +10,7 @@ function A() {
 var a = A.bind();
 
 a();
+
+
+
 

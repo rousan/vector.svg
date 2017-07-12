@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Wed Jul 12 2017 01:49:50 GMT+0530 (IST)
+ * Date: Wed Jul 12 2017 14:42:35 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -39,6 +39,12 @@
     var slice = Array.prototype.slice;
 
     var splice = Array.prototype.splice;
+
+    var svgNS = "http://www.w3.org/2000/svg";
+
+    var xlinkNS = "http://www.w3.org/1999/xlink";
+
+    var evNS = "http://www.w3.org/2001/xml-events";
 
     //var window = window || root.window;
 
@@ -87,18 +93,13 @@
         return (/MSIE/i.test(ua) || /rv:11\.0/i.test(ua) || /Edge/i.test(ua));
     };
 
-
-
-
     /**
-     *
      * @param container
      * @constructor
      */
     var Vector = function(container) {
 
     };
-
 
     /**
      * This method copies all own properties(enumerable and non-enumerable)
@@ -139,6 +140,21 @@
         this._events = {};
     };
 
+    Vector.merge(Element.prototype, {
+
+        byId: function() {
+
+        },
+
+        query: function() {
+
+        },
+
+        queryAll: function() {
+
+        }
+    });
+
 
     Vector.merge(Element.prototype, {
 
@@ -164,11 +180,13 @@
             wrapper = function() {
                 listener.apply(context, slice.call(arguments));
             };
+
             if (eventArr) {
                 for (; i < eventArr.length; ++i) {
                     if (eventArr[i].listener === listener && eventArr[i].useCapture === useCapture)
                         return this;
                 }
+
             } else {
                 eventArr = this._events[eventName] = [];
             }
@@ -204,6 +222,7 @@
                     });
                 });
                 this._events = {};
+
             } else if (arguments.length === 1) {
                 eventName = String(eventName);
                 if (!_events[eventName])
@@ -215,6 +234,7 @@
                         self._domElement.detachEvent("on" + eventName, event.wrapperListener);
                 });
                 delete _events[eventName];
+
             } else {
                 if (!isCallable(listener))
                     throw new TypeError("EventListener is not callable");
@@ -272,6 +292,7 @@
                     if (eventArr[i].listener === listener && eventArr[i].useCapture === useCapture)
                         return this;
                 }
+
             } else {
                 eventArr = this._events[eventName] = [];
             }
@@ -306,9 +327,11 @@
                     bubbles: bubbles,
                     cancelable: true
                 });
+
             } else if (isCallable(document.createEvent)) {
                 event = document.createEvent("CustomEvent");
                 event.initCustomEvent(eventName, bubbles, true, data);
+
             } else {
                 event = document.createEventObject();
                 event.detail = data;
@@ -641,6 +664,7 @@
         } else if (isCallable(document.createEvent)) {
             event = document.createEvent("MouseEvent");
             event.initMouseEvent(eventName, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
         } else {
             event = document.createEventObject();
         }
@@ -685,6 +709,7 @@
                     event.initKeyboardEvent(eventName, true, true, window); //For webkit, blink and DOM Level 3 Draft Spec
             } else
                 event.initKeyEvent(eventName, true, true, window, false, false, false, false, 0, 0); //For Gecko
+
         } else {
             event = document.createEventObject();
         }
@@ -704,11 +729,13 @@
         if (listener === null) {
             elem._domElement[eventAttr] = null;
             return elem;
+
         } else if (isCallable(listener)) {
             wrapper = listener.bind(context);
             wrapper._listener = listener;
             elem._domElement[eventAttr] = wrapper;
             return elem;
+
         } else {
             wrapper = elem._domElement[eventAttr];
             if (isCallable(wrapper) && isCallable(wrapper._listener))
@@ -728,8 +755,6 @@
 
     Graphics.prototype.constructor = Graphics;
 
-
-
     var Geometry = Vector.Geometry = function Geometry() {
         Graphics.apply(this, slice.call(arguments));
     };
@@ -739,6 +764,10 @@
     Geometry.prototype = create(Graphics.prototype);
 
     Geometry.prototype.constructor = Geometry;
+
+    var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
+        Geometry.apply(this, []);
+    };
 
     return Vector;
 }));

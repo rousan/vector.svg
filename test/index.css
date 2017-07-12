@@ -1,5 +1,9 @@
 
 
-#rect {
-    transition: all 0.6s;
+svg {
+    border: 1px solid red;
+}
+
+#txt {
+
 }

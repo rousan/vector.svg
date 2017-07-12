@@ -1,12 +1,11 @@
+
 /**
- *
  * @param container
  * @constructor
  */
 var Vector = function (container) {
 
 };
-
 
 /**
  * This method copies all own properties(enumerable and non-enumerable)

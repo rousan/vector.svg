@@ -8,4 +8,3 @@ setPrototypeOf(Graphics, Element);
 Graphics.prototype = create(Element.prototype);
 
 Graphics.prototype.constructor = Graphics;
-

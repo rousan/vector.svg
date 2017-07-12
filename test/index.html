@@ -10,20 +10,23 @@
 
 
 
-<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+<svg id="svg" width="600" height="400" xmlns="http://www.w3.org/2000/svg">
 
-    <rect id="rect" x="100" y="100" width="200" height="200" fill="red"></rect>
+    <rect id="rect" x="100" y="100" width="200" height="100"></rect>
+
+    <text id="txt" x="100" y="100" style="font-size: 50px;">ABC</text>
 
 </svg>
 
-<button id="btn">khk</button>
 
-<input id="inp" type="checkbox"/>
+
+
 
 <script>
 
-
-
+    setTimeout(function () {
+        console.log(document.getElementById("txt").hasAttribute("font-size"));
+    }, 1000);
 
 
 </script>
