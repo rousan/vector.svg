@@ -1,4 +1,5 @@
 
+// Add DOM Event wrappers to Element
 Vector.merge(Element.prototype, {
 
     // Old IE browsers does not support useCapture parameter and 'this' value

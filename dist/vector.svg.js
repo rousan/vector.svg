@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Wed Jul 12 2017 14:42:35 GMT+0530 (IST)
+ * Date: Wed Jul 12 2017 17:28:13 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -45,6 +45,8 @@
     var xlinkNS = "http://www.w3.org/1999/xlink";
 
     var evNS = "http://www.w3.org/2001/xml-events";
+
+    var xhtmlNS = "http://www.w3.org/1999/xhtml";
 
     //var window = window || root.window;
 
@@ -132,6 +134,60 @@
         return target;
     };
 
+    Vector.merge(Vector, {
+
+        ns: {
+
+            svg: svgNS,
+
+            xlink: xlinkNS,
+
+            ev: evNS,
+
+            xhtml: xhtmlNS
+        },
+
+        /**
+         * Creates a SVGElement and returns actual DOM Node, not the wrapper one.
+         * @param tagName
+         * @returns SVGElement
+         */
+        createElement: function(tagName) {
+            return document.createElementNS(Vector.ns.svg, tagName);
+        },
+
+        /**
+         * Set attribute to SVG DOM Element
+         * @param svgDomNode
+         * @param name
+         * @param value
+         * @param namespace
+         * @returns Vector
+         */
+        setAttribute: function(svgDomNode, name, value, namespace) {
+            if (value === undefined)
+                return this;
+            namespace = isNullOrUndefined(namespace) ? null : namespace;
+            svgDomNode.setAttributeNS(namespace, name, value);
+            return this;
+        },
+
+        /**
+         * Set attributes to SVG DOM Element
+         * @param svgDomNode
+         * @param attrs
+         * @param namespace
+         * @returns Vector
+         */
+        setAttributes: function(svgDomNode, attrs, namespace) {
+            Object.keys(attrs).forEach(function(attr) {
+                Vector.setAttribute(svgDomNode, attr, attrs[attr], namespace);
+            });
+            return this;
+        }
+
+    });
+
     /**
      * Base class for all the SVG DOM wrapper elements.
      */
@@ -155,7 +211,20 @@
         }
     });
 
+    // Add data-visualization functionality
+    Vector.merge(Element.prototype, {
 
+        binder: function() {
+
+        },
+
+        bind: function() {
+
+        }
+
+    });
+
+    // Add DOM Event wrappers to Element
     Vector.merge(Element.prototype, {
 
         // Old IE browsers does not support useCapture parameter and 'this' value
@@ -767,7 +836,30 @@
 
     var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
         Geometry.apply(this, []);
+        var elem = Vector.createElement(this.tag);
+        Vector.setAttributes(elem, {
+            width: width,
+            height: height,
+            x: x,
+            y: y,
+            rx: rx,
+            ry: ry
+        }, null);
+        this._domElement = elem;
+        elem._wrapElement = this;
     };
+
+    setPrototypeOf(Rect, Geometry);
+
+    Rect.prototype = Object.create(Geometry.prototype);
+
+    Rect.prototype.constructor = Rect;
+
+    Vector.merge(Rect.prototype, {
+
+        tag: "rect"
+
+    });
 
     return Vector;
 }));

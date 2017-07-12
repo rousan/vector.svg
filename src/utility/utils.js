@@ -13,6 +13,8 @@ var xlinkNS = "http://www.w3.org/1999/xlink";
 
 var evNS = "http://www.w3.org/2001/xml-events";
 
+var xhtmlNS = "http://www.w3.org/1999/xhtml";
+
 //var window = window || root.window;
 
 //var document = document || root.document;
