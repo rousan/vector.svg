@@ -2,9 +2,18 @@
 // Add DOM Event wrappers to Element
 Vector.merge(Element.prototype, {
 
-    // Old IE browsers does not support useCapture parameter and 'this' value
-    // in the listener, so to overcome this a wrapper listener is used instead of
-    // actual listener.
+    /**
+     * Attach event listener to element.
+     * Old IE browsers does not support useCapture parameter and 'this' value
+     * in the listener, so to overcome this a wrapper listener is used instead of
+     * actual listener.
+     *
+     * @param eventName
+     * @param listener
+     * @param context
+     * @param useCapture
+     * @returns {Element}
+     */
     on: function (eventName, listener, context, useCapture) {
         if (this._domElement === null)
             return this;
@@ -44,7 +53,14 @@ Vector.merge(Element.prototype, {
         return self;
     },
 
-    // Remove the listeners which was previously added via 'on' method
+    /**
+     * Remove the listeners which was previously added via 'on' method
+     *
+     * @param eventName
+     * @param listener
+     * @param useCapture
+     * @returns {Element}
+     */
     off: function (eventName, listener, useCapture) {
         if (this._domElement === null)
             return this;

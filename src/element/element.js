@@ -39,9 +39,19 @@ Vector.merge(Element.prototype, {
                 length = attrs.length;
                 for(; i<length; ++i) {
                     attr = attrs.item(i);
-                    outs[attr.localName] = attr.value;
+                    if (attr === null)
+                        continue;
+                    outs[attr.localName] = simplifyRawAttrValue(attr.localName, attr.value, attr.namespaceURI);
                 }
+
+                // IE 5.5 returns a key-value pair instead of NamedNodeMap
+            } else {
+                Object.keys(attrs).forEach(function (attr) {
+                    outs[attr] = simplifyRawAttrValue(attr, attrs[attr], null);
+                });
             }
+
+            return outs;
         }
     },
 
@@ -58,14 +68,14 @@ Vector.merge(Element.prototype, {
     }
 });
 
-/*
- * If element reference can be retrieved from attrValue then
- * wrapper element reference is returned otherwise attrValue is returned
- *
- * if attrName is:
- *      # 'mask', 'clip-path', 'fill', 'stroke', 'href', 'xlink:href' then extract id and then return wrapper element,
- *      # 'transform' etc then extract operations as JSON format and return it.
- */
-var getElementRefFromAttr = function (attrName, value, namespaceURI) {
 
+// It simplifies the raw value of attribute to a simplified form.
+// and returns the formatted version.
+var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
+
+    switch (attrName) {
+
+        case "class":
+            
+    }
 };

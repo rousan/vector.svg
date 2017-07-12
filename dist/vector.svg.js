@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Wed Jul 12 2017 17:28:13 GMT+0530 (IST)
+ * Date: Thu Jul 13 2017 03:36:45 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -95,6 +95,7 @@
         return (/MSIE/i.test(ua) || /rv:11\.0/i.test(ua) || /Edge/i.test(ua));
     };
 
+
     /**
      * @param container
      * @constructor
@@ -150,7 +151,7 @@
         /**
          * Creates a SVGElement and returns actual DOM Node, not the wrapper one.
          * @param tagName
-         * @returns SVGElement
+         * @returns Element
          */
         createElement: function(tagName) {
             return document.createElementNS(Vector.ns.svg, tagName);
@@ -184,9 +185,99 @@
                 Vector.setAttribute(svgDomNode, attr, attrs[attr], namespace);
             });
             return this;
+        },
+
+        /**
+         * Generates RFC4122 version 4 compliant UUID.
+         * @returns {string}
+         */
+        uuid: (function() {
+            var table = [],
+                i = 0;
+
+            for (; i < 256; i++) {
+                table[i] = (i < 16 ? '0' : '') + (i).toString(16);
+            }
+
+            return function() {
+                var d0 = Math.random() * 0xffffffff | 0,
+                    d1 = Math.random() * 0xffffffff | 0,
+                    d2 = Math.random() * 0xffffffff | 0,
+                    d3 = Math.random() * 0xffffffff | 0;
+
+                return table[d0 & 0xff] + table[d0 >> 8 & 0xff] + table[d0 >> 16 & 0xff] + table[d0 >> 24 & 0xff] + '-' +
+                    table[d1 & 0xff] + table[d1 >> 8 & 0xff] + '-' + table[d1 >> 16 & 0x0f | 0x40] + table[d1 >> 24 & 0xff] + '-' +
+                    table[d2 & 0x3f | 0x80] + table[d2 >> 8 & 0xff] + '-' + table[d2 >> 16 & 0xff] + table[d2 >> 24 & 0xff] +
+                    table[d3 & 0xff] + table[d3 >> 8 & 0xff] + table[d3 >> 16 & 0xff] + table[d3 >> 24 & 0xff];
+            };
+        })(),
+
+        /**
+         * Returns an array of unique values,
+         * does not alter main array
+         *
+         * Time Complexity: O(n)
+         *
+         * @param arr Array or Array like object
+         * @returns Array
+         */
+        unique: function(arr) {
+            if (isNullOrUndefined(arr))
+                return [];
+
+            arr = Object(arr);
+
+            var cArr = slice.call(arr),
+                out = [],
+                primHashSet = {},
+                objSet = [],
+                randomProp = Vector.uuid(),
+                anyValue = true,
+                ln = cArr.length,
+                val,
+                prop,
+                i = 0;
+
+            for (; i < ln; ++i) {
+                val = cArr[i];
+                if (isObject(val)) {
+                    if (Object.isExtensible(val)) {
+                        if (!val.hasOwnProperty(randomProp)) {
+                            out.push(val);
+                            val[randomProp] = anyValue;
+                        }
+                    } else {
+                        if (objSet.indexOf(val) === -1) {
+                            out.push(val);
+                            objSet.push(val);
+                        }
+                    }
+                } else {
+                    if (val === undefined)
+                        prop = "U";
+                    else if (val === null)
+                        prop = "I";
+                    else if (typeof val === "string")
+                        prop = "S_" + val;
+                    else if (typeof val === "number")
+                        prop = "N_" + val;
+                    else if (typeof val === "boolean")
+                        prop = "B_" + val;
+                    else
+                        prop = val; // Support for 'symbol' type in ES6
+                    if (!primHashSet.hasOwnProperty(prop)) {
+                        out.push(val);
+                        primHashSet[prop] = anyValue;
+                    }
+                }
+            }
+
+            return out;
         }
 
     });
+
+
 
     /**
      * Base class for all the SVG DOM wrapper elements.
@@ -197,6 +288,52 @@
     };
 
     Vector.merge(Element.prototype, {
+
+        /**
+         * If params in form of:
+         *      # (attrName, value, namespace) then sets attr and returns element, [3 args]
+         *      # (attrName, value) then namespace = null and sets attr and returns element, [2 args]
+         *      # (attrName, null, namespace) then deletes attr and returns element, [3 args]
+         *      # (attrName, null) then namespace = null and deletes attr and returns element, [2 args]
+         *      # (attrObject, namespace) then sets attrs and returns element, [2 args]
+         *      # (attrObject) then namespace = null and sets attrs and returns element, [1 args]
+         *      # (attrName, namespace) then returns attrValue, [2 args]
+         *      # (attrName) then namespace = null and returns attrValue, [1 args]
+         *      # (attrNamesArr) namespace = null and then returns attrValue as Array in order, [1 args]
+         *      # (attrNamesArr, null) namespace = null and then deletes attrs and return element, [2 args]
+         *      # () then returns all attributes as key/value pairs. [0 args]
+         *
+         * @param params
+         */
+        attr: function(params) {
+            if (arguments.length === 0) {
+                var node = this._domElement,
+                    attrs,
+                    i = 0,
+                    length,
+                    attr,
+                    outs = {};
+
+                attrs = node.attributes;
+                if (window.NamedNodeMap && attrs instanceof window.NamedNodeMap) {
+                    length = attrs.length;
+                    for (; i < length; ++i) {
+                        attr = attrs.item(i);
+                        if (attr === null)
+                            continue;
+                        outs[attr.localName] = simplifyRawAttrValue(attr.localName, attr.value, attr.namespaceURI);
+                    }
+
+                    // IE 5.5 returns a key-value pair instead of NamedNodeMap
+                } else {
+                    Object.keys(attrs).forEach(function(attr) {
+                        outs[attr] = simplifyRawAttrValue(attr, attrs[attr], null);
+                    });
+                }
+
+                return outs;
+            }
+        },
 
         byId: function() {
 
@@ -210,6 +347,18 @@
 
         }
     });
+
+
+    // It simplifies the raw value of attribute to a simplified form.
+    // and returns the formatted version.
+    var simplifyRawAttrValue = function(attrName, value, namespaceURI) {
+
+        switch (attrName) {
+
+            case "class":
+
+        }
+    };
 
     // Add data-visualization functionality
     Vector.merge(Element.prototype, {
@@ -227,9 +376,18 @@
     // Add DOM Event wrappers to Element
     Vector.merge(Element.prototype, {
 
-        // Old IE browsers does not support useCapture parameter and 'this' value
-        // in the listener, so to overcome this a wrapper listener is used instead of
-        // actual listener.
+        /**
+         * Attach event listener to element.
+         * Old IE browsers does not support useCapture parameter and 'this' value
+         * in the listener, so to overcome this a wrapper listener is used instead of
+         * actual listener.
+         *
+         * @param eventName
+         * @param listener
+         * @param context
+         * @param useCapture
+         * @returns {Element}
+         */
         on: function(eventName, listener, context, useCapture) {
             if (this._domElement === null)
                 return this;
@@ -273,7 +431,14 @@
             return self;
         },
 
-        // Remove the listeners which was previously added via 'on' method
+        /**
+         * Remove the listeners which was previously added via 'on' method
+         *
+         * @param eventName
+         * @param listener
+         * @param useCapture
+         * @returns {Element}
+         */
         off: function(eventName, listener, useCapture) {
             if (this._domElement === null)
                 return this;
@@ -814,6 +979,10 @@
         }
     };
 
+    /**
+     * Wrapper of SVGGraphicsElement class
+     * @type {Vector.Graphics}
+     */
     var Graphics = Vector.Graphics = function Graphics() {
         Element.apply(this, slice.call(arguments));
     };
@@ -824,6 +993,10 @@
 
     Graphics.prototype.constructor = Graphics;
 
+    /**
+     * Wrapper of SVGGeometryElement class
+     * @type {Vector.Geometry}
+     */
     var Geometry = Vector.Geometry = function Geometry() {
         Graphics.apply(this, slice.call(arguments));
     };
@@ -834,6 +1007,10 @@
 
     Geometry.prototype.constructor = Geometry;
 
+    /**
+     * Wrapper class for <rect> svg element
+     * @type {Vector.Rect}
+     */
     var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
         Geometry.apply(this, []);
         var elem = Vector.createElement(this.tag);

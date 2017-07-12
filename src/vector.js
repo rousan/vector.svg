@@ -54,7 +54,7 @@ Vector.merge(Vector, {
     /**
      * Creates a SVGElement and returns actual DOM Node, not the wrapper one.
      * @param tagName
-     * @returns SVGElement
+     * @returns Element
      */
     createElement: function (tagName) {
         return document.createElementNS(Vector.ns.svg, tagName);
@@ -88,6 +88,104 @@ Vector.merge(Vector, {
             Vector.setAttribute(svgDomNode, attr, attrs[attr], namespace);
         });
         return this;
+    },
+
+    /**
+     * Generates RFC4122 version 4 compliant UUID.
+     * @returns {string}
+     */
+    uuid: (function() {
+        var table = [],
+            i = 0;
+
+        for (; i < 256; i++) {
+            table[i] = (i < 16 ? '0' : '') + (i).toString(16);
+        }
+
+        return function() {
+            var d0 = Math.random() * 0xffffffff | 0,
+                d1 = Math.random() * 0xffffffff | 0,
+                d2 = Math.random() * 0xffffffff | 0,
+                d3 = Math.random() * 0xffffffff | 0;
+
+            return table[d0 & 0xff] + table[d0 >> 8 & 0xff] + table[d0 >> 16 & 0xff] + table[d0 >> 24 & 0xff] + '-' +
+                table[d1 & 0xff] + table[d1 >> 8 & 0xff] + '-' + table[d1 >> 16 & 0x0f | 0x40] + table[d1 >> 24 & 0xff] + '-' +
+                table[d2 & 0x3f | 0x80] + table[d2 >> 8 & 0xff] + '-' + table[d2 >> 16 & 0xff] + table[d2 >> 24 & 0xff] +
+                table[d3 & 0xff] + table[d3 >> 8 & 0xff] + table[d3 >> 16 & 0xff] + table[d3 >> 24 & 0xff];
+        };
+    })(),
+
+    /**
+     * Returns an array of unique values,
+     * does not alter main array
+     *
+     * Time Complexity: O(n)
+     *
+     * @param arr Array or Array like object
+     * @returns Array
+     */
+    unique: function (arr) {
+        if (isNullOrUndefined(arr))
+            return [];
+
+        arr = Object(arr);
+
+        var cArr = slice.call(arr),
+            out = [],
+            primHashSet = {},
+            objSet = [],
+            extIndex = [],
+            randomProp = Vector.uuid(),
+            anyValue = true,
+            ln = cArr.length,
+            val,
+            prop,
+            i = 0;
+
+        for(; i<ln; ++i) {
+            val = cArr[i];
+            if (isObject(val)) {
+                if (Object.isExtensible(val)) {
+                    if (!val.hasOwnProperty(randomProp)) {
+                        out.push(val);
+                        val[randomProp] = anyValue;
+                        extIndex.push(out.length - 1);
+                    }
+
+                } else {
+                    if (objSet.indexOf(val) === -1) {
+                        out.push(val);
+                        objSet.push(val);
+                    }
+                }
+
+            } else {
+                if (val === undefined)
+                    prop = "U";
+                else if (val === null)
+                    prop = "I";
+                else if (typeof val === "string")
+                    prop = "S_" + val;
+                else if (typeof val === "number")
+                    prop = "N_" + val;
+                else if (typeof val === "boolean")
+                    prop = "B_" + val;
+                else
+                    prop = val; // Support for 'symbol' type in ES6
+
+                if (!primHashSet.hasOwnProperty(prop)) {
+                    out.push(val);
+                    primHashSet[prop] = anyValue;
+                }
+            }
+        }
+
+        extIndex.forEach(function (index) {
+            delete out[index][randomProp];
+        });
+
+        return out;
     }
 
 });
+

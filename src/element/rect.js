@@ -1,4 +1,8 @@
 
+/**
+ * Wrapper class for <rect> svg element
+ * @type {Vector.Rect}
+ */
 var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
     Geometry.apply(this, []);
     var elem = Vector.createElement(this.tag);

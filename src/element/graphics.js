@@ -1,4 +1,8 @@
 
+/**
+ * Wrapper of SVGGraphicsElement class
+ * @type {Vector.Graphics}
+ */
 var Graphics = Vector.Graphics = function Graphics() {
     Element.apply(this, slice.call(arguments));
 };
