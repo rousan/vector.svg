@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Thu Jul 13 2017 14:33:15 GMT+0530 (IST)
+ * Date: Fri Jul 14 2017 00:48:57 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -95,6 +95,15 @@
         return (/MSIE/i.test(ua) || /rv:11\.0/i.test(ua) || /Edge/i.test(ua));
     };
 
+    var regex = {
+
+        tokenSeparator: /\s+/,
+
+        referenceAttrVal: /^url\(#(.+)\)$/,
+
+        hrefAttrVal: /^#(.+)$/
+
+    };
 
     /**
      * @param container
@@ -110,7 +119,7 @@
      * It does not make deep copy of properties.
      *
      * @param target object which will be merged by sources
-     * @returns target object
+     * @return target object
      */
     Vector.merge = function(target) {
         if (isNullOrUndefined(target))
@@ -151,7 +160,7 @@
         /**
          * Creates a SVGElement and returns actual DOM Node, not the wrapper one.
          * @param tagName
-         * @returns Element
+         * @returns {SVGElement}
          */
         createElement: function(tagName) {
             return document.createElementNS(Vector.ns.svg, tagName);
@@ -163,7 +172,7 @@
          * @param name
          * @param value
          * @param namespace
-         * @returns Vector
+         * @return Vector
          */
         setAttribute: function(svgDomNode, name, value, namespace) {
             if (value === undefined)
@@ -178,7 +187,7 @@
          * @param svgDomNode
          * @param attrs
          * @param namespace
-         * @returns Vector
+         * @return Vector
          */
         setAttributes: function(svgDomNode, attrs, namespace) {
             Object.keys(attrs).forEach(function(attr) {
@@ -288,6 +297,42 @@
             });
 
             return out;
+        },
+
+
+        /**
+         * If svgDOMNode is not SVGElement then it returns null,
+         * and if svgDOMNode is already wrapped then previous wrapper will be return
+         * otherwise a new wrapper object will be returned.
+         *
+         * @param svgDOMNode
+         * @returns {Vector.Element}
+         */
+        wrap: function(svgDOMNode) {
+            if (!(svgDOMNode instanceof window.SVGElement))
+                return null;
+
+            if (Vector.isWrapped(svgDOMNode))
+                return svgDOMNode["_wrappingElement"];
+
+            switch (svgDOMNode.constructor) {
+                case window.SVGRectElement:
+                    return new Rect(undefined, undefined, undefined, undefined, undefined, undefined, svgDOMNode);
+                default:
+                    return new Element(svgDOMNode);
+            }
+        },
+
+        /**
+         * Check if a DOM element object is wrapped or not
+         * @param svgDOMNode
+         * @returns {boolean}
+         */
+        isWrapped: function(svgDOMNode) {
+            if (!isObject(svgDOMNode))
+                return false;
+            var wrapper = svgDOMNode["_wrappingElement"];
+            return wrapper instanceof Element && svgDOMNode instanceof wrapper.constructor.domInterface && wrapper["_domElement"] === svgDOMNode;
         }
 
     });
@@ -296,13 +341,35 @@
 
     /**
      * Base class for all the SVG DOM wrapper elements.
+     *
+     * Wrapper for SVGElement native interface
+     *
+     * It can wrap SVGElement elements.
      */
-    var Element = Vector.Element = function Element() {
-        this._domElement = null;
+    var Element = Vector.Element = function Element(svgDOMNode) {
+
+        if (svgDOMNode instanceof this.constructor.domInterface) {
+            if (Vector.isWrapped(svgDOMNode) && svgDOMNode["_wrappingElement"] instanceof this.constructor)
+                return svgDOMNode["_wrappingElement"];
+        } else {
+            svgDOMNode = this.tag !== null ? Vector.createElement(this.tag) : null;
+        }
+
+        this._domElement = svgDOMNode;
         this._events = {};
+        if (svgDOMNode !== null)
+            svgDOMNode._wrappingElement = this;
     };
 
+    Vector.merge(Element, {
+
+        domInterface: window.SVGElement
+
+    });
+
     Vector.merge(Element.prototype, {
+
+        tag: null,
 
         /**
          * If params in form of:
@@ -368,10 +435,69 @@
     // and returns the formatted version.
     var simplifyRawAttrValue = function(attrName, value, namespaceURI) {
 
+        var match,
+            temp,
+            elem;
+
         switch (attrName) {
 
             case "class":
+                return Vector.unique(value.trim().split(regex.tokenSeparator));
 
+            case "mask":
+            case "clip-path":
+            case "fill":
+            case "stroke":
+                match = regex.referenceAttrVal.exec(value);
+                if (match) {
+                    elem = document.getElementById(match[1]);
+                    if (Vector.isWrapped(elem))
+                        return elem._wrappingElement;
+                    else
+                        return value;
+                } else
+                    return value;
+
+            case "href":
+                if (namespaceURI === Vector.ns.xlink) {
+                    match = regex.referenceAttrVal.exec(value);
+                } else
+                    match = regex.hrefAttrVal.exec(value);
+                if (match) {
+                    elem = document.getElementById(match[1]);
+                    if (Vector.isWrapped(elem))
+                        return elem._wrappingElement;
+                    else
+                        return value;
+                } else
+                    return value;
+
+            case "cx":
+            case "cy":
+            case "font-size":
+            case "font-weight":
+            case "height":
+            case "r":
+            case "rx":
+            case "ry":
+            case "stroke-dasharray":
+            case "stroke-dashoffset":
+            case "stroke-width":
+            case "width":
+            case "x":
+            case "x1":
+            case "x2":
+            case "y":
+            case "y1":
+            case "y2":
+                temp = +value;
+                if (isFinite(temp))
+                    return temp;
+                else
+                    return value;
+
+            default:
+                return value;
         }
     };
 
@@ -995,11 +1121,20 @@
     };
 
     /**
-     * Wrapper of SVGGraphicsElement class
+     * Wrapper for SVGGraphicsElement native interface
+     *
+     * It can wrap SVGElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Graphics's super class then
+     * it removes that wrapper and returns a new Vector.Graphics wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
      * @type {Vector.Graphics}
      */
-    var Graphics = Vector.Graphics = function Graphics() {
-        Element.apply(this, slice.call(arguments));
+    var Graphics = Vector.Graphics = function Graphics(svgDOMNode) {
+        var wrappedInstance = Element.call(this, svgDOMNode);
+        if (wrappedInstance)
+            return wrappedInstance;
     };
 
     setPrototypeOf(Graphics, Element);
@@ -1008,12 +1143,37 @@
 
     Graphics.prototype.constructor = Graphics;
 
+
+    Vector.merge(Graphics, {
+
+        /**
+         * Some browsers does not support SVGGraphicsElement interface at all
+         */
+        domInterface: window.SVGElement
+
+    });
+
+    Vector.merge(Graphics.prototype, {
+
+        tag: null
+
+    });
+
     /**
-     * Wrapper of SVGGeometryElement class
+     * Wrapper for SVGGeometryElement interface
+     *
+     * It can wrap SVGElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Geometry's super class then
+     * it removes that wrapper and returns a new Vector.Geometry wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
      * @type {Vector.Geometry}
      */
-    var Geometry = Vector.Geometry = function Geometry() {
-        Graphics.apply(this, slice.call(arguments));
+    var Geometry = Vector.Geometry = function Geometry(svgDOMNode) {
+        var wrappedInstance = Graphics.call(this, svgDOMNode);
+        if (wrappedInstance)
+            return wrappedInstance;
     };
 
     setPrototypeOf(Geometry, Graphics);
@@ -1022,23 +1182,47 @@
 
     Geometry.prototype.constructor = Geometry;
 
+    Vector.merge(Graphics, {
+
+        /**
+         * Some browsers does not support SVGGeometryElement interface at all
+         */
+        domInterface: window.SVGElement
+
+    });
+
+    Vector.merge(Graphics.prototype, {
+
+        tag: null
+
+    });
+
     /**
-     * Wrapper class for <rect> svg element
+     * Wrapper for SVGRectElement native interface
+     *
+     * It can wrap SVGRectElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Rect's super class then
+     * it removes that wrapper and returns a new Vector.Rect wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
      * @type {Vector.Rect}
      */
-    var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
-        Geometry.apply(this, []);
-        var elem = Vector.createElement(this.tag);
-        Vector.setAttributes(elem, {
-            width: width,
-            height: height,
-            x: x,
-            y: y,
-            rx: rx,
-            ry: ry
-        }, null);
-        this._domElement = elem;
-        elem._wrappingElement = this;
+    var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry, svgDOMNode) {
+        var wrappedInstance = Geometry.call(this, svgDOMNode),
+            attrs = {
+                width: width,
+                height: height,
+                x: x,
+                y: y,
+                rx: rx,
+                ry: ry
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
     };
 
     setPrototypeOf(Rect, Geometry);
@@ -1046,6 +1230,12 @@
     Rect.prototype = Object.create(Geometry.prototype);
 
     Rect.prototype.constructor = Rect;
+
+    Vector.merge(Rect, {
+
+        domInterface: window.SVGRectElement
+
+    });
 
     Vector.merge(Rect.prototype, {
 

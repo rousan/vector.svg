@@ -1,33 +1,29 @@
 
 /**
  * Base class for all the SVG DOM wrapper elements.
+ *
+ * Wrapper for SVGElement native interface
+ *
+ * It can wrap SVGElement elements.
  */
 var Element = Vector.Element = function Element(svgDOMNode) {
-    this._domElement = null;
+
+    if (svgDOMNode instanceof this.constructor.domInterface) {
+        if (Vector.isWrapped(svgDOMNode) && svgDOMNode["_wrappingElement"] instanceof this.constructor)
+            return svgDOMNode["_wrappingElement"];
+    } else {
+        svgDOMNode = this.tag !== null ? Vector.createElement(this.tag) : null;
+    }
+
+    this._domElement = svgDOMNode;
     this._events = {};
-    var newInstance;
-    if (svgDOMNode instanceof window.SVGElement)
-        newInstance = Element.construct(this, svgDOMNode);
-    else
-        newInstance = this;
-    return newInstance;
+    if (svgDOMNode !== null)
+        svgDOMNode._wrappingElement = this;
 };
 
 Vector.merge(Element, {
 
-    domInterface: window.SVGElement,
-
-    construct: function (newInstance, svgDOMNode) {
-        if (svgDOMNode instanceof this.domInterface) {
-            if(Vector.isWrapped(svgDOMNode))
-                return svgDOMNode["_wrappingElement"];
-        } else
-            svgDOMNode = Vector.createElement(newInstance.tag);
-
-        newInstance._domElement = svgDOMNode;
-        svgDOMNode._wrappingElement = newInstance;
-        return newInstance;
-    }
+    domInterface: window.SVGElement
 
 });
 
@@ -100,6 +96,7 @@ Vector.merge(Element.prototype, {
 var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
 
     var match,
+        temp,
         elem;
 
     switch (attrName) {
@@ -123,7 +120,7 @@ var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
 
         case "href":
             if (namespaceURI === Vector.ns.xlink) {
-                match = regex.hrefAttrVal.exec(value);
+                match = regex.referenceAttrVal.exec(value);
             } else
                 match = regex.hrefAttrVal.exec(value);
             if (match) {
@@ -133,6 +130,30 @@ var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
                 else
                     return value;
             } else
+                return value;
+
+        case "cx":
+        case "cy":
+        case "font-size":
+        case "font-weight":
+        case "height":
+        case "r":
+        case "rx":
+        case "ry":
+        case "stroke-dasharray":
+        case "stroke-dashoffset":
+        case "stroke-width":
+        case "width":
+        case "x":
+        case "x1":
+        case "x2":
+        case "y":
+        case "y1":
+        case "y2":
+            temp = +value;
+            if (isFinite(temp))
+                return temp;
+            else
                 return value;
 
         default:

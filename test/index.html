@@ -10,20 +10,23 @@
 
 
 
-<svg id="svg" width="600" height="400" xmlns="http://www.w3.org/2000/svg" xml:xlink="http://www.w3.org/1999/xlink">
+<svg id="svg" width="800" height="400" xmlns="http://www.w3.org/2000/svg" xml:xlink="http://www.w3.org/1999/xlink">
 
 
-    <rect id="rect" x="100" y="100" width="200" height="100"></rect>
+    <defs>
 
-    <text id="txt" x="100" y="100" style="font-size: 50px;">ABC</text>
+        <clipPath id="clipPath">
+            <rect x="100" y="100" width="20" height="20"></rect>
+        </clipPath>
 
-    <use id="use"  class="r r y" href="#rect" fill="red"></use>
+    </defs>
+
+    <rect id="rect" class="xx xx a r t" x="100" y="100" clip-path="url(#clipPath)" width="200" height="100" fill="purple"></rect>
+
+    <circle id="circle" cx="100" cy="300" r="100" fill="red"></circle>
 
 </svg>
 
-<div id="d" class="d0"></div>
-
-<a id="a" class="ii ii"></a>
 
 <script>
 

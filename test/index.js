@@ -4,21 +4,15 @@ try {
 
 
     var rect = document.getElementById("rect");
-
-    var r = new Vector.Rect(100, 200);
-    r.on("click", function () {
-
-    });
-
-    var t = document.querySelector("use").classList;
-    t.add("ytut");
+    var circle = document.getElementById("circle");
+    var clip = document.getElementById("clipPath");
 
 
-    console.log(document.querySelector("use").getAttribute("class"));
+    var rr = Vector.wrap(rect);
+    var cc = Vector.wrap(circle);
+    var cpp = Vector.wrap(clip);
 
-
-
-
+    console.log(rr.attr()["clip-path"].constructor.name);
 
 } catch (e) {
     console.log(e);

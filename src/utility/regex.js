@@ -1,5 +1,5 @@
 
-var regex = Vector.merge({}, {
+var regex = {
 
     tokenSeparator: /\s+/,
 
@@ -7,4 +7,4 @@ var regex = Vector.merge({}, {
 
     hrefAttrVal: /^#(.+)$/
 
-});
+};

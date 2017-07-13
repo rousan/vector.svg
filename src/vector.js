@@ -13,7 +13,7 @@ var Vector = function (container) {
  * It does not make deep copy of properties.
  *
  * @param target object which will be merged by sources
- * @returns target object
+ * @return target object
  */
 Vector.merge = function (target) {
     if (isNullOrUndefined(target))
@@ -54,7 +54,7 @@ Vector.merge(Vector, {
     /**
      * Creates a SVGElement and returns actual DOM Node, not the wrapper one.
      * @param tagName
-     * @returns Element
+     * @returns {SVGElement}
      */
     createElement: function (tagName) {
         return document.createElementNS(Vector.ns.svg, tagName);
@@ -66,7 +66,7 @@ Vector.merge(Vector, {
      * @param name
      * @param value
      * @param namespace
-     * @returns Vector
+     * @return Vector
      */
     setAttribute: function (svgDomNode, name, value, namespace) {
         if (value === undefined)
@@ -81,7 +81,7 @@ Vector.merge(Vector, {
      * @param svgDomNode
      * @param attrs
      * @param namespace
-     * @returns Vector
+     * @return Vector
      */
     setAttributes: function (svgDomNode, attrs, namespace) {
         Object.keys(attrs).forEach(function (attr) {
@@ -194,9 +194,21 @@ Vector.merge(Vector, {
     },
 
 
+    /**
+     * If svgDOMNode is not SVGElement then it returns null,
+     * and if svgDOMNode is already wrapped then previous wrapper will be return
+     * otherwise a new wrapper object will be returned.
+     *
+     * @param svgDOMNode
+     * @returns {Vector.Element}
+     */
     wrap: function (svgDOMNode) {
         if (!(svgDOMNode instanceof window.SVGElement))
             return null;
+
+        if (Vector.isWrapped(svgDOMNode))
+            return svgDOMNode["_wrappingElement"];
+
         switch (svgDOMNode.constructor) {
             case window.SVGRectElement:
                 return new Rect(undefined, undefined, undefined, undefined, undefined, undefined, svgDOMNode);
@@ -206,14 +218,15 @@ Vector.merge(Vector, {
     },
 
     /**
-     * Check if a DOM object is wrapped or not
-     * @param svgDomNode
+     * Check if a DOM element object is wrapped or not
+     * @param svgDOMNode
      * @returns {boolean}
      */
-    isWrapped: function (svgDomNode) {
-        return svgDomNode instanceof window.SVGElement &&
-            svgDomNode["_wrappingElement"] instanceof Element &&
-            svgDomNode["_wrappingElement"]["_domElement"] === svgDomNode;
+    isWrapped: function (svgDOMNode) {
+        if(!isObject(svgDOMNode))
+            return false;
+        var wrapper = svgDOMNode["_wrappingElement"];
+        return wrapper instanceof Element && svgDOMNode instanceof wrapper.constructor.domInterface && wrapper["_domElement"] === svgDOMNode;
     }
 
 });
