@@ -3,10 +3,10 @@
  * Wrapper class for <rect> svg element
  * @type {Vector.Rect}
  */
-var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
+var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry, rectSVGDom) {
     Geometry.apply(this, []);
-    var elem = Vector.createElement(this.tag);
-    Vector.setAttributes(elem, {
+    var newInstance = Rect.construct(this, rectSVGDom);
+    newInstance.attr({
         width: width,
         height: height,
         x: x,
@@ -14,8 +14,8 @@ var Rect = Vector.Rect = function Rect(width, height, x, y, rx, ry) {
         rx: rx,
         ry: ry
     }, null);
-    this._domElement = elem;
-    elem._wrapElement = this;
+
+    return newInstance;
 };
 
 setPrototypeOf(Rect, Geometry);
@@ -23,6 +23,12 @@ setPrototypeOf(Rect, Geometry);
 Rect.prototype = Object.create(Geometry.prototype);
 
 Rect.prototype.constructor = Rect;
+
+Vector.merge(Rect, {
+
+    domInterface: window.SVGRectElement
+
+});
 
 Vector.merge(Rect.prototype, {
 

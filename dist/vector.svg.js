@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Thu Jul 13 2017 03:36:45 GMT+0530 (IST)
+ * Date: Thu Jul 13 2017 14:33:15 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -219,7 +219,7 @@
          * Time Complexity: O(n)
          *
          * @param arr Array or Array like object
-         * @returns Array
+         * @returns {Array}
          */
         unique: function(arr) {
             if (isNullOrUndefined(arr))
@@ -231,8 +231,9 @@
                 out = [],
                 primHashSet = {},
                 objSet = [],
+                extIndex = [],
                 randomProp = Vector.uuid(),
-                anyValue = true,
+                anyValue = true, //any value without 'undefined'
                 ln = cArr.length,
                 val,
                 prop,
@@ -240,18 +241,26 @@
 
             for (; i < ln; ++i) {
                 val = cArr[i];
+
                 if (isObject(val)) {
+                    // Check val is extensible or not
                     if (Object.isExtensible(val)) {
-                        if (!val.hasOwnProperty(randomProp)) {
+                        // Make a link in val to get maximum running speed
+                        if (val[randomProp] === undefined) {
                             out.push(val);
                             val[randomProp] = anyValue;
+                            extIndex.push(out.length - 1);
                         }
+
                     } else {
+                        // Otherwise use linear search,
+                        // it is very very rare case
                         if (objSet.indexOf(val) === -1) {
                             out.push(val);
                             objSet.push(val);
                         }
                     }
+
                 } else {
                     if (val === undefined)
                         prop = "U";
@@ -265,12 +274,18 @@
                         prop = "B_" + val;
                     else
                         prop = val; // Support for 'symbol' type in ES6
-                    if (!primHashSet.hasOwnProperty(prop)) {
+
+                    if (primHashSet[prop] === undefined) {
                         out.push(val);
                         primHashSet[prop] = anyValue;
                     }
                 }
             }
+
+            // Delete the randomProp from extensible objects
+            extIndex.forEach(function(index) {
+                delete out[index][randomProp];
+            });
 
             return out;
         }
@@ -1023,7 +1038,7 @@
             ry: ry
         }, null);
         this._domElement = elem;
-        elem._wrapElement = this;
+        elem._wrappingElement = this;
     };
 
     setPrototypeOf(Rect, Geometry);

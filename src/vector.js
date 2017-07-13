@@ -122,7 +122,7 @@ Vector.merge(Vector, {
      * Time Complexity: O(n)
      *
      * @param arr Array or Array like object
-     * @returns Array
+     * @returns {Array}
      */
     unique: function (arr) {
         if (isNullOrUndefined(arr))
@@ -136,7 +136,7 @@ Vector.merge(Vector, {
             objSet = [],
             extIndex = [],
             randomProp = Vector.uuid(),
-            anyValue = true,
+            anyValue = true, //any value without 'undefined'
             ln = cArr.length,
             val,
             prop,
@@ -144,15 +144,20 @@ Vector.merge(Vector, {
 
         for(; i<ln; ++i) {
             val = cArr[i];
+
             if (isObject(val)) {
+                // Check val is extensible or not
                 if (Object.isExtensible(val)) {
-                    if (!val.hasOwnProperty(randomProp)) {
+                    // Make a link in val to get maximum running speed
+                    if (val[randomProp] === undefined) {
                         out.push(val);
                         val[randomProp] = anyValue;
                         extIndex.push(out.length - 1);
                     }
 
                 } else {
+                    // Otherwise use linear search,
+                    // it is very very rare case
                     if (objSet.indexOf(val) === -1) {
                         out.push(val);
                         objSet.push(val);
@@ -173,18 +178,42 @@ Vector.merge(Vector, {
                 else
                     prop = val; // Support for 'symbol' type in ES6
 
-                if (!primHashSet.hasOwnProperty(prop)) {
+                if (primHashSet[prop] === undefined) {
                     out.push(val);
                     primHashSet[prop] = anyValue;
                 }
             }
         }
 
+        // Delete the randomProp from extensible objects
         extIndex.forEach(function (index) {
             delete out[index][randomProp];
         });
 
         return out;
+    },
+
+
+    wrap: function (svgDOMNode) {
+        if (!(svgDOMNode instanceof window.SVGElement))
+            return null;
+        switch (svgDOMNode.constructor) {
+            case window.SVGRectElement:
+                return new Rect(undefined, undefined, undefined, undefined, undefined, undefined, svgDOMNode);
+            default:
+                return new Element(svgDOMNode);
+        }
+    },
+
+    /**
+     * Check if a DOM object is wrapped or not
+     * @param svgDomNode
+     * @returns {boolean}
+     */
+    isWrapped: function (svgDomNode) {
+        return svgDomNode instanceof window.SVGElement &&
+            svgDomNode["_wrappingElement"] instanceof Element &&
+            svgDomNode["_wrappingElement"]["_domElement"] === svgDomNode;
     }
 
 });

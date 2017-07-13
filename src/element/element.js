@@ -2,12 +2,38 @@
 /**
  * Base class for all the SVG DOM wrapper elements.
  */
-var Element = Vector.Element = function Element() {
+var Element = Vector.Element = function Element(svgDOMNode) {
     this._domElement = null;
     this._events = {};
+    var newInstance;
+    if (svgDOMNode instanceof window.SVGElement)
+        newInstance = Element.construct(this, svgDOMNode);
+    else
+        newInstance = this;
+    return newInstance;
 };
 
+Vector.merge(Element, {
+
+    domInterface: window.SVGElement,
+
+    construct: function (newInstance, svgDOMNode) {
+        if (svgDOMNode instanceof this.domInterface) {
+            if(Vector.isWrapped(svgDOMNode))
+                return svgDOMNode["_wrappingElement"];
+        } else
+            svgDOMNode = Vector.createElement(newInstance.tag);
+
+        newInstance._domElement = svgDOMNode;
+        svgDOMNode._wrappingElement = newInstance;
+        return newInstance;
+    }
+
+});
+
 Vector.merge(Element.prototype, {
+
+    tag: null,
 
     /**
      * If params in form of:
@@ -73,9 +99,43 @@ Vector.merge(Element.prototype, {
 // and returns the formatted version.
 var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
 
+    var match,
+        elem;
+
     switch (attrName) {
 
         case "class":
-            
+            return Vector.unique(value.trim().split(regex.tokenSeparator));
+
+        case "mask":
+        case "clip-path":
+        case "fill":
+        case "stroke":
+            match = regex.referenceAttrVal.exec(value);
+            if (match) {
+                elem = document.getElementById(match[1]);
+                if (Vector.isWrapped(elem))
+                    return elem._wrappingElement;
+                else
+                    return value;
+            } else
+                return value;
+
+        case "href":
+            if (namespaceURI === Vector.ns.xlink) {
+                match = regex.hrefAttrVal.exec(value);
+            } else
+                match = regex.hrefAttrVal.exec(value);
+            if (match) {
+                elem = document.getElementById(match[1]);
+                if (Vector.isWrapped(elem))
+                    return elem._wrappingElement;
+                else
+                    return value;
+            } else
+                return value;
+
+        default:
+            return value;
     }
 };

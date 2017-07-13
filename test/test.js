@@ -6,4 +6,4 @@
 
 
 
-console.log("g" + (-0));
+console.log( null instanceof String );

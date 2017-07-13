@@ -28,6 +28,7 @@ var header = [
 var parts = [
     "./src/header.js",
     "./src/utility/utils.js",
+    "./src/utility/regex.js",
     "./src/vector.js",
     "./src/container/*.js",
     "./src/element/element.js",
