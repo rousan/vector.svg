@@ -3,13 +3,11 @@ try {
 
 
 
-    var polygon = document.getElementById("polygon");
+    var line = document.getElementById("line");
 
-    var pg = new Vector.Element(polygon);
-    var y = new Vector.Polygon(null, polygon);
+    var ln = Vector.wrap(line);
 
-    console.log();
-
+    ln.from(90).to(200);
 
 
 } catch (e) {

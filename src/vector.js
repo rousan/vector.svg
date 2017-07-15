@@ -253,6 +253,8 @@ Vector.merge(Vector, {
                 return new Polyline(undefined, svgDOMNode);
             case window.SVGPolygonElement:
                 return new Polygon(undefined, svgDOMNode);
+            case window.SVGLineElement:
+                return new Line(undefined, undefined, undefined, undefined, svgDOMNode);
             default:
                 return new Element(svgDOMNode);
         }
