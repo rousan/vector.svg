@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Sat Jul 15 2017 18:32:38 GMT+0530 (IST)
+ * Date: Sat Jul 15 2017 18:59:45 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -371,6 +371,8 @@
                     return new Circle(undefined, undefined, undefined, svgDOMNode);
                 case window.SVGPolylineElement:
                     return new Polyline(undefined, svgDOMNode);
+                case window.SVGPolygonElement:
+                    return new Polygon(undefined, svgDOMNode);
                 default:
                     return new Element(svgDOMNode);
             }
@@ -1808,6 +1810,58 @@
 
         // Namespace of all the attributes is null
         _defaultAttrValues: Vector.merge(Vector.merge({}, Polyline.prototype._defaultAttrValues), {
+
+            points: ""
+
+        }),
+
+        points: function(points) {
+            return this._setAttrGetterSetter("points", points);
+        }
+
+    });
+
+    /**
+     * Wrapper for SVGPolygonElement native interface
+     *
+     * It can wrap SVGPolygonElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Polygon's super class then
+     * it removes that wrapper and returns a new Vector.Polygon wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Polygon}
+     */
+    var Polygon = Vector.Polygon = function Polygon(points, svgDOMNode) {
+        var wrappedInstance = Geometry.call(this, svgDOMNode),
+            attrs = {
+                points: points
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
+    };
+
+    setPrototypeOf(Polygon, Geometry);
+
+    Polygon.prototype = Object.create(Geometry.prototype);
+
+    Polygon.prototype.constructor = Polygon;
+
+    Vector.merge(Polygon, {
+
+        domInterface: window.SVGPolygonElement
+
+    });
+
+    Vector.merge(Polygon.prototype, {
+
+        tag: "polygon",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Polygon.prototype._defaultAttrValues), {
 
             points: ""
 

@@ -251,6 +251,8 @@ Vector.merge(Vector, {
                 return new Circle(undefined, undefined, undefined, svgDOMNode);
             case window.SVGPolylineElement:
                 return new Polyline(undefined, svgDOMNode);
+            case window.SVGPolygonElement:
+                return new Polygon(undefined, svgDOMNode);
             default:
                 return new Element(svgDOMNode);
         }

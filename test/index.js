@@ -3,10 +3,12 @@ try {
 
 
 
-    var polyline = document.getElementById("polyline");
+    var polygon = document.getElementById("polygon");
 
-    var pr = new Vector.Polyline(null, polyline);
+    var pg = new Vector.Element(polygon);
+    var y = new Vector.Polygon(null, polygon);
 
+    console.log();
 
 
 
