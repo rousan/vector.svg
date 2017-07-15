@@ -42,6 +42,7 @@ var parts = [
     "./src/element/polygon.js",
     "./src/element/line.js",
     "./src/element/ellipse.js",
+    "./src/element/path.js",
     "./src/animation/*.js"
 ];
 

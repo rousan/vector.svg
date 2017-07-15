@@ -3,30 +3,13 @@ try {
 
 
 
-    var ellipse = document.getElementById("ellipse");
+    var path = document.getElementById("path");
 
-    var er = Vector.wrap(ellipse);
+    var pr = Vector.wrap(path);
 
-    er.attr({
-        cx: "50%",
-        cy: "50%",
-        rx: 10,
-        ry: 10,
-        fill: "purple"
-    });
+    pr.d("M10,10c200,200,100,200,100,100z").attr("fill", "purple");
 
-
-    er.onmousemove(function () {
-        if (er.rx() > 300)
-            er.rx(10);
-        if (er.ry() > 200)
-            er.ry(10);
-        er.ry(er.ry() +  Math.floor(Math.random() * 2));
-        er.rx(er.rx() + Math.floor(Math.random() * 2));
-    });
-
-
-
+    console.log(Vector.Path.prototype._defaultAttrValues);
 
 } catch (e) {
     console.log(e);

@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Sun Jul 16 2017 00:59:48 GMT+0530 (IST)
+ * Date: Sun Jul 16 2017 02:09:22 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -377,6 +377,8 @@
                     return new Line(undefined, undefined, undefined, undefined, svgDOMNode);
                 case window.SVGEllipseElement:
                     return new Ellipse(undefined, undefined, undefined, undefined, svgDOMNode);
+                case window.SVGPathElement:
+                    return new Path(undefined, svgDOMNode);
                 default:
                     return new Element(svgDOMNode);
             }
@@ -852,6 +854,7 @@
             case "y":
             case "y1":
             case "y2":
+            case "pathLength":
                 if (namespaceURI !== null)
                     return value;
                 temp = +value;
@@ -1599,9 +1602,13 @@
         // Namespace of all the attributes is null
         _defaultAttrValues: Vector.merge(Vector.merge({}, Geometry.prototype._defaultAttrValues), {
 
-            // Add here SVGGeometryElement interface specific attribute's default values
+            pathLength: "0"
 
-        })
+        }),
+
+        pathLength: function(pathLength) {
+            return this._setAttrGetterSetter("pathLength", pathLength);
+        }
 
     });
 
@@ -2051,6 +2058,58 @@
 
         cy: function(cy) {
             return this._setAttrGetterSetter("cy", cy);
+        }
+
+    });
+
+    /**
+     * Wrapper for SVGPathElement native interface
+     *
+     * It can wrap SVGPathElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Path's super class then
+     * it removes that wrapper and returns a new Vector.Path wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Path}
+     */
+    var Path = Vector.Path = function Path(d, svgDOMNode) {
+        var wrappedInstance = Geometry.call(this, svgDOMNode),
+            attrs = {
+                d: d
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
+    };
+
+    setPrototypeOf(Path, Geometry);
+
+    Path.prototype = Object.create(Geometry.prototype);
+
+    Path.prototype.constructor = Path;
+
+    Vector.merge(Path, {
+
+        domInterface: window.SVGPathElement
+
+    });
+
+    Vector.merge(Path.prototype, {
+
+        tag: "path",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Path.prototype._defaultAttrValues), {
+
+            d: ""
+
+        }),
+
+        d: function(d) {
+            return this._setAttrGetterSetter("d", d);
         }
 
     });

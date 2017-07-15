@@ -257,6 +257,8 @@ Vector.merge(Vector, {
                 return new Line(undefined, undefined, undefined, undefined, svgDOMNode);
             case window.SVGEllipseElement:
                 return new Ellipse(undefined, undefined, undefined, undefined, svgDOMNode);
+            case window.SVGPathElement:
+                return new Path(undefined, svgDOMNode);
             default:
                 return new Element(svgDOMNode);
         }
