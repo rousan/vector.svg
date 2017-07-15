@@ -255,6 +255,8 @@ Vector.merge(Vector, {
                 return new Polygon(undefined, svgDOMNode);
             case window.SVGLineElement:
                 return new Line(undefined, undefined, undefined, undefined, svgDOMNode);
+            case window.SVGEllipseElement:
+                return new Ellipse(undefined, undefined, undefined, undefined, svgDOMNode);
             default:
                 return new Element(svgDOMNode);
         }

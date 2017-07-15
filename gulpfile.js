@@ -41,6 +41,7 @@ var parts = [
     "./src/element/polyline.js",
     "./src/element/polygon.js",
     "./src/element/line.js",
+    "./src/element/ellipse.js",
     "./src/animation/*.js"
 ];
 
