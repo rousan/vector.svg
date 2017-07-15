@@ -38,8 +38,12 @@ Vector.merge(Geometry.prototype, {
     // Namespace of all the attributes is null
     _defaultAttrValues: Vector.merge(Vector.merge({}, Geometry.prototype._defaultAttrValues), {
 
-        // Add here SVGGeometryElement interface specific attribute's default values
+        pathLength: "0"
 
-    })
+    }),
+
+    pathLength: function (pathLength) {
+        return this._setAttrGetterSetter("pathLength", pathLength);
+    }
 
 });
