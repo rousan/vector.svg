@@ -22,7 +22,6 @@ Graphics.prototype = create(Element.prototype);
 
 Graphics.prototype.constructor = Graphics;
 
-
 Vector.merge(Graphics, {
 
     /**
@@ -34,6 +33,13 @@ Vector.merge(Graphics, {
 
 Vector.merge(Graphics.prototype, {
 
-    tag: null
+    tag: null,
+
+    // Namespace of all the attributes is null
+    _defaultAttrValues: Vector.merge(Vector.merge({}, Graphics.prototype._defaultAttrValues), {
+
+        // Add here SVGGraphicsElement interface specific attribute's default values
+
+    })
 
 });

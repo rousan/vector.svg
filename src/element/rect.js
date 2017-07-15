@@ -41,6 +41,62 @@ Vector.merge(Rect, {
 
 Vector.merge(Rect.prototype, {
 
-    tag: "rect"
+    tag: "rect",
+
+    // Namespace of all the attributes is null
+    _defaultAttrValues: Vector.merge(Vector.merge({}, Rect.prototype._defaultAttrValues), {
+
+        width: "0",
+
+        height: "0",
+
+        x: "0",
+
+        y: "0",
+
+        rx: "0",
+
+        ry: "0"
+
+    }),
+
+    width: function (width) {
+        return this._setAttrGetterSetter("width", width);
+    },
+
+    height: function (height) {
+        return this._setAttrGetterSetter("height", height);
+    },
+
+    x: function (x) {
+        return this._setAttrGetterSetter("x", x);
+    },
+
+    y: function (y) {
+        return this._setAttrGetterSetter("y", y);
+    },
+
+    rx: function (rx) {
+        return this._setAttrGetterSetter("rx", rx);
+    },
+
+    ry: function (ry) {
+        return this._setAttrGetterSetter("ry", ry);
+    },
+
+    size: function (width, height) {
+        if (width === undefined && height === undefined) {
+            return {
+                width: this.width(),
+                height: this.height()
+            };
+        }
+        if (width !== undefined)
+            this.width(width);
+        if (height !== undefined)
+            this.height(height);
+
+        return this;
+    }
 
 });

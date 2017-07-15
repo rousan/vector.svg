@@ -22,7 +22,7 @@ Geometry.prototype = create(Graphics.prototype);
 
 Geometry.prototype.constructor = Geometry;
 
-Vector.merge(Graphics, {
+Vector.merge(Geometry, {
 
     /**
      * Some browsers does not support SVGGeometryElement interface at all
@@ -31,8 +31,15 @@ Vector.merge(Graphics, {
 
 });
 
-Vector.merge(Graphics.prototype, {
+Vector.merge(Geometry.prototype, {
 
-    tag: null
+    tag: null,
+
+    // Namespace of all the attributes is null
+    _defaultAttrValues: Vector.merge(Vector.merge({}, Geometry.prototype._defaultAttrValues), {
+
+        // Add here SVGGeometryElement interface specific attribute's default values
+
+    })
 
 });

@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Fri Jul 14 2017 00:48:57 GMT+0530 (IST)
+ * Date: Sat Jul 15 2017 17:47:31 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -38,7 +38,13 @@
 
     var slice = Array.prototype.slice;
 
+    var map = Array.prototype.map;
+
     var splice = Array.prototype.splice;
+
+    var floor = Math.floor;
+
+    var reduce = Array.prototype.reduce;
 
     var svgNS = "http://www.w3.org/2000/svg";
 
@@ -51,6 +57,8 @@
     //var window = window || root.window;
 
     //var document = document || root.document;
+
+    var isArray = Array.isArray;
 
     var max = Math.max;
 
@@ -98,6 +106,12 @@
     var regex = {
 
         tokenSeparator: /\s+/,
+
+        pointSeparator: /[,\s]+/,
+
+        trimStartPointString: /^[,\s]+/,
+
+        trimEndPointString: /[,\s]+$/,
 
         referenceAttrVal: /^url\(#(.+)\)$/,
 
@@ -172,11 +186,9 @@
          * @param name
          * @param value
          * @param namespace
-         * @return Vector
+         * @returns {Vector}
          */
         setAttribute: function(svgDomNode, name, value, namespace) {
-            if (value === undefined)
-                return this;
             namespace = isNullOrUndefined(namespace) ? null : namespace;
             svgDomNode.setAttributeNS(namespace, name, value);
             return this;
@@ -187,12 +199,49 @@
          * @param svgDomNode
          * @param attrs
          * @param namespace
-         * @return Vector
+         * @return {Vector}
          */
         setAttributes: function(svgDomNode, attrs, namespace) {
             Object.keys(attrs).forEach(function(attr) {
                 Vector.setAttribute(svgDomNode, attr, attrs[attr], namespace);
             });
+            return this;
+        },
+
+        /**
+         * Check if the attribute exists in SVG DOM Element
+         * @param svgDomNode
+         * @param name
+         * @param namespace
+         * @returns {boolean}
+         */
+        hasAttribute: function(svgDomNode, name, namespace) {
+            namespace = isNullOrUndefined(namespace) ? null : namespace;
+            return svgDomNode.hasAttributeNS(namespace, name);
+        },
+
+        /**
+         * Returns attribute value from SVG DOM element
+         * @param svgDomNode
+         * @param name
+         * @param namespace
+         * @returns {string}
+         */
+        getAttribute: function(svgDomNode, name, namespace) {
+            namespace = isNullOrUndefined(namespace) ? null : namespace;
+            return svgDomNode.getAttributeNS(namespace, name);
+        },
+
+        /**
+         * Deletes a attribute from SVG DOM Element
+         * @param svgDomNode
+         * @param name
+         * @param namespace
+         * @returns {Vector}
+         */
+        removeAttribute: function(svgDomNode, name, namespace) {
+            namespace = isNullOrUndefined(namespace) ? null : namespace;
+            svgDomNode.removeAttributeNS(namespace, name);
             return this;
         },
 
@@ -234,21 +283,21 @@
             if (isNullOrUndefined(arr))
                 return [];
 
-            arr = Object(arr);
-
-            var cArr = slice.call(arr),
+            var cArr = Object(arr),
                 out = [],
                 primHashSet = {},
                 objSet = [],
                 extIndex = [],
                 randomProp = Vector.uuid(),
                 anyValue = true, //any value without 'undefined'
-                ln = cArr.length,
+                ln = Vector.toIntLength(cArr.length),
                 val,
                 prop,
                 i = 0;
 
             for (; i < ln; ++i) {
+                // If i property does not exist in cArr then it will be treated as undefined
+                // if we check every tme then running speed will be less.
                 val = cArr[i];
 
                 if (isObject(val)) {
@@ -318,6 +367,10 @@
             switch (svgDOMNode.constructor) {
                 case window.SVGRectElement:
                     return new Rect(undefined, undefined, undefined, undefined, undefined, undefined, svgDOMNode);
+                case window.SVGCircleElement:
+                    return new Circle(undefined, undefined, undefined, svgDOMNode);
+                case window.SVGPolylineElement:
+                    return new Polyline(undefined, svgDOMNode);
                 default:
                     return new Element(svgDOMNode);
             }
@@ -333,6 +386,106 @@
                 return false;
             var wrapper = svgDOMNode["_wrappingElement"];
             return wrapper instanceof Element && svgDOMNode instanceof wrapper.constructor.domInterface && wrapper["_domElement"] === svgDOMNode;
+        },
+
+        /**
+         * It converts any value to Integer length [Positive Integer value]
+         * @param value
+         * @returns {number}
+         */
+        toIntLength: function(value) {
+            value = Number(value);
+            value = isNaN(value) ? 0 : value;
+            value = max(0, value);
+            value = floor(value);
+            return value;
+        },
+
+        /**
+         * It returns values without holes in array and array-like objects
+         * @param arr
+         */
+        unHoles: function(arr) {
+            if (isNullOrUndefined(arr))
+                return [];
+
+            arr = Object(arr);
+            return reduce.call(arr, function(acc, next) {
+                acc.push(next);
+                return acc;
+            }, []);
+        },
+
+        /**
+         * It formats pointString as a array of points.
+         * every point is a object containing two x and y properties.
+         *
+         * @param pointsString
+         * @returns {Array}
+         */
+        points: function(pointsString) {
+            if (isNullOrUndefined(pointsString))
+                return [];
+            pointsString = String(pointsString);
+            var nums,
+                pointsCount,
+                coords,
+                x,
+                y,
+                outs = [],
+                i = 0;
+
+            pointsString = pointsString.replace(regex.trimStartPointString, "").replace(regex.trimEndPointString, "");
+            nums = pointsString.split(regex.pointSeparator);
+            pointsCount = floor(nums.length / 2);
+            coords = pointsCount * 2;
+
+            for (; i < coords; i += 2) {
+                x = nums[i];
+                y = nums[i + 1];
+                x = +x;
+                y = +y;
+                if (isFinite(x) && isFinite(y)) {
+                    outs.push({
+                        x: x,
+                        y: y
+                    });
+                }
+            }
+
+            return outs;
+        },
+
+
+        /**
+         * If pointList is formatted like: pointList = [{x: 12, y: 11}, {x: 11, y: 33}, {x: 111, y: 999}]
+         * then it will be converted to point string like "12,11 11,33 111,999",
+         * otherwise if pointList is primitive(i.e. string) then it is passed to
+         * @method Vector.points() and then its output value is interpreted.
+         *
+         * @param pointList string or array or array-like object
+         * @returns {string}
+         */
+        pointString: function(pointList) {
+            if (!isObject(pointList))
+                pointList = Vector.points(pointList);
+            return reduce.call(pointList, function(outs, point) {
+                if (!isObject(point))
+                    return outs;
+
+                var x = point["x"],
+                    y = point["y"];
+
+                x = +String(x);
+                y = +String(y);
+
+                if (isFinite(x) && isFinite(y)) {
+                    outs.push(x + "," + y);
+                    return outs;
+                } else
+                    return outs;
+
+            }, []).join(" ");
         }
 
     });
@@ -371,6 +524,46 @@
 
         tag: null,
 
+        // Namespace of all the attributes is null
+        _defaultAttrValues: {
+
+            "fill": "#000",
+
+            "fill-opacity": "1",
+
+            "stroke": "#000",
+
+            "stroke-width": "0",
+
+            "stroke-opacity": "1",
+
+            "stroke-linecap": "butt",
+
+            "stroke-linejoin": "miter",
+
+            "opacity": "1",
+
+            "font-size": "16",
+
+            "font-family": "sans-serif",
+
+            "text-anchor": "start",
+
+            "stop-color": "#000",
+
+            "stop-opacity": "1",
+
+            "offset": "0"
+        },
+
+        // It sets attribute in null namespace
+        _setAttrGetterSetter: function(attrName, newValue) {
+            if (newValue === undefined)
+                return this.attr(attrName); //Acts as a getter
+            else
+                return this.attr(attrName, newValue); //acts as a setter
+        },
+
         /**
          * If params in form of:
          *      # (attrName, value, namespace) then sets attr and returns element, [3 args]
@@ -379,27 +572,39 @@
          *      # (attrName, null) then namespace = null and deletes attr and returns element, [2 args]
          *      # (attrObject, namespace) then sets attrs and returns element, [2 args]
          *      # (attrObject) then namespace = null and sets attrs and returns element, [1 args]
-         *      # (attrName, namespace) then returns attrValue, [2 args]
          *      # (attrName) then namespace = null and returns attrValue, [1 args]
-         *      # (attrNamesArr) namespace = null and then returns attrValue as Array in order, [1 args]
-         *      # (attrNamesArr, null) namespace = null and then deletes attrs and return element, [2 args]
+         *      # (attrNamesArr) namespace = null and then returns attrValue as map object, [1 args]
+         *      # (attrNamesArr, namespace) then returns attrValue as map object, [2 args]
          *      # () then returns all attributes as key/value pairs. [0 args]
+         *
+         * When setting attribute value:
+         *      # If attr value is null then this attr will be deleted,
+         *      # if attr value is undefined then this attr will be ignored,
+         *      # for others value it will be processed by
+         *      @method convertToRawAttrValue
          *
          * @param params
          */
         attr: function(params) {
+            var arg0,
+                arg1,
+                arg2,
+                self = this,
+                node = this._domElement,
+                attrs,
+                i = 0,
+                length,
+                attr,
+                temp,
+                outs;
+
             if (arguments.length === 0) {
-                var node = this._domElement,
-                    attrs,
-                    i = 0,
-                    length,
-                    attr,
-                    outs = {};
+                outs = {};
 
                 attrs = node.attributes;
                 if (window.NamedNodeMap && attrs instanceof window.NamedNodeMap) {
                     length = attrs.length;
-                    for (; i < length; ++i) {
+                    for (i = 0; i < length; ++i) {
                         attr = attrs.item(i);
                         if (attr === null)
                             continue;
@@ -414,6 +619,146 @@
                 }
 
                 return outs;
+
+            } else if (arguments.length === 1) {
+                arg0 = arguments[0];
+
+                if (isArray(arg0)) {
+                    return self.attr(arg0, null);
+
+                } else if (isObject(arg0)) {
+                    return self.attr(arg0, null);
+
+                } else {
+                    attr = String(arg0);
+                    if (Vector.hasAttribute(node, attr, null))
+                        return simplifyRawAttrValue(attr, Vector.getAttribute(node, attr, null), null);
+                    else {
+                        temp = self["_defaultAttrValues"][attr];
+                        if (temp !== undefined)
+                            return simplifyRawAttrValue(attr, temp, null);
+                        else
+                            return null;
+                    }
+                }
+
+            } else if (arguments.length === 2) {
+                arg0 = arguments[0];
+                arg1 = arguments[1];
+
+                if (isArray(arg0)) {
+                    arg1 = isNullOrUndefined(arg1) ? null : arg1;
+                    return arg0.reduce(function(outs, attr) {
+                        attr = String(attr);
+                        var val;
+                        if (Vector.hasAttribute(node, attr, arg1))
+                            val = simplifyRawAttrValue(attr, Vector.getAttribute(node, attr, arg1), arg1);
+                        else {
+                            if (arg1 === null) {
+                                temp = self["_defaultAttrValues"][attr];
+                                if (temp !== undefined)
+                                    val = simplifyRawAttrValue(attr, temp, null);
+                                else
+                                    val = null;
+                            } else
+                                val = null;
+                        }
+                        outs[attr] = val;
+                        return outs;
+
+                    }, {});
+
+                } else if (isObject(arg0)) {
+                    arg1 = isNullOrUndefined(arg1) ? null : arg1;
+                    // If attr value is undefined then it will be ignored,
+                    // and for attr value null it will be deleted
+                    Object.keys(arg0).forEach(function(attr) {
+                        var val = arg0[attr];
+                        if (val === undefined) {
+                            // Nothing, just ignore
+                        } else if (val === null)
+                            Vector.removeAttribute(node, attr, arg1);
+                        else
+                            Vector.setAttribute(node, attr, convertToRawAttrValue(attr, val, arg1), arg1);
+                    });
+                    return self;
+
+                } else {
+                    return self.attr(String(arg0), arg1, null);
+                }
+
+            } else if (arguments.length >= 3) {
+                arg0 = arguments[0];
+                arg1 = arguments[1];
+                arg2 = arguments[2];
+
+                if (isArray(arg0)) {
+                    return self.attr(arg0, arg1);
+                } else if (isObject(arg0)) {
+                    return self.attr(arg0, arg1);
+                } else {
+                    arg2 = isNullOrUndefined(arg2) ? null : arg2;
+                    temp = String(arg0);
+                    if (arg1 === null)
+                        Vector.removeAttribute(node, temp, arg2);
+                    else if (arg1 === undefined) {
+                        //just ignore
+                    } else {
+                        Vector.setAttribute(node, temp, convertToRawAttrValue(temp, arg1, arg2), arg2);
+                    }
+                    return self;
+                }
+            }
+        },
+
+        /**
+         * This method returns css properties computed value and sets css property,
+         * It works on css files also, not only inline css
+         * @returns {*}
+         */
+        css: function() {
+
+        },
+
+        /**
+         * If options is null then all the font attributes will be reset i.e. will be deleted.
+         * if options is object then retrieve the attribute names and set them.
+         * and for any others value of options, it returns a object containing the current values of font configs.
+         *
+         * @param options
+         * @returns {*}
+         */
+        font: function(options) {
+            var fontAttrs = ["font-family", "font-size", "font-size-adjust", "font-stretch", "font-style", "font-variant", "font-weight"],
+                aliases = ["family", "size", "adjust", "stretch", "style", "variant", "weight"],
+                i = 0,
+                length = fontAttrs.length,
+                values;
+
+            if (options === null) {
+                return this.attr(fontAttrs.reduce(function(attrs, attr) {
+                    attrs[attr] = null;
+                    return attrs;
+                }, {}));
+
+            } else if (isObject(options)) {
+                i = 0;
+                return this.attr(fontAttrs.reduce(function(attrs, attr) {
+                    var val = options[aliases[i]];
+                    i++;
+                    if (val !== undefined)
+                        attrs[attr] = val;
+                    return attrs;
+                }, {}));
+
+            } else {
+                values = this.attr(fontAttrs);
+                i = 0;
+                return aliases.reduce(function(outs, alias) {
+                    outs[alias] = values[fontAttrs[i]];
+                    i++;
+                    return outs;
+                }, {});
             }
         },
 
@@ -439,15 +784,23 @@
             temp,
             elem;
 
+        attrName = String(attrName);
+        value = String(value);
+        namespaceURI = isNullOrUndefined(namespaceURI) ? null : namespaceURI;
+
         switch (attrName) {
 
             case "class":
+                if (namespaceURI !== null)
+                    return value;
                 return Vector.unique(value.trim().split(regex.tokenSeparator));
 
             case "mask":
             case "clip-path":
             case "fill":
             case "stroke":
+                if (namespaceURI !== null)
+                    return value;
                 match = regex.referenceAttrVal.exec(value);
                 if (match) {
                     elem = document.getElementById(match[1]);
@@ -461,8 +814,11 @@
             case "href":
                 if (namespaceURI === Vector.ns.xlink) {
                     match = regex.referenceAttrVal.exec(value);
-                } else
+                } else if (namespaceURI === null)
                     match = regex.hrefAttrVal.exec(value);
+                else
+                    return value;
+
                 if (match) {
                     elem = document.getElementById(match[1]);
                     if (Vector.isWrapped(elem))
@@ -490,6 +846,8 @@
             case "y":
             case "y1":
             case "y2":
+                if (namespaceURI !== null)
+                    return value;
                 temp = +value;
                 if (isFinite(temp))
                     return temp;
@@ -499,6 +857,37 @@
             default:
                 return value;
         }
+    };
+
+    // It converts the given value to raw attribute value as string in appropriate way.
+    var convertToRawAttrValue = function(attrName, value, namespaceURI) {
+
+        attrName = String(attrName);
+        namespaceURI = isNullOrUndefined(namespaceURI) ? null : namespaceURI;
+
+        // For number, string, boolean and symbol(in ES6).
+        // value can't be null or undefined due to it is handled previously
+        if (!isObject(value))
+            return String(value);
+
+        switch (attrName) {
+
+            // value can be array or array like object
+            case "class":
+                if (namespaceURI !== null)
+                    return value.toString();
+                return Vector.unHoles(value).join(" ").trim();
+
+            case "mask":
+                if (namespaceURI !== null)
+                    return value.toString();
+                //To do...
+                return value.toString();
+
+            default:
+                return value.toString();
+        }
+
     };
 
     // Add data-visualization functionality
@@ -1143,7 +1532,6 @@
 
     Graphics.prototype.constructor = Graphics;
 
-
     Vector.merge(Graphics, {
 
         /**
@@ -1155,7 +1543,14 @@
 
     Vector.merge(Graphics.prototype, {
 
-        tag: null
+        tag: null,
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Graphics.prototype._defaultAttrValues), {
+
+            // Add here SVGGraphicsElement interface specific attribute's default values
+
+        })
 
     });
 
@@ -1182,7 +1577,7 @@
 
     Geometry.prototype.constructor = Geometry;
 
-    Vector.merge(Graphics, {
+    Vector.merge(Geometry, {
 
         /**
          * Some browsers does not support SVGGeometryElement interface at all
@@ -1191,9 +1586,16 @@
 
     });
 
-    Vector.merge(Graphics.prototype, {
+    Vector.merge(Geometry.prototype, {
 
-        tag: null
+        tag: null,
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Geometry.prototype._defaultAttrValues), {
+
+            // Add here SVGGeometryElement interface specific attribute's default values
+
+        })
 
     });
 
@@ -1239,7 +1641,181 @@
 
     Vector.merge(Rect.prototype, {
 
-        tag: "rect"
+        tag: "rect",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Rect.prototype._defaultAttrValues), {
+
+            width: "0",
+
+            height: "0",
+
+            x: "0",
+
+            y: "0",
+
+            rx: "0",
+
+            ry: "0"
+
+        }),
+
+        width: function(width) {
+            return this._setAttrGetterSetter("width", width);
+        },
+
+        height: function(height) {
+            return this._setAttrGetterSetter("height", height);
+        },
+
+        x: function(x) {
+            return this._setAttrGetterSetter("x", x);
+        },
+
+        y: function(y) {
+            return this._setAttrGetterSetter("y", y);
+        },
+
+        rx: function(rx) {
+            return this._setAttrGetterSetter("rx", rx);
+        },
+
+        ry: function(ry) {
+            return this._setAttrGetterSetter("ry", ry);
+        },
+
+        size: function(width, height) {
+            if (width === undefined && height === undefined) {
+                return {
+                    width: this.width(),
+                    height: this.height()
+                };
+            }
+            if (width !== undefined)
+                this.width(width);
+            if (height !== undefined)
+                this.height(height);
+
+            return this;
+        }
+
+    });
+
+    /**
+     * Wrapper for SVGCircleElement native interface
+     *
+     * It can wrap SVGCircleElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Circle's super class then
+     * it removes that wrapper and returns a new Vector.Circle wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Circle}
+     */
+    var Circle = Vector.Circle = function Circle(r, cx, cy, svgDOMNode) {
+        var wrappedInstance = Geometry.call(this, svgDOMNode),
+            attrs = {
+                r: r,
+                cx: cx,
+                cy: cy
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
+    };
+
+    setPrototypeOf(Circle, Geometry);
+
+    Circle.prototype = Object.create(Geometry.prototype);
+
+    Circle.prototype.constructor = Circle;
+
+    Vector.merge(Circle, {
+
+        domInterface: window.SVGCircleElement
+
+    });
+
+    Vector.merge(Circle.prototype, {
+
+        tag: "circle",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Circle.prototype._defaultAttrValues), {
+
+            r: "0",
+
+            cx: "0",
+
+            cy: "0"
+
+        }),
+
+        r: function(r) {
+            return this._setAttrGetterSetter("r", r);
+        },
+
+        cx: function(cx) {
+            return this._setAttrGetterSetter("cx", cx);
+        },
+
+        cy: function(cy) {
+            return this._setAttrGetterSetter("cy", cy);
+        }
+
+    });
+
+    /**
+     * Wrapper for SVGPolylineElement native interface
+     *
+     * It can wrap SVGPolylineElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Polyline's super class then
+     * it removes that wrapper and returns a new Vector.Polyline wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Polyline}
+     */
+    var Polyline = Vector.Polyline = function Polyline(points, svgDOMNode) {
+        var wrappedInstance = Geometry.call(this, svgDOMNode),
+            attrs = {
+                points: points
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
+    };
+
+    setPrototypeOf(Polyline, Geometry);
+
+    Polyline.prototype = Object.create(Geometry.prototype);
+
+    Polyline.prototype.constructor = Polyline;
+
+    Vector.merge(Polyline, {
+
+        domInterface: window.SVGPolylineElement
+
+    });
+
+    Vector.merge(Polyline.prototype, {
+
+        tag: "polyline",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Polyline.prototype._defaultAttrValues), {
+
+            points: ""
+
+        }),
+
+        points: function(points) {
+            return this._setAttrGetterSetter("points", points);
+        }
 
     });
 

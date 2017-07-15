@@ -37,6 +37,8 @@ var parts = [
     "./src/element/graphics.js",
     "./src/element/geometry.js",
     "./src/element/rect.js",
+    "./src/element/circle.js",
+    "./src/element/polyline.js",
     "./src/animation/*.js"
 ];
 

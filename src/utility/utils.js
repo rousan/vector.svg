@@ -5,7 +5,13 @@ var defineProperties = Object.defineProperties;
 
 var slice = Array.prototype.slice;
 
+var map = Array.prototype.map;
+
 var splice = Array.prototype.splice;
+
+var floor = Math.floor;
+
+var reduce = Array.prototype.reduce;
 
 var svgNS = "http://www.w3.org/2000/svg";
 
@@ -18,6 +24,8 @@ var xhtmlNS = "http://www.w3.org/1999/xhtml";
 //var window = window || root.window;
 
 //var document = document || root.document;
+
+var isArray = Array.isArray;
 
 var max = Math.max;
 
