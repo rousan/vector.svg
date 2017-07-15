@@ -353,6 +353,7 @@ var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
         case "y":
         case "y1":
         case "y2":
+        case "pathLength":
             if (namespaceURI !== null)
                 return value;
             temp = +value;
