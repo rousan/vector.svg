@@ -69,3 +69,8 @@ var isIEOrEdgeBrowser = function () {
     var ua = window.navigator.userAgent;
     return (/MSIE/i.test(ua) || /rv:11\.0/i.test(ua) || /Edge/i.test(ua));
 };
+
+var isFirefox = function () {
+    var ua = window.navigator.userAgent;
+    return (/Firefox/i.test(ua) || /Mozilla/i.test(ua));
+};

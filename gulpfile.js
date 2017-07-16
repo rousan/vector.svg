@@ -14,7 +14,7 @@ var header = [
     "* <%= pkg.name %> v<%= pkg.version %>",
     "* A Javascript library for creating vector graphics using SVG. It uses",
     "* SVG 1.1 W3C Spec and written in pure ES5.",
-    "* It provides SVG DOM manipulation, data visualization and animation.",
+    "* It provides SVG DOM manipulation, data binding and animation functionality.",
     "*",
     "* @license Copyright (c) 2017 Ariyan Khan, <%= pkg.license %> License",
     "*",
