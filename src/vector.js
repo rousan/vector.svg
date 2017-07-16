@@ -374,6 +374,28 @@ Vector.merge(Vector, {
                 return outs;
 
         }, []).join(" ");
+    },
+
+    isIEOrEdgeBrowser: isIEOrEdgeBrowser,
+
+    isFirefox: isFirefox,
+
+    distance: function (x1, y1, x2, y2) {
+        x1 = +x1;
+        y1 = +y1;
+        x2 = +x2;
+        y2 = +y2;
+
+        if (!isFinite(x1))
+            x1 = 0;
+        if (!isFinite(y1))
+            y1 = 0;
+        if (!isFinite(x2))
+            x2 = 0;
+        if (!isFinite(y2))
+            y2 = 0;
+
+        return Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 0.5);
     }
 
 });
