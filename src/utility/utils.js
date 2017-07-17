@@ -80,5 +80,5 @@ var isFirefox = function () {
 var isSVGSupported = function () {
     return isCallable(window.SVGElement)
         && isCallable(document.createElementNS)
-        && document.createElementNS(svgNS, "svg") instanceof window.SVGElement
+        && document.createElementNS(svgNS, "svg") instanceof window.SVGElement;
 };
