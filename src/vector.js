@@ -48,7 +48,9 @@ Vector.merge(Vector, {
 
         ev: evNS,
 
-        xhtml: xhtmlNS
+        xhtml: xhtmlNS,
+
+        xml: xmlNS
     },
 
     /**
@@ -396,7 +398,9 @@ Vector.merge(Vector, {
             y2 = 0;
 
         return Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 0.5);
-    }
+    },
+
+    svgSupported: isSVGSupported()
 
 });
 
