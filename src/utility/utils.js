@@ -76,3 +76,9 @@ var isFirefox = function () {
     var ua = window.navigator.userAgent;
     return (/Firefox/i.test(ua) || /Mozilla/i.test(ua));
 };
+
+var isSVGSupported = function () {
+    return isCallable(window.SVGElement)
+        && isCallable(document.createElementNS)
+        && document.createElementNS(svgNS, "svg") instanceof window.SVGElement
+};
