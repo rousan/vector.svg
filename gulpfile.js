@@ -32,7 +32,6 @@ var parts = [
     "./src/vector.js",
     "./src/container/*.js",
     "./src/element/element.js",
-    "./src/element/data-visual.js",
     "./src/element/events.js",
     "./src/element/graphics.js",
     "./src/element/geometry.js",
@@ -43,6 +42,9 @@ var parts = [
     "./src/element/line.js",
     "./src/element/ellipse.js",
     "./src/element/path.js",
+    "./src/element/svg.js",
+    "./src/data/data-binding.js",
+    "./src/data/data.js",
     "./src/animation/*.js"
 ];
 

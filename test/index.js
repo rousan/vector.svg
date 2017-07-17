@@ -5,11 +5,15 @@ try {
 
 
 
-    var polygon = document.getElementById("polygon");
 
-    var t = new Vector.Geometry(polygon);
 
-    console.log(t.length());
+    var t = document.getElementById("svg");
+
+    var ty = Vector.wrap(t);
+
+    console.log(ty.aspectRatio("xMidYMid slice"));
+
+
 
 
 
