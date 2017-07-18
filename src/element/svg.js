@@ -150,7 +150,7 @@ Vector.merge(SVG.prototype, {
         width = +width;
         height = +height;
 
-        // If these values are not finite then no problem browser will handle it.
+        // If these values are not finite (i.e. NaN, Infinite or -Infinite) then no problem browser will handle it.
         viewBox = x + " " + y + " " + width + " " + height;
         this.attr("viewBox", viewBox);
 
@@ -183,6 +183,12 @@ Vector.merge(SVG.prototype, {
         };
     },
 
+    /**
+     * Sets and gets 'preserveAspectRatio' attribute value
+     *
+     * @param aspectRatio
+     * @returns {*}
+     */
     aspectRatio: function (aspectRatio) {
         return this._setAttrGetterSetter("preserveAspectRatio", aspectRatio);
     }
