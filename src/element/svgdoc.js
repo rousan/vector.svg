@@ -66,6 +66,24 @@ Vector.merge(SVGDoc.prototype, {
         // setting "xmlns" attribute by setAttributeNS() method throws exception.
         domElem.setAttribute("xmlns", Vector.ns.svg);
         Vector.setAttribute(domElem, "xmlns:xlink", Vector.ns.xlink, Vector.ns.xml);
+    },
+
+
+    /**
+     * It does nothing if container value is undefined, null, number, boolean, symbol,
+     * or any others object other than HTML dom element.
+     * @param container string id or HTML dom element
+     * @returns {SVGDoc}
+     */
+    container: function (container) {
+        // The parent of outermost <svg> element
+        // can only be a html element.
+        if (container instanceof window.HTMLElement) {
+            container.appendChild(this._domElement);
+        } else if (typeof container === "string") {
+            return this.container(document.getElementById(container));
+        }
+        return this;
     }
 
 });
