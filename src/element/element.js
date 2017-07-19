@@ -279,6 +279,10 @@ Vector.merge(Element.prototype, {
 
     queryAll: function () {
 
+    },
+
+    node: function () {
+        return this._domElement;
     }
 });
 
