@@ -1,10 +1,33 @@
-
 /**
- * @param container
- * @constructor
+ * It returns a SVGDoc instance and provides a
+ * drawing paper to draw on it.
+ *
+ * @param container its value can be SVGDoc, window.SVGSVGElement, window.HTMLElement or string id.
+ * @param width
+ * @param height
+ * @returns {Vector.SVGDoc}
  */
-var Vector = function (container) {
+var Vector = function Vector(container, width, height) {
+    width = isNullOrUndefined(width) ? "100%" : width;
+    height = isNullOrUndefined(height) ? "100%" : height;
+    var temp;
 
+    if (container instanceof SVGDoc)
+        return container.size(width, height);
+    else if (container instanceof window.SVGSVGElement)
+        return new SVGDoc(width, height, container);
+    else if (container instanceof window.HTMLElement) {
+        temp = new SVGDoc(width, height); // Automatically creates a new svg element
+        container.appendChild(temp._domElement);
+        return temp;
+    } else if(typeof container === "string") {
+        return Vector(document.getElementById(container), width, height);
+    } else {
+        // Otherwise returns a SVGDoc
+        // which is not attached to the document DOM tree initially.
+        // And it can be attached by calling SVGDoc.container() method
+        return new SVGDoc(width, height);
+    }
 };
 
 /**
