@@ -281,6 +281,13 @@ Vector.merge(Element.prototype, {
 
     },
 
+    /**
+     * Returns underlying DOM element.
+     * Remember after creating a wrapper,
+     * you should not change the underlying element,
+     * if necessary then create a new wrapper.
+     * @returns {*}
+     */
     node: function () {
         return this._domElement;
     }
