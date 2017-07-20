@@ -269,18 +269,6 @@ Vector.merge(Element.prototype, {
         }
     },
 
-    byId: function () {
-
-    },
-
-    query: function () {
-
-    },
-
-    queryAll: function () {
-
-    },
-
     /**
      * Returns underlying DOM element.
      * Remember after creating a wrapper,
