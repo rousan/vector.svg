@@ -195,5 +195,4 @@ Vector.merge(SVG.prototype, {
 
 });
 
-Container.makeInheritance(SVG);
 ShapeContainer.makeInheritance(SVG);

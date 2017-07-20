@@ -293,6 +293,10 @@ Vector.merge(Element.prototype, {
     }
 });
 
+// Every wrapper class is a container and also a
+// Generic container
+Container.makeInheritance(Element);
+GenericContainer.makeInheritance(Element);
 
 // It simplifies the raw value of attribute to a simplified form.
 // and returns the formatted version.

@@ -4,19 +4,14 @@ try {
 
 
 
+    var paper = Vector("paper", 600, 600);
 
-
-
-    var t = document.getElementById("svg");
-
-    var ty = Vector.wrap(t);
-
-    console.log(ty.aspectRatio("xMidYMid slice"));
-
-
-
-
-
+    var t = paper.element("rect");
+    t.attr({
+        width: 100,
+        height: 200,
+        fill: "purple"
+    });
 
 
 } catch (e) {

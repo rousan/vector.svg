@@ -30,7 +30,9 @@ var parts = [
     "./src/utility/utils.js",
     "./src/utility/regex.js",
     "./src/vector.js",
-    "./src/container/*.js",
+    "./src/container/container.js",
+    "./src/container/shape-container.js",
+    "./src/container/generic-container.js",
     "./src/element/element.js",
     "./src/element/events.js",
     "./src/element/graphics.js",
@@ -43,8 +45,11 @@ var parts = [
     "./src/element/ellipse.js",
     "./src/element/path.js",
     "./src/element/svg.js",
+    "./src/element/svgdoc.js",
     "./src/data/data-binding.js",
     "./src/data/data.js",
+    "./src/utility/color.js",
+    "./src/utility/matrix.js",
     "./src/animation/*.js"
 ];
 

@@ -7,14 +7,16 @@
  *
  * @constructor
  */
-var Container = function () {
+var Container = function () {};
 
-};
+Container.prototype.exports = {};
 
 Vector.merge(Container, {
 
     makeInheritance: function (wrapperClass) {
-        Vector.merge(wrapperClass.prototype, this.prototype);
+        Vector.merge(wrapperClass.prototype, this.prototype.exports);
     }
 
 });
+
+Vector.merge(Container.prototype.exports, {});

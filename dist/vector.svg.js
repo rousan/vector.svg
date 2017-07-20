@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Tue Jul 18 2017 05:16:11 GMT+0530 (IST)
+ * Date: Thu Jul 20 2017 19:20:35 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -131,13 +131,36 @@
         hrefAttrVal: /^#(.+)$/
 
     };
-
     /**
-     * @param container
-     * @constructor
+     * It returns a SVGDoc instance and provides a
+     * drawing paper to draw on it.
+     *
+     * @param container its value can be SVGDoc, window.SVGSVGElement, window.HTMLElement or string id.
+     * @param width
+     * @param height
+     * @returns {Vector.SVGDoc}
      */
-    var Vector = function(container) {
+    var Vector = function Vector(container, width, height) {
+        width = isNullOrUndefined(width) ? "100%" : width;
+        height = isNullOrUndefined(height) ? "100%" : height;
+        var temp;
 
+        if (container instanceof SVGDoc)
+            return container.size(width, height);
+        else if (container instanceof window.SVGSVGElement)
+            return new SVGDoc(width, height, container);
+        else if (container instanceof window.HTMLElement) {
+            temp = new SVGDoc(width, height); // Automatically creates a new svg element
+            container.appendChild(temp._domElement);
+            return temp;
+        } else if (typeof container === "string") {
+            return Vector(document.getElementById(container), width, height);
+        } else {
+            // Otherwise returns a SVGDoc
+            // which is not attached to the document DOM tree initially.
+            // And it can be attached by calling SVGDoc.container() method
+            return new SVGDoc(width, height);
+        }
     };
 
     /**
@@ -540,6 +563,121 @@
     });
 
 
+    /**
+     * This class is the super class of all the containers
+     *
+     * These containers provide container based methods to add elements
+     * and these methods are copied to actual svg wrapper class, so
+     * remember these containers are not in the prototype chain of actual svg wrapper classes.
+     *
+     * @constructor
+     */
+    var Container = function() {};
+
+    Container.prototype.exports = {};
+
+    Vector.merge(Container, {
+
+        makeInheritance: function(wrapperClass) {
+            Vector.merge(wrapperClass.prototype, this.prototype.exports);
+        }
+
+    });
+
+    Vector.merge(Container.prototype.exports, {});
+
+    /**
+     *
+     * This type of container contains shape elements
+     * i.e Path, Rect, Circle etc.
+     *
+     * @constructor
+     */
+    var ShapeContainer = function() {};
+
+    setPrototypeOf(ShapeContainer, Container);
+
+    ShapeContainer.prototype = Object.create(Container.prototype);
+
+    ShapeContainer.prototype.constructor = ShapeContainer;
+
+    ShapeContainer.prototype.exports = {};
+
+    Vector.merge(ShapeContainer.prototype.exports, {
+
+        rect: function(width, height, x, y, rx, ry) {
+            var wrapper = new Rect(width, height, x, y, rx, ry);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        circle: function(r, cx, cy) {
+            var wrapper = new Circle(r, cx, cy);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        ellipse: function(rx, ry, cx, cy) {
+            var wrapper = new Ellipse(rx, ry, cx, cy);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        line: function(x1, y1, x2, y2) {
+            var wrapper = new Line(x1, y1, x2, y2);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        path: function(d) {
+            var wrapper = new Path(d);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        polygon: function(points) {
+            var wrapper = new Polygon(points);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        polyline: function(points) {
+            var wrapper = new Polyline(points);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        }
+
+    });
+
+    /**
+     * This type of container provides capability of
+     * adding any svg element as Element wrapper class.
+     * This Interface is useful when some svg element has no wrapper class implemented
+     * in Vector.svg.
+     *
+     * In this case Element wrapper class is used as wrapper.
+     *
+     * @constructor
+     */
+    var GenericContainer = function() {};
+
+    setPrototypeOf(GenericContainer, Container);
+
+    GenericContainer.prototype = Object.create(Container.prototype);
+
+    GenericContainer.prototype.constructor = GenericContainer;
+
+    GenericContainer.prototype.exports = {};
+
+    Vector.merge(GenericContainer.prototype.exports, {
+
+        element: function(tagName) {
+            var wrapper = new Element(Vector.createElement(tagName));
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        }
+
+    });
 
     /**
      * Base class for all the SVG DOM wrapper elements.
@@ -821,9 +959,24 @@
 
         queryAll: function() {
 
+        },
+
+        /**
+         * Returns underlying DOM element.
+         * Remember after creating a wrapper,
+         * you should not change the underlying element,
+         * if necessary then create a new wrapper.
+         * @returns {*}
+         */
+        node: function() {
+            return this._domElement;
         }
     });
 
+    // Every wrapper class is a container and also a
+    // Generic container
+    Container.makeInheritance(Element);
+    GenericContainer.makeInheritance(Element);
 
     // It simplifies the raw value of attribute to a simplified form.
     // and returns the formatted version.
@@ -2671,7 +2824,7 @@
             width = +width;
             height = +height;
 
-            // If these values are not finite then no problem browser will handle it.
+            // If these values are not finite (i.e. NaN, Infinite or -Infinite) then no problem browser will handle it.
             viewBox = x + " " + y + " " + width + " " + height;
             this.attr("viewBox", viewBox);
 
@@ -2704,8 +2857,105 @@
             };
         },
 
+        /**
+         * Sets and gets 'preserveAspectRatio' attribute value
+         *
+         * @param aspectRatio
+         * @returns {*}
+         */
         aspectRatio: function(aspectRatio) {
             return this._setAttrGetterSetter("preserveAspectRatio", aspectRatio);
+        }
+
+    });
+
+    ShapeContainer.makeInheritance(SVG);
+
+    /**
+     * Wrapper for SVGSVGElement native interface
+     *
+     * It can wrap SVGSVGElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.SVGDoc's super class then
+     * it removes that wrapper and returns a new Vector.SVGDoc wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * This class wraps only outermost <svg> element.
+     * It defines a new SVG document.
+     *
+     * @type {Vector.SVGDoc}
+     */
+    var SVGDoc = Vector.SVGDoc = function SVGDoc(width, height, svgDOMNode) {
+        var wrappedInstance = SVG.call(this, undefined, undefined, undefined, undefined, svgDOMNode),
+            attrs = {
+                width: width,
+                height: height
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            wrappedInstance._setup();
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
+        this._setup();
+    };
+
+    setPrototypeOf(SVGDoc, SVG);
+
+    SVGDoc.prototype = Object.create(SVG.prototype);
+
+    SVGDoc.prototype.constructor = SVGDoc;
+
+    Vector.merge(SVGDoc, {
+
+        domInterface: window.SVGSVGElement
+
+    });
+
+    Vector.merge(SVGDoc.prototype, {
+
+        tag: "svg",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, SVGDoc.prototype._defaultAttrValues), {
+
+            /**
+             * If width and height attributes are not present, then
+             *       1. if viewbox attribute is not present, then default values of width and height = 300x150
+             *       2. if viewbox attribute is present, then values of width and height = 100%x100%
+             * So for this conflicts just use 100%x100%
+             */
+            width: "100%",
+
+            height: "100%"
+
+        }),
+
+        _setup: function() {
+            var domElem = this._domElement;
+
+            Vector.setAttribute(domElem, "version", "1.1", null);
+            // setting "xmlns" attribute by setAttributeNS() method throws exception.
+            domElem.setAttribute("xmlns", Vector.ns.svg);
+            Vector.setAttribute(domElem, "xmlns:xlink", Vector.ns.xlink, Vector.ns.xml);
+        },
+
+
+        /**
+         * It does nothing if container value is undefined, null, number, boolean, symbol,
+         * or any others object other than HTML dom element.
+         * @param container string id or HTML dom element
+         * @returns {SVGDoc}
+         */
+        container: function(container) {
+            // The parent of outermost <svg> element
+            // can only be a html element.
+            if (container instanceof window.HTMLElement) {
+                container.appendChild(this._domElement);
+            } else if (typeof container === "string") {
+                return this.container(document.getElementById(container));
+            }
+            return this;
         }
 
     });
@@ -2729,6 +2979,10 @@
         }
 
     });
+
+
+
+
 
     return Vector;
 }));
