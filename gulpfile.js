@@ -35,6 +35,7 @@ var parts = [
     "./src/container/generic-container.js",
     "./src/element/element.js",
     "./src/element/events.js",
+    "./src/element/dom.js",
     "./src/element/graphics.js",
     "./src/element/geometry.js",
     "./src/element/rect.js",
