@@ -196,3 +196,4 @@ Vector.merge(SVG.prototype, {
 });
 
 ShapeContainer.makeInheritance(SVG);
+StructuralContainer.makeInheritance(SVG);
