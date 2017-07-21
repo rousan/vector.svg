@@ -66,6 +66,7 @@ Vector.merge(SVGDoc.prototype, {
         // setting "xmlns" attribute by setAttributeNS() method throws exception.
         domElem.setAttribute("xmlns", Vector.ns.svg);
         Vector.setAttribute(domElem, "xmlns:xlink", Vector.ns.xlink, Vector.ns.xml);
+        this.defs();
     },
 
 
@@ -84,6 +85,37 @@ Vector.merge(SVGDoc.prototype, {
             return this.container(document.getElementById(container));
         }
         return this;
+    },
+
+    /**
+     * Only one <defs> element for every SVG document,
+     * this can be access by anyElem.doc().defs()
+     * @returns {*}
+     */
+    defs: function () {
+        var defsElem = this._getDefsElement();
+        if (defsElem)
+            return defsElem;
+        else
+            return this._createDefsElement();
+    },
+
+    _getDefsElement: function () {
+        var children = this.children(),
+            length = children.length,
+            i = 0;
+
+        for(; i<length; ++i) {
+            if (children[i].node() instanceof window.SVGDefsElement)
+                return new Defs(children[i].node());
+        }
+        return null;
+    },
+
+    _createDefsElement: function () {
+        var defs = new Defs();
+        this.append(defs);
+        return defs;
     }
 
 });
