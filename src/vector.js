@@ -286,6 +286,14 @@ Vector.merge(Vector, {
                 return new Path(undefined, svgDOMNode);
             case window.SVGSVGElement:
                 return new SVG(undefined, undefined, undefined, undefined, svgDOMNode);
+            case window.SVGGElement:
+                return new G(svgDOMNode);
+            case window.SVGDefsElement:
+                return new Defs(svgDOMNode);
+            case window.SVGSymbolElement:
+                return new Symbol(svgDOMNode);
+            case window.SVGUseElement:
+                return new Use(undefined, undefined, undefined, undefined, undefined, svgDOMNode);
             default:
                 return new Element(svgDOMNode);
         }
