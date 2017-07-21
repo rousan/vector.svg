@@ -278,7 +278,46 @@ Vector.merge(Element.prototype, {
      */
     node: function () {
         return this._domElement;
+    },
+
+    /**
+     * Returns SVG Doc to which current element belongs
+     * @returns {*}
+     */
+    doc: function () {
+        var node = this.node();
+        while (node !== null) {
+            // SVG DOC's parent node will be a HTML node.
+            if (node instanceof window.SVGSVGElement && node.parentNode instanceof window.HTMLElement)
+                return new SVGDoc(undefined, undefined, node);
+            node = node.parentNode;
+        }
+        return null;
+    },
+
+    /**
+     * If id attribute does not exist then a new id
+     * attribute will be created.
+     * @param newId
+     * @returns {*}
+     */
+    id: function (newId) {
+        var node = this.node();
+
+        if (arguments.length === 0) {
+            if (node.id === "") {
+                node.id = this._generateElemId();
+            }
+            return node.id;
+        }
+        node.id = newId;
+        return this;
+    },
+
+    _generateElemId: function () {
+        return Vector.uuid();
     }
+
 });
 
 // Every wrapper class is a container and also a
