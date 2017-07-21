@@ -322,12 +322,7 @@ var simplifyRawAttrValue = function (attrName, value, namespaceURI) {
                 return value;
 
         case "href":
-            if (namespaceURI === Vector.ns.xlink) {
-                match = regex.referenceAttrVal.exec(value);
-            } else if (namespaceURI === null)
-                match = regex.hrefAttrVal.exec(value);
-            else
-                return value;
+            match = regex.hrefAttrVal.exec(value); //xlink:href and href value is like: #id etc or full URL
 
             if (match) {
                 elem = document.getElementById(match[1]);
