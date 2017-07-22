@@ -26,22 +26,22 @@ After downloading just insert it into your HTML page:
 
 * [Getting Started](#getting-started)
 * [Elements](#elements)
-    * [Vector.Element](#vectorelement)
-    * [Vector.Graphics](#vectorgraphics)
-    * [Vector.Geometry](#vectorgeometry)
-    * [Vector.Rect](#vectorrect)
-    * [Vector.Circle](#vectorcircle)
-    * [Vector.Path](#vectorpath)
-    * [Vector.Line](#vectorline)
-    * [Vector.Ellipse](#vectorellipse)
-    * [Vector.Polygon](#vectorpolygon)
-    * [Vector.Polyline](#vectorpolyline)
-    * [Vector.Defs](#vectordefs)
-    * [Vector.G](#vectorg)
-    * [Vector.Symbol](#vectorsymbol)
-    * [Vector.Use](#vectoruse)
-    * [Vector.SVG](#vectorsvg)
-    * [Vector.SVGDoc](#vectorsvgdoc)
+    * [Element](#vectorelement)
+    * [Graphics](#vectorgraphics)
+    * [Geometry](#vectorgeometry)
+    * [Rect](#vectorrect)
+    * [Circle](#vectorcircle)
+    * [Path](#vectorpath)
+    * [Line](#vectorline)
+    * [Ellipse](#vectorellipse)
+    * [Polygon](#vectorpolygon)
+    * [Polyline](#vectorpolyline)
+    * [Defs](#vectordefs)
+    * [G](#vectorg)
+    * [Symbol](#vectorsymbol)
+    * [Use](#vectoruse)
+    * [SVG](#vectorsvg)
+    * [SVGDoc](#vectorsvgdoc)
 * [Containers](#containers)
 * [Manipulation](#manipulation)
 * [Events](#events)
@@ -96,11 +96,11 @@ That's it, isn't it so simple?
 
 #### Vector.Element
 
-lmenBase class for all the SVG DOM wrapper elements.
- 
-  Wrapper for SVGElement native interface
- 
-  It can wrap SVGElement elements.
+The `Vector.Element` class is the Base class for all the SVG DOM wrapper elements. This class
+is used to wrap `SVGElement` native interface and its subclasses.
+This class provides some basic methods that all the wrappers inherit.
+
+<iframe width="100%" height="300" src="//jsfiddle.net/ariyankhan/zdw1z7ns/2/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ### Containers
      
