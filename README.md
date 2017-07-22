@@ -75,10 +75,9 @@ Now, lets create some basic shapes:
 
 ```javascript
 var paper = Vector("paper", 400, 300);
-
 var circle = paper.circle(50).cx(60).cy(60);
 circle.attr("stroke", "red")
-	  .attr("fill", "purple");
+      .attr("fill", "purple");
       
 var rect = paper.rect(100, 100).x(100).y(100);
 rect.attr("stroke", "purple")
