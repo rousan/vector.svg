@@ -6,7 +6,7 @@ and written in pure ES5. It provides `SVG DOM manipulation`, `data binding` and 
 ## Install
 
 If you use NPM, run the following command, Otherwise download the latest release from Github. It supports UMD module loader i.e.
-AMD, CommonJS, and VanillaJS environments are supported. In VanillaJS, a `Vector` global is exported:
+AMD, CommonJS, and VanillaJS environments. In VanillaJS, a `Vector` global is exported:
 
 `npm install vector.svg`
 
@@ -34,7 +34,7 @@ After downloading just insert it into your HTML page:
 
 ### Getting Started
 
-First of all create a HTML page consisting of a `<div>` element like following snippet:
+First of all create a HTML page consisting a HTML element with an `id` attribute and ready to serve as the container:
 
 ```html
 <!DOCTYPE html>
@@ -49,7 +49,7 @@ First of all create a HTML page consisting of a `<div>` element like following s
 </body>
 </html>
 ```
-Then, create a SVG Documents withing the container element:
+Then, create a SVG Document within the container element:
 
 ```javascript
 var paper = Vector("paper", 400, 300);
@@ -72,7 +72,7 @@ var rect = paper.rect(100, 100).x(100).y(100)
             });
 ```
 
-That's it, so simple. 
+That's it, isn't it so simple?
 [Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling, go and play with Vector.svg.
 
 ### Elements
