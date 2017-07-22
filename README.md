@@ -107,7 +107,7 @@ paper.append(rect);
 ```
 #### Vector.Graphics
 
-`Vector.Graphics` is a subclass of [Vector.Element](#vectorelement). <br/>
+`Vector.Graphics` is a subclass of `Vector.Element`. <br/>
 
 This class represents the native interface `SVGGraphicsElement`. This class normally
 does nothing, but it is useful when you want to add your own methods to all
@@ -158,6 +158,83 @@ alert(ellipse.length());
 #### Vector.SVG
 
 `Vector.SVG` is a subclass of `Vector.Graphics`.<br/>
+
+This class represents the inner `<svg>` element i.e. nested svg document.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var svg = paper.svg(100, 100, 10, 10);
+
+svg.circle(40, 50, 50)
+   .attr("fill", "purple")
+   .attr("stroke", "green");
+```
+
+#### Vector.SVGDoc
+
+`Vector.SVGDoc` is a subclass of `Vector.SVG`.<br/>
+
+The return value of `Vector()` function is a `Vector.SVGDoc` instance. It wraps
+the SVG document i.e. the outer most `<svg>` element.
+
+```javascript
+var paper = Vector("paper", 400, 300);
+```
+
+#### Vector.Rect
+
+`Vector.Rect` is a subclass of `Vector.Geometry`.<br/>
+
+It wraps the `<rect>` element i.e. `SVGRectElement` native interface.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+paper.rect()
+     .size(100, 200)
+     .x(50)
+     .y(50)
+     .rx(50)
+     .ry(50)
+     .attr("fill", "red")
+     .attr("stroke", "purple");
+```
+
+##### prototype.x()
+
+Sets and gets the value of `x` attribute.
+
+##### prototype.y()
+
+Sets and gets the value of `y` attribute.
+
+##### prototype.width()
+
+Sets and gets the value of `width` attribute.
+
+##### prototype.height()
+
+Sets and gets the value of `height` attribute.
+
+##### prototype.size()
+
+Sets and gets the size of the `rect` in easy way.
+
+It is equivalent to:
+
+```javascript
+rect.width(w).height(h);
+```
+##### prototype.rx()
+
+Sets and gets the value of `rx` attribute.
+
+##### prototype.ry()
+
+Sets and gets the value of `ry` attribute.
+
+
 
 ### Containers
      
