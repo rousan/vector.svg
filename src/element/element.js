@@ -17,6 +17,7 @@ var Element = Vector.Element = function Element(svgDOMNode) {
 
     this._domElement = svgDOMNode;
     this._events = {};
+    this._binder = null;
     if (svgDOMNode !== null)
         svgDOMNode._wrappingElement = this;
 };
