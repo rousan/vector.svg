@@ -100,7 +100,16 @@ The `Vector.Element` class is the Base class for all the SVG DOM wrapper element
 is used to wrap `SVGElement` native interface and its subclasses.
 This class provides some basic methods that all the wrappers inherit.
 
-<iframe width="100%" height="300" src="//jsfiddle.net/ariyankhan/zdw1z7ns/2/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+```javascript
+var paper = Vector("paper", 400, 300);
+
+var rect = new Vector.Element(Vector.createElement("rect"));
+rect.attr("width", 100)
+    .attr("height", 100)
+    .attr("fill", "red");
+
+paper.append(rect);
+```
 
 ### Containers
      
