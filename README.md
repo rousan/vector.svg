@@ -83,7 +83,7 @@ var circle = paper.circle(50).cx(60).cy(60)
               });
 
 var rect = paper.rect(100, 100).x(100).y(100)
-		   .attr({
+		    .attr({
                 stroke: "purple",
                 fill: "green"
             });
