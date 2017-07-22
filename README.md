@@ -107,7 +107,7 @@ paper.append(rect);
 ```
 #### Vector.Graphics
 
-`Vector.Graphics` is a subclass of `Vector.Element`. <br/>
+`Vector.Graphics` is a subclass of [Vector.Element](#vectorelement). <br/>
 
 This class represents the native interface `SVGGraphicsElement`. This class normally
 does nothing, but it is useful when you want to add your own methods to all
@@ -154,6 +154,10 @@ alert(path.length());
 alert(rect.length());
 alert(ellipse.length());
 ```
+
+#### Vector.SVG
+
+`Vector.SVG` is a subclass of `Vector.Graphics`.<br/>
 
 ### Containers
      
