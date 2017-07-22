@@ -105,7 +105,7 @@ rect.attr("width", 100)
 
 paper.append(rect);
 ```
-### Vector.Graphics
+#### Vector.Graphics
 
 `Vector.Graphics` is a subclass of `Vector.Element`. <br/>
 
