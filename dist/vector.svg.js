@@ -1,14 +1,14 @@
 /*!
- * Vector.svg v1.1.0
- * A Javascript library for creating vector graphics using SVG. It uses
- * SVG 1.1 W3C Spec and written in pure ES5.
+ * Vector.svg v1.2.0
+ * A Javascript library for creating vector graphics using SVG.
+ * It uses the SVG W3C Recommendation.
  * It provides SVG DOM manipulation, data binding and animation functionality.
  *
  * @license Copyright (c) 2017 Ariyan Khan, MIT License
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Fri Jul 21 2017 04:11:05 GMT+0530 (IST)
+ * Date: Sat Jul 22 2017 16:53:18 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -28,7 +28,7 @@
         // When module is loaded by <script> tag in browser
         root.Vector = factory(root);
     }
-}(typeof window !== "undefined" ? window : this, function(root) {
+})(typeof window !== "undefined" ? window : this, function(root) {
 
     "use strict";
 
@@ -56,9 +56,9 @@
 
     var xmlNS = "http://www.w3.org/2000/xmlns/";
 
-    //var window = window || root.window;
+    var window = root;
 
-    //var document = document || root.document;
+    var document = root.document;
 
     var isArray = Array.isArray;
 
@@ -419,6 +419,14 @@
                     return new Path(undefined, svgDOMNode);
                 case window.SVGSVGElement:
                     return new SVG(undefined, undefined, undefined, undefined, svgDOMNode);
+                case window.SVGGElement:
+                    return new G(svgDOMNode);
+                case window.SVGDefsElement:
+                    return new Defs(svgDOMNode);
+                case window.SVGSymbolElement:
+                    return new Symbol(svgDOMNode);
+                case window.SVGUseElement:
+                    return new Use(undefined, undefined, undefined, undefined, undefined, svgDOMNode);
                 default:
                     return new Element(svgDOMNode);
             }
@@ -650,6 +658,53 @@
     });
 
     /**
+     *
+     * This type of container contains structural elements
+     * i.e <defs>, <g>, <svg>, <symbol>, <use>
+     *
+     * Note: Only SVGDoc wrapper can contain <defs> element.
+     *
+     * @constructor
+     */
+    var StructuralContainer = function() {};
+
+    setPrototypeOf(StructuralContainer, Container);
+
+    StructuralContainer.prototype = Object.create(Container.prototype);
+
+    StructuralContainer.prototype.constructor = StructuralContainer;
+
+    StructuralContainer.prototype.exports = {};
+
+    Vector.merge(StructuralContainer.prototype.exports, {
+
+        g: function() {
+            var wrapper = new G();
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        svg: function(width, height, x, y) {
+            var wrapper = new SVG(width, height, x, y);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        symbol: function() {
+            var wrapper = new Symbol();
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        },
+
+        use: function(elem, width, height, x, y) {
+            var wrapper = new Use(elem, width, height, x, y);
+            this.node().appendChild(wrapper.node());
+            return wrapper;
+        }
+
+    });
+
+    /**
      * This type of container provides capability of
      * adding any svg element as Element wrapper class.
      * This Interface is useful when some svg element has no wrapper class implemented
@@ -697,6 +752,7 @@
 
         this._domElement = svgDOMNode;
         this._events = {};
+        this._binder = null;
         if (svgDOMNode !== null)
             svgDOMNode._wrappingElement = this;
     };
@@ -958,7 +1014,46 @@
          */
         node: function() {
             return this._domElement;
+        },
+
+        /**
+         * Returns SVG Doc to which current element belongs
+         * @returns {*}
+         */
+        doc: function() {
+            var node = this.node();
+            while (node !== null) {
+                // SVG DOC's parent node will be a HTML node.
+                if (node instanceof window.SVGSVGElement && node.parentNode instanceof window.HTMLElement)
+                    return new SVGDoc(undefined, undefined, node);
+                node = node.parentNode;
+            }
+            return null;
+        },
+
+        /**
+         * If id attribute does not exist then a new id
+         * attribute will be created.
+         * @param newId
+         * @returns {*}
+         */
+        id: function(newId) {
+            var node = this.node();
+
+            if (arguments.length === 0) {
+                if (node.id === "") {
+                    node.id = this._generateElemId();
+                }
+                return node.id;
+            }
+            node.id = newId;
+            return this;
+        },
+
+        _generateElemId: function() {
+            return Vector.uuid();
         }
+
     });
 
     // Every wrapper class is a container and also a
@@ -1002,12 +1097,7 @@
                     return value;
 
             case "href":
-                if (namespaceURI === Vector.ns.xlink) {
-                    match = regex.referenceAttrVal.exec(value);
-                } else if (namespaceURI === null)
-                    match = regex.hrefAttrVal.exec(value);
-                else
-                    return value;
+                match = regex.hrefAttrVal.exec(value); //xlink:href and href value is like: #id etc or full URL
 
                 if (match) {
                     elem = document.getElementById(match[1]);
@@ -1528,7 +1618,7 @@
             if (arguments.length >= 1 && listener !== null && !isCallable(listener))
                 throw new TypeError("Listener is not null or callable");
             context = arguments.length >= 2 ? context : this;
-            return setEventAttribute(this, "oondragstart", listener, context);
+            return setEventAttribute(this, "ondragstart", listener, context);
         },
 
         ondrop: function(listener, context) {
@@ -2978,6 +3068,7 @@
     });
 
     ShapeContainer.makeInheritance(SVG);
+    StructuralContainer.makeInheritance(SVG);
 
     /**
      * Wrapper for SVGSVGElement native interface
@@ -3046,6 +3137,7 @@
             // setting "xmlns" attribute by setAttributeNS() method throws exception.
             domElem.setAttribute("xmlns", Vector.ns.svg);
             Vector.setAttribute(domElem, "xmlns:xlink", Vector.ns.xlink, Vector.ns.xml);
+            this.defs();
         },
 
 
@@ -3064,18 +3156,314 @@
                 return this.container(document.getElementById(container));
             }
             return this;
+        },
+
+        /**
+         * Only one <defs> element for every SVG document,
+         * this can be access by anyElem.doc().defs()
+         * @returns {*}
+         */
+        defs: function() {
+            var defsElem = this._getDefsElement();
+            if (defsElem)
+                return defsElem;
+            else
+                return this._createDefsElement();
+        },
+
+        _getDefsElement: function() {
+            var children = this.children(),
+                length = children.length,
+                i = 0;
+
+            for (; i < length; ++i) {
+                if (children[i].node() instanceof window.SVGDefsElement)
+                    return new Defs(children[i].node());
+            }
+            return null;
+        },
+
+        _createDefsElement: function() {
+            var defs = new Defs();
+            this.append(defs);
+            return defs;
+        }
+
+    });
+
+    /**
+     * Wrapper for SVGGElement native interface
+     *
+     * It can wrap SVGGElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.G's super class then
+     * it removes that wrapper and returns a new Vector.G wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.G}
+     */
+    var G = Vector.G = function G(svgDOMNode) {
+        var wrappedInstance = Graphics.call(this, svgDOMNode);
+        if (wrappedInstance)
+            return wrappedInstance;
+    };
+
+    setPrototypeOf(G, Graphics);
+
+    G.prototype = Object.create(Graphics.prototype);
+
+    G.prototype.constructor = G;
+
+    Vector.merge(G, {
+
+        domInterface: window.SVGGElement
+
+    });
+
+    Vector.merge(G.prototype, {
+
+        tag: "g",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, G.prototype._defaultAttrValues), {
+
+        })
+    });
+
+    ShapeContainer.makeInheritance(G);
+    StructuralContainer.makeInheritance(G);
+
+    /**
+     * Wrapper for SVGDefsElement native interface
+     *
+     * It can wrap SVGDefsElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Defs's super class then
+     * it removes that wrapper and returns a new Vector.Defs wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Defs}
+     */
+    var Defs = Vector.Defs = function Defs(svgDOMNode) {
+        var wrappedInstance = Graphics.call(this, svgDOMNode);
+        if (wrappedInstance)
+            return wrappedInstance;
+    };
+
+    setPrototypeOf(Defs, Graphics);
+
+    Defs.prototype = Object.create(Graphics.prototype);
+
+    Defs.prototype.constructor = Defs;
+
+    Vector.merge(Defs, {
+
+        domInterface: window.SVGDefsElement
+
+    });
+
+    Vector.merge(Defs.prototype, {
+
+        tag: "defs",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Defs.prototype._defaultAttrValues), {
+
+        })
+    });
+
+    ShapeContainer.makeInheritance(Defs);
+    StructuralContainer.makeInheritance(Defs);
+
+    /**
+     * Wrapper for SVGSymbolElement native interface
+     *
+     * It can wrap SVGSymbolElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Symbol's super class then
+     * it removes that wrapper and returns a new Vector.Symbol wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Symbol}
+     */
+    var Symbol = Vector.Symbol = function Symbol(svgDOMNode) {
+        var wrappedInstance = Element.call(this, svgDOMNode);
+        if (wrappedInstance)
+            return wrappedInstance;
+    };
+
+    setPrototypeOf(Symbol, Element);
+
+    Symbol.prototype = Object.create(Element.prototype);
+
+    Symbol.prototype.constructor = Symbol;
+
+    Vector.merge(Symbol, {
+
+        domInterface: window.SVGSymbolElement
+
+    });
+
+    Vector.merge(Symbol.prototype, {
+
+        tag: "symbol",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Symbol.prototype._defaultAttrValues), {
+
+            preserveAspectRatio: "xMidYMid meet"
+
+        }),
+
+        viewBox: function(viewBox) {
+            return this._setAttrGetterSetter("viewBox", viewBox);
+        },
+
+        aspectRatio: function(aspectRatio) {
+            return this._setAttrGetterSetter("preserveAspectRatio", aspectRatio);
+        }
+
+    });
+
+    ShapeContainer.makeInheritance(Symbol);
+    StructuralContainer.makeInheritance(Symbol);
+
+    /**
+     * Wrapper for SVGUseElement native interface
+     *
+     * It can wrap SVGUseElement elements
+     *
+     * If svgDOMNode is wrapped by Vector.Use's super class then
+     * it removes that wrapper and returns a new Vector.Use wrapper.
+     * To get a appropriate wrapper please use Vector.wrap() method.
+     *
+     * @type {Vector.Use}
+     */
+    var Use = Vector.Use = function Use(elem, width, height, x, y, svgDOMNode) {
+        var wrappedInstance = Graphics.call(this, svgDOMNode),
+            attrs = {
+                width: width,
+                height: height,
+                x: x,
+                y: y
+            };
+        if (wrappedInstance) {
+            wrappedInstance.attr(attrs, null);
+            wrappedInstance.href(elem);
+            return wrappedInstance;
+        }
+        this.attr(attrs, null);
+        this.href(elem);
+    };
+
+    setPrototypeOf(Use, Graphics);
+
+    Use.prototype = Object.create(Graphics.prototype);
+
+    Use.prototype.constructor = Use;
+
+    Vector.merge(Use, {
+
+        domInterface: window.SVGUseElement
+
+    });
+
+    Vector.merge(Use.prototype, {
+
+        tag: "use",
+
+        // Namespace of all the attributes is null
+        _defaultAttrValues: Vector.merge(Vector.merge({}, Use.prototype._defaultAttrValues), {
+
+            x: "0",
+
+            y: "0",
+
+            width: "0",
+
+            height: "0",
+
+            href: "" // for SVG2 href attribute, not for xlink:href
+
+        }),
+
+        width: function(width) {
+            return this._setAttrGetterSetter("width", width);
+        },
+
+        height: function(height) {
+            return this._setAttrGetterSetter("height", height);
+        },
+
+        x: function(x) {
+            return this._setAttrGetterSetter("x", x);
+        },
+
+        y: function(y) {
+            return this._setAttrGetterSetter("y", y);
+        },
+
+        /**
+         * gets and sets the href attribute value
+         * @param element null, wrapper element, or URL
+         * @returns {*}
+         */
+        href: function(element) {
+            var href;
+            if (element === undefined)
+                return this.attr(["href"], Vector.ns.xlink).href;
+            else if (element === null)
+                return this.attr("href", null, Vector.ns.xlink);
+            else if (element instanceof Element)
+                href = "#" + element.id();
+            else
+                href = String(element);
+
+            return this.attr("href", href, Vector.ns.xlink);
         }
 
     });
 
     Vector.merge(Element.prototype, {
 
-        binder: function() {
-
+        /**
+         * Attach the binder function that will be called every time when
+         * bind() method is called and the passed data to bind() function
+         * to be passed to this binderFn argument.
+         *
+         * Note: at a time, a single binder function can be attached i.e. setting a new
+         * binder replaces the previous one.
+         * Pass null as first argument resets the binder function and sets it to null value.
+         *
+         * @param binderFn The binder function or null to reset
+         * @param thisArg the this value of 'this' keyword, default value is current element object
+         * @returns {Element}
+         */
+        binder: function(binderFn, thisArg) {
+            if (binderFn === null) {
+                this._binder = null;
+                return this;
+            }
+            if (!isCallable(binderFn))
+                throw new TypeError("Binder must be a callable");
+            thisArg = isNullOrUndefined(thisArg) ? this : thisArg;
+            this._binder = binderFn.bind(thisArg);
+            return this;
         },
 
-        bind: function() {
-
+        /**
+         * It calls the binder function with the specified data argument.
+         * If the binder function is not set then it does nothing.
+         *
+         * @param data any data to be passed to te binder function
+         * @returns {Element}
+         */
+        bind: function(data) {
+            var binder = this._binder;
+            if (!isCallable(binder))
+                return this;
+            binder(data);
+            return this;
         }
 
     });
@@ -3093,4 +3481,4 @@
 
 
     return Vector;
-}));
+});
