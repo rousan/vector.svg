@@ -26,6 +26,7 @@ After downloading just insert it into your HTML page:
 
 * [Getting Started](#getting-started)
 * [Elements](#elements)
+    * [Vector.Element](#vector-element)
 * [Containers](#containers)
 * [Manipulation](#manipulation)
 * [Events](#events)
@@ -34,7 +35,7 @@ After downloading just insert it into your HTML page:
 
 ### Getting Started
 
-First of all create a HTML page consisting a HTML element with an `id` attribute and ready to serve as the container:
+First of all, create a HTML page consisting of a HTML element with an `id` attribute and ready to serve as the container:
 
 ```html
 <!DOCTYPE html>
@@ -76,6 +77,14 @@ That's it, isn't it so simple?
 [Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling, go and play with Vector.svg.
 
 ### Elements
+
+#### Vector.Element
+
+lmenBase class for all the SVG DOM wrapper elements.
+ 
+  Wrapper for SVGElement native interface
+ 
+  It can wrap SVGElement elements.
 
 ### Containers
      
