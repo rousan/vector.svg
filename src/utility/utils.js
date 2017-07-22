@@ -23,9 +23,9 @@ var xhtmlNS = "http://www.w3.org/1999/xhtml";
 
 var xmlNS = "http://www.w3.org/2000/xmlns/";
 
-//var window = window || root.window;
+var window = root;
 
-//var document = document || root.document;
+var document = root.document;
 
 var isArray = Array.isArray;
 
