@@ -111,8 +111,49 @@ paper.append(rect);
 
 This class represents the native interface `SVGGraphicsElement`. This class normally
 does nothing, but it is useful when you want to add your own methods to all
-graphics elements.
+the graphics elements.
 
+#### Vector.Geometry
+
+`Vector.Geometry` is a subclass of `Vector.Graphics`.<br/>
+
+It wraps the `SVGGeometryElement` native interface. It provides some useful methods
+to all the shape elements i.e. `Rect`, `Circle`, `Path` etc.
+
+##### prototype.pathLength()
+
+This method sets and gets the value `pathLength` attribute.
+
+##### prototype.length()
+
+It returns the user agent's computed value for the total length of 
+the shape in user units.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+g.attr("fill", "none")
+ .attr("stroke-width", 2)
+ .attr("stroke", "purple");
+ 
+var path = g.path();
+path.d("M0,0h100q50,50,0,100z");  
+
+var rect = g.rect(100, 100);
+rect.x(50)
+    .y(120);
+    
+var ellipse = g.ellipse();
+ellipse.cx(250)
+       .cy(100)
+       .rx(70)
+       .ry(50);
+       
+alert(path.length());
+alert(rect.length());
+alert(ellipse.length());
+```
 
 ### Containers
      
