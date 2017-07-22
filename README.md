@@ -26,11 +26,27 @@ After downloading just insert it into your HTML page:
 
 * [Getting Started](#getting-started)
 * [Elements](#elements)
-    * [Vector.Element](#vector-element)
+    * [Vector.Element](#vectorelement)
+    * [Vector.Graphics](#vectorgraphics)
+    * [Vector.Geometry](#vectorgeometry)
+    * [Vector.Rect](#vectorrect)
+    * [Vector.Circle](#vectorcircle)
+    * [Vector.Path](#vectorpath)
+    * [Vector.Line](#vectorline)
+    * [Vector.Ellipse](#vectorellipse)
+    * [Vector.Polygon](#vectorpolygon)
+    * [Vector.Polyline](#vectorpolyline)
+    * [Vector.Defs](#vectordefs)
+    * [Vector.G](#vectorg)
+    * [Vector.Symbol](#vectorsymbol)
+    * [Vector.Use](#vectoruse)
+    * [Vector.SVG](#vectorsvg)
+    * [Vector.SVGDoc](#vectorsvgdoc)
 * [Containers](#containers)
 * [Manipulation](#manipulation)
 * [Events](#events)
 * [Data Binding](#data-binding)
+* [Utilities](#utilities)
 
 
 ### Getting Started
@@ -91,6 +107,8 @@ lmenBase class for all the SVG DOM wrapper elements.
 ### Manipulation
 
 ### Data Binding
+
+### Utilities
 
 
 ## Contributors
