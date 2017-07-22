@@ -29,6 +29,8 @@ After downloading just insert it into your HTML page:
     * [Element](#vectorelement)
     * [Graphics](#vectorgraphics)
     * [Geometry](#vectorgeometry)
+    * [SVG](#vectorsvg)
+    * [SVGDoc](#vectorsvgdoc)
     * [Rect](#vectorrect)
     * [Circle](#vectorcircle)
     * [Path](#vectorpath)
@@ -40,8 +42,6 @@ After downloading just insert it into your HTML page:
     * [G](#vectorg)
     * [Symbol](#vectorsymbol)
     * [Use](#vectoruse)
-    * [SVG](#vectorsvg)
-    * [SVGDoc](#vectorsvgdoc)
 * [Containers](#containers)
 * [Manipulation](#manipulation)
 * [Events](#events)
@@ -105,6 +105,14 @@ rect.attr("width", 100)
 
 paper.append(rect);
 ```
+### Vector.Graphics
+
+`Vector.Graphics` is a subclass of `Vector.Element`. <br/>
+
+This class represents the native interface `SVGGraphicsElement`. This class normally
+does nothing, but it is useful when you want to add your own methods to all
+graphics elements.
+
 
 ### Containers
      
