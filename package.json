@@ -1,8 +1,8 @@
 {
   "name": "vector.svg",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "url": "https://github.com/ariyankhan/vector.svg",
-  "description": "A Javascript library for creating vector graphics using SVG",
+  "description": "A Javascript library for manipulating and animating SVG",
   "main": "./dist/vector.svg.js",
   "scripts": {
     "build": "gulp",
