@@ -438,7 +438,7 @@ Vector.merge(Element.prototype, {
         if (arguments.length >= 1 && listener !== null && !isCallable(listener))
             throw new TypeError("Listener is not null or callable");
         context = arguments.length >= 2 ? context : this;
-        return setEventAttribute(this, "oondragstart", listener, context);
+        return setEventAttribute(this, "ondragstart", listener, context);
     },
 
     ondrop: function (listener, context) {
