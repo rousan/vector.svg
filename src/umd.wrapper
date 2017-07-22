@@ -16,8 +16,8 @@
         // When module is loaded by <script> tag in browser
         root.Vector = factory(root);
     }
-}(typeof window !== "undefined" ? window : this, function(root) {
+})(typeof window !== "undefined" ? window : this, function(root) {
     <%= contents %>
 
     return Vector;
-}));
+});
