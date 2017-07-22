@@ -1,20 +1,89 @@
 # Vector.svg
 
-A Javascript library for creating vector graphics using SVG. It uses SVG 1.1 W3C Spec 
-and written in pure ES5. It provides SVG DOM manipulation, data binding and animation functionality.
+A Javascript library for creating vector graphics using SVG. It uses the SVG W3C Recommendation
+and written in pure ES5. It provides `SVG DOM manipulation`, `data binding` and `animation` functionality.
 
 ## Install
 
-    `npm install vector.svg`
-    
+If you use NPM, run the following command, Otherwise download the latest release from Github. It supports UMD module loader i.e.
+AMD, CommonJS, and VanillaJS environments are supported. In VanillaJS, a `Vector` global is exported:
+
+`npm install vector.svg`
+
+After downloading just insert it into your HTML page:
+
+`<script src="vector.svg.min.js"></script>`
+
 ## Build
-    
-    `npm run build`
+
+`npm run build`     
      
 ## Test
 
-    `npm test`
+`npm test`
+
+## Documentation
+
+* [Getting Started](#getting-started)
+* [Elements](#elements)
+* [Containers](#containers)
+* [Manipulation](#manipulation)
+* [Events](#events)
+* [Data Binding](#data-binding)
+
+
+### Getting Started
+
+First of all create a HTML page consisting of a `<div>` element like following snippet:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vector.svg Getting Started</title>
+</head>
+<body>
+
+<div id="paper"></div>
+
+</body>
+</html>
+```
+Then, create a SVG Documents withing the container element:
+
+```javascript
+var paper = Vector("paper", 400, 300);
+```
+Now, lets create some basic shapes:
+
+```javascript
+var paper = Vector("paper", 400, 300);
+
+var circle = paper.circle(50).cx(60).cy(60)
+             .attr({
+                 stroke: "red",
+                 fill: "purple"
+              });
+
+var rect = paper.rect(100, 100).x(100).y(100)
+		   .attr({
+                stroke: "purple",
+                fill: "green"
+            });
+```
+
+That's it, so simple. 
+[Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling, go and play with Vector.svg.
+
+### Elements
+
+### Containers
      
+### Manipulation
+
+### Data Binding
+
+
 ## Contributors
 
    * [Ariyan Khan](https://github.com/ariyankhan)
