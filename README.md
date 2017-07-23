@@ -816,7 +816,7 @@ paper.use()
 
 #### The `Vector()` function
 
-This function is called before any drawing. It returns a `Element.SVGDoc` instance 
+This function is called before any drawing. It returns a `Element.SVGDoc` instance
 and provides a drawing paper to draw on it.
 
 The syntax is:
@@ -835,7 +835,6 @@ it can be attached by calling `paper.container()` method.
 * `width` : The width of the newly created svg document. Default value is `100%`,
 
 * `hieght` : The height of the newly created svg document. Default value is `100%`.
-
 
 Example:
 
@@ -919,7 +918,7 @@ alert(Object.getOwnPropertyNames(target));
 
 #### `Vector.createElement()`
 
-Creates a SVG element for the specified tag name and returns the actual DOM Node,
+Creates a SVG element for the specified tag name and returns the actual svg dom node,
 not the wrapper one.
 
 The syntax is:
@@ -1055,7 +1054,7 @@ alert(uuid);
 #### `Vector.unique()`
 
 Returns an array of unique values from an array of values.
-Its time complexity is approx: O(n). It does not alter the main array.
+Its time complexity is: O(n). It does not alter the main array.
 
 The syntax is:
 
@@ -1083,7 +1082,7 @@ alert(uniqueValues);
 
 #### `Vector.wrap()`
 
-It wraps a existing SVG DOM node with a wrapper class.
+It wraps a existing SVG DOM node with a appropriate wrapper class.
 
 The syntax is:
 
@@ -1097,7 +1096,7 @@ Where,
 
 If `svgDOMNode` is not a `SVGElement` then it returns null,
 and if `svgDOMNode` is already wrapped then previous wrapper will be returned,
-otherwise a new wrapper object will be returned with appropriate wrapper class.
+otherwise a new wrapper object will be returned of appropriate wrapper class.
 
 Example:
 
@@ -1232,6 +1231,14 @@ Where,
 
 It returns a formatted string of points like: `"12,22 34,55 11,44"`.
 
+Example:
+
+```javascript
+var points = [{x: 10, y: 18}, {x: 66, y: 667}, {x: 1, y: -44}];
+
+alert(Vector.pointString(points));
+```
+
 #### `Vector.isIEOrEdgeBrowser()`
 
 Checks if the current browser is Internet Explorer or Edge or not.
@@ -1278,7 +1285,7 @@ alert(distance);
 
 #### `Vector.svgSupported`
 
-Detects current browser `svg` is supported or not.
+Detects whether the current browser `svg` supports or not.
 
 ```javascript
 if(Vector.svgSupported)
