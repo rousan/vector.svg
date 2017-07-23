@@ -22,6 +22,8 @@ After downloading just insert it into your HTML page:
 
 `npm test`
 
+## Demo
+
 ## Documentation
 
 * [Getting Started](#getting-started)
@@ -29,7 +31,7 @@ After downloading just insert it into your HTML page:
     * [Element](#vectorelement)
     * [Graphics](#vectorgraphics)
     * [Geometry](#vectorgeometry)
-    * [SVG](#vectorsvg)
+    * [SVG](#vector.svg)
     * [SVGDoc](#vectorsvgdoc)
     * [Rect](#vectorrect)
     * [Circle](#vectorcircle)
