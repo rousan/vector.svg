@@ -74,7 +74,7 @@ var isIEOrEdgeBrowser = function () {
 
 var isFirefox = function () {
     var ua = window.navigator.userAgent;
-    return (/Firefox/i.test(ua) || /Mozilla/i.test(ua));
+    return (/Firefox/i.test(ua) && /Mozilla/i.test(ua));
 };
 
 var isSVGSupported = function () {
