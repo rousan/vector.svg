@@ -1302,7 +1302,7 @@ It is a object containing of necessary namespace URIs.
 
 * `ns.xlink` : XLink namespace URI,
 
-* `ns.ev` : XML-Event namespace URI,
+* `ns.ev` : XML-Events namespace URI,
 
 * `ns.xhtml` : XHTML namespace URI,
 
