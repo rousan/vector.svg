@@ -285,6 +285,16 @@ paper.circle(70)
      .attr("fill", "purple");
 ```
 
+##### prototype.defs()
+
+There is only one `<defs>` element for every SVG document and that resides
+as the direct child of the the outer most `<svg>` element.
+This instance can be accessed by `defs()` method.
+
+```
+var defs = paper.defs();
+```
+
 #### Vector.Rect
 
 `Vector.Rect` is a subclass of `Vector.Geometry`.<br/>
