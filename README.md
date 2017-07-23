@@ -534,7 +534,7 @@ attribute.
 
 `Vector.Defs` is a subclass of `Vector.Graphics`.<br/>
 
-The `<defs>` element is a container element for referenced elements.
+It wraps `<defs>` elements. The `<defs>` element is a container element for referenced elements.
 Elements that are descendants of a `<defs>` are not rendered directly.
 For understandability and accessibility reasons, it is recommended that, 
 whenever possible, referenced elements be defined inside of the `<defs>` element.
@@ -558,6 +558,118 @@ The `defs` instance can also be accessed from any element throught `doc()` metho
 ```javascript
 circle.doc().defs();
 ```
+#### Vector.G
+
+`Vector.G` is a subclass of `Vector.Graphics`.<br/>
+
+This class wraps `<g>` elements. The `<g>` element is a container element for
+grouping together related graphics elements. Grouping elements can be useful
+if you want to transform a set of elements as if it were one.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+// Create a group and apply some transforms
+var g = paper.g();
+g.attr("transform", "translate(100, 100)");
+
+g.rect(100, 100)
+ .attr("fill", "red");
+ 
+// You also can add another element
+var circle = paper.circle(50);
+circle.attr("fill", "purple");
+g.append(circle);
+```
+#### Vector.Symbol
+
+`Vector.Symbol` is a subclass of `Vector.Element`.<br/>
+
+It wraps the `<symbol>` elements. The `<symbol>` element is used to define graphical 
+template objects which can be instantiated by a `<use>` element.
+The key distinction between a `<symbol>` and a `<g>` is `<symbol>` element itself
+is not rendered. Only instances of a `<symbol>` element are rendered.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var symbol = paper.defs().symbol();
+symbol.rect(100, 100)
+      .attr("fill", "red");
+      
+paper.use(symbol);
+```
+##### prototype.viewBox()
+
+Sets and gets the value of `viewBox` attribute.
+
+##### prototype.aspectRatio()
+
+Sets and gets the value of `preserveAspectRatio` attribute.
+
+#### Vector.Use
+
+`Vector.Use` is a subclass of `Vector.Graphics`.<br/>
+
+This class wraps the `<use>` elements. The `<use>` element references
+another element and indicates that the graphical contents of that element 
+is included/drawn at that given point in the document.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var circle = paper.defs().circle(15);
+
+paper.use(circle)
+     .attr("fill", "purple")
+     .x(20)
+     .y(20);
+     
+paper.use(circle)
+     .attr("fill", "red")
+     .x(80)
+     .y(80);
+     
+paper.use(circle)
+     .attr("fill", "green")
+     .x(140)
+     .y(140);
+```
+
+##### prototype.x()
+
+Sets and gets the value of `x` attribute.
+
+##### prototype.y()
+
+Sets and gets the value of `y` attribute.
+
+##### prototype.width()
+
+Sets and gets the value of `width` attribute.
+
+##### prototype.height()
+
+Sets and gets the value of `height` attribute.
+
+##### prototype.href()
+
+Sets and gets the value of the `xlink:href` attribute.
+
+When the first argument is `null` then the `xlink:href` attribute will be
+deleted. Also, you can pass any element directly or the `url` as a referenced element.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var circle = paper.defs().circle(15);
+var url = "#" + circle.id();
+paper.use(url)
+     .attr("fill", "purple")
+     .x(20)
+     .y(20);
+```
+
 
 
 ### Containers
