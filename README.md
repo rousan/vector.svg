@@ -6,11 +6,11 @@ and written in pure ES5. It provides `SVG DOM manipulation`, `data binding` and 
 ## Install
 
 If you use NPM, run the following command, Otherwise download the latest release from Github. It supports UMD module loader i.e.
-AMD, CommonJS, and VanillaJS environments. In VanillaJS, a `Vector` global is exported:
+AMD, CommonJS, and VanillaJS environments. In VanillaJS, a `Vector` global object is exported:
 
 `npm install vector.svg`
 
-After downloading just insert it into your HTML page:
+For VanillaJS, just insert it into your HTML page:
 
 `<script src="vector.svg.min.js"></script>`
 
@@ -23,6 +23,8 @@ After downloading just insert it into your HTML page:
 `npm test`
 
 ## Demo
+
+[This](http://byter.in/) is a simple Drawing Pad built with Vector.svg library.
 
 ## Documentation
 
@@ -44,16 +46,21 @@ After downloading just insert it into your HTML page:
     * [G](#vectorg)
     * [Symbol](#vectorsymbol)
     * [Use](#vectoruse)
+* [Vector Global](#vector-global)
 * [Containers](#containers)
-* [Manipulation](#manipulation)
+    * [Container](#container)
+    * [GenericContainer](#genericcontainer)
+    * [ShapeContainer](#shapecontainer)
+    * [StructuralContainer](#structuralcontainer)
+* [SVG DOM](#svg-dom)
 * [Events](#events)
 * [Data Binding](#data-binding)
-* [Utilities](#utilities)
+
 
 
 ### Getting Started
 
-First of all, create a HTML page consisting of a HTML element with an `id` attribute and ready to serve as the container:
+First of all, create a HTML page consisting of a HTML element with an `id` attribute and ready to serve as the container of the drawing:
 
 ```html
 <!DOCTYPE html>
@@ -77,6 +84,7 @@ Now, lets create some basic shapes:
 
 ```javascript
 var paper = Vector("paper", 400, 300);
+
 var circle = paper.circle(50).cx(60).cy(60);
 circle.attr("stroke", "red")
       .attr("fill", "purple");
@@ -86,11 +94,11 @@ rect.attr("stroke", "purple")
     .attr("fill", "green");
 ```
 
-That's it, isn't it so simple?
-[Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling, go and play with Vector.svg.
+That's it, isn't it so simple? [Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling.
 
 Test all the following code snippets [Here](https://jsfiddle.net/ariyankhan/zdw1z7ns/). Just
-copy and paste into the fiddling editor and run it.
+copy and paste into the fiddling editor and run it. All the necessary files are already
+attached.
 
 ### Elements
 
@@ -100,25 +108,141 @@ The `Vector.Element` class is the Base class for all the SVG DOM wrapper element
 is used to wrap `SVGElement` native interface and its subclasses.
 This class provides some basic methods that all the wrappers inherit.
 
-For those elements which has no wrapper implemented in `Vector.svg`, the
+For those elements which has no wrapper implemented yet in `Vector.svg`, the
 `Vector.Element` interface is useful.
+
 ```javascript
 var paper = Vector("paper", 400, 300);
 
 var rect = paper.rect(100, 100)
           .attr("fill", "red");
 
-// title variable is a instance of Vector.Element class
+// title variable is a instance of Vector.Element wrapper
 var title = rect.element("title");
 title.textContent("This is 100x100 rect");
 ```
+
+##### prototype.attr()
+
+This method is frequently used to manipulate attributes of the element. 
+
+All the forms are:
+
+* `attr(attrName, value, namespace)` : Sets the attribute and returns itself,
+
+* `attr(attrName, value)` : Equivalent to `attr(attrName, value, null)`,
+
+* `attr(attrName, null, namespace)` : Deletes the attribute and returns itself,
+
+* `attr(attrName, null)` : Equivalent `attr(attrName, null, null)`,
+
+* `attr(attrObject, namespace)` : Sets and deletes (if `null` is passed as value) multiple
+attributes at once with the specified namespace and returns itself,
+
+* `attr(attrObject)` : Equivalent to `attr(attrObject, null)`
+
+* `attr(attrName)` : Returns the attribute value with namespace = null,
+
+* `attr(attrNamesArr, namespace)` : Returns attribute values as map of attribute names and values,
+
+* `attr(attrNamesArr)` : Equivalent to `attr(attrNamesArr, null)`,
+
+* `attr()` : Returns all the attributes as map of attribute names and values
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect();
+
+// Sets a single attribute
+rect.attr("width", 100)
+    .attr("height", 100);
+    
+// Sets multiple attributes    
+rect.attr({
+  fill: 'red',
+  stroke: "purple",
+  x: 50,
+  y: 50
+});
+
+// Sets a single attribute with namespace
+rect.attr("href", "rect doesn't contain href attr", Vector.ns.xlink);
+
+// Deletes a attribute
+rect.attr("fill", null);
+
+// Gets a attribute value
+var fill = rect.attr("stroke");
+
+// Gets a attribute value with namespace
+var href = rect.attr(["href"], Vector.ns.xlink).href;
+
+alert(fill);
+alert(href);
+```
+
+##### prototype.node()
+
+Returns the underlying DOM element of the wrapper object. Remember after creating a wrapper, 
+you should not change the underlying dom element, if necessary then create a new wrapper.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(100, 100).x(10).y(10);
+// Gets SVGRectElement DOM node
+var node = rect.node();
+node.style.fill = "purple";
+node.style.stroke = "red";
+```
+
+##### prototype.doc()
+
+Returns the SVG document to which current element belongs, as `SVGDoc` instance.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(100, 100).x(10).y(10);
+
+alert(rect.doc() === paper);
+```
+
+##### prototype.id()
+
+Returns the `id` attribute, if the `id` attribute does not exist then a new random id
+will be created and returns it.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(100, 100).x(10).y(10);
+// Attach a new random id
+rect.id();
+
+alert(rect.id());
+```
+
+##### prototype.tag
+
+Returns the tag name of the underlying SVG dom element.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(100, 100).x(10).y(10);
+
+alert(rect.tag);
+```
+
 #### Vector.Graphics
 
 `Vector.Graphics` is a subclass of `Vector.Element`. <br/>
 
 This class represents the native interface `SVGGraphicsElement`. This class normally
 does nothing, but it is useful when you want to add your own methods to all
-the graphics elements.
+the graphics elements by extending it.
 
 #### Vector.Geometry
 
@@ -161,8 +285,8 @@ alert(path.length());
 alert(rect.length());
 alert(ellipse.length());
 ```
-Also, if the `width` and `height` or any others dimensions of the shape is in percentage,
-then you can get the actual length easily by this method.
+Also, if the `width` and `height` or any other dimensions of the shape is in percentage,
+then you can get the actual length easily by this method:
  
 ```javascript
 var paper = Vector("paper", 600, 300);
@@ -212,7 +336,7 @@ Sets and gets the value of `height` attribute.
 
 ##### prototype.size()
 
-Sets and gets the size of the `svg` in easy way.
+Sets and gets the size of the `<svg>` element in shortcut.
 
 It is equivalent to:
 
@@ -222,7 +346,7 @@ svg.width(w).height(h);
 
 ##### prototype.viewBox()
 
-Sets and gets the `viewBox` of the `svg` element.
+Sets and gets the `viewBox` of the `<svg>` element.
 
 As a setter:
 
@@ -296,7 +420,7 @@ There is only one `<defs>` element for every SVG document and that resides
 as the direct child of the the outer most `<svg>` element.
 This instance can be accessed by `defs()` method.
 
-```
+```javascript
 var defs = paper.defs();
 ```
 
@@ -337,7 +461,7 @@ Sets and gets the value of `height` attribute.
 
 ##### prototype.size()
 
-Sets and gets the size of the `rect` in easy way.
+Sets and gets the size of the `<rect>` element in shortcut.
 
 It is equivalent to:
 
@@ -366,7 +490,6 @@ paper.circle(100)
      .cy(100)
      .attr("fill", "red")
      .attr("stroke", "purple");
-       
 ```
 ##### prototype.r()
 
@@ -384,7 +507,7 @@ Sets and gets the value of `cy` attribute.
 
 `Vector.Path` is a subclass of `Vector.Geometry`.<br/>
 
-Path is used to create complex shapes unlike Polyline.
+Path is used to create complex shapes unlike Polyline or Polygon.
 It wraps the `SVGPathElement` native interface. 
 
 ```javascript
@@ -392,10 +515,9 @@ var paper = Vector("paper", 600, 300);
 
 var path = paper.path();
 path.d("M0,0H50A20,20,0,1,0,150,50v40C100,125,0,85,0,85z")
-    .attr("fill", "red")
+    .attr("fill", "none")
+    .attr("stroke-width", 2)
     .attr("stroke", "purple");
-     
-alert(path.length());
 ```
 
 ##### prototype.d()
@@ -446,7 +568,7 @@ line.x1(50).y1(60);
 ```
 ##### prototype.to()
 
-Sets and gets the destination point of the line.
+Sets and gets the end point of the line.
 
 Equivalent to the following:
 
@@ -512,7 +634,6 @@ polygon.points("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40")
 Sets and gets the polygon point-string i.e. the value of `points`
 attribute.
 
-
 #### Vector.Polyline
 
 `Vector.Polyline` is a subclass of `Vector.Geometry`.<br/>
@@ -558,7 +679,7 @@ paper.use(circle)
      .attr("fill", "purple");
 ```
 
-The `defs` instance can also be accessed from any element throught `doc()` method.
+The `<defs>` instance can also be accessed from any element through `doc()` method.
 
 ```javascript
 circle.doc().defs();
@@ -586,6 +707,7 @@ var circle = paper.circle(50);
 circle.attr("fill", "purple");
 g.append(circle);
 ```
+
 #### Vector.Symbol
 
 `Vector.Symbol` is a subclass of `Vector.Element`.<br/>
@@ -604,6 +726,7 @@ symbol.rect(100, 100)
       
 paper.use(symbol);
 ```
+
 ##### prototype.viewBox()
 
 Sets and gets the value of `viewBox` attribute.
@@ -662,28 +785,51 @@ Sets and gets the value of `height` attribute.
 Sets and gets the value of the `xlink:href` attribute.
 
 When the first argument is `null` then the `xlink:href` attribute will be
-deleted. Also, you can pass any element directly or the `url` as a referenced element.
+deleted. Also, you can pass any element directly as a referenced element:
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var circle = paper.defs().circle(15);
+paper.use()
+     .href(circle)
+     .attr("fill", "purple")
+     .x(20)
+     .y(20);
+```
+
+Pass any relative or absolute URL as reference:
 
 ```javascript
 var paper = Vector("paper", 600, 300);
 
 var circle = paper.defs().circle(15);
 var url = "#" + circle.id();
-paper.use(url)
+paper.use()
+     .href(url)
      .attr("fill", "purple")
      .x(20)
      .y(20);
 ```
 
+### Vector Global
+
 
 
 ### Containers
+
+
      
-### Manipulation
+### SVG DOM
+
+
+
+### Events
+
+
 
 ### Data Binding
 
-### Utilities
 
 
 ## Contributors
