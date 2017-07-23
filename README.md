@@ -89,6 +89,9 @@ rect.attr("stroke", "purple")
 That's it, isn't it so simple?
 [Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling, go and play with Vector.svg.
 
+Test all the following code snippets [Here](https://jsfiddle.net/ariyankhan/zdw1z7ns/). Just
+copy and paste into the fiddling editor and run it.
+
 ### Elements
 
 #### Vector.Element
