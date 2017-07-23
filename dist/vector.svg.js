@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Mon Jul 24 2017 01:15:11 GMT+0530 (IST)
+ * Date: Mon Jul 24 2017 01:18:11 GMT+0530 (IST)
  */
 
 (function(root, factory) {
