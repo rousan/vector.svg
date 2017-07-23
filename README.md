@@ -95,15 +95,17 @@ The `Vector.Element` class is the Base class for all the SVG DOM wrapper element
 is used to wrap `SVGElement` native interface and its subclasses.
 This class provides some basic methods that all the wrappers inherit.
 
+For those elements which has no wrapper implemented in `Vector.svg`, the
+`Vector.Element` interface is useful.
 ```javascript
 var paper = Vector("paper", 400, 300);
 
-var rect = new Vector.Element(Vector.createElement("rect"));
-rect.attr("width", 100)
-    .attr("height", 100)
-    .attr("fill", "red");
+var rect = paper.rect(100, 100)
+          .attr("fill", "red");
 
-paper.append(rect);
+// title variable is a instance of Vector.Element class
+var title = rect.element("title");
+title.textContent("This is 100x100 rect");
 ```
 #### Vector.Graphics
 
@@ -122,7 +124,7 @@ to all the shape elements i.e. `Rect`, `Circle`, `Path` etc.
 
 ##### prototype.pathLength()
 
-This method sets and gets the value `pathLength` attribute.
+Sets and gets the value of `pathLength` attribute.
 
 ##### prototype.length()
 
@@ -153,6 +155,23 @@ ellipse.cx(250)
 alert(path.length());
 alert(rect.length());
 alert(ellipse.length());
+```
+Also, if the `width` and `height` or any others dimensions of the shape is in percentage,
+then you can get the actual length easily by this method.
+ 
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+g.attr("fill", "none")
+ .attr("stroke-width", 2)
+ .attr("stroke", "purple");
+ 
+var rect = g.rect("30%", "50.56%");
+rect.x("5%")
+    .y("5%");
+    
+alert(rect.length());
 ```
 
 #### Vector.SVG
@@ -186,7 +205,7 @@ var paper = Vector("paper", 400, 300);
 
 `Vector.Rect` is a subclass of `Vector.Geometry`.<br/>
 
-It wraps the `<rect>` element i.e. `SVGRectElement` native interface.
+Creates a basic rectangle shape. It wraps the `SVGRectElement` native interface.
 
 ```javascript
 var paper = Vector("paper", 600, 300);
@@ -234,7 +253,188 @@ Sets and gets the value of `rx` attribute.
 
 Sets and gets the value of `ry` attribute.
 
+#### Vector.Circle
 
+`Vector.Circle` is a subclass of `Vector.Geometry`.<br/>
+
+Creates a circle of the specified radius. It wraps the `SVGCircleElement` native interface.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+paper.circle(100)
+     .cx(100)
+     .cy(100)
+     .attr("fill", "red")
+     .attr("stroke", "purple");
+       
+```
+##### prototype.r()
+
+Sets and gets the value of `r` attribute.
+
+##### prototype.cx()
+
+Sets and gets the value of `cx` attribute.
+
+##### prototype.cy()
+
+Sets and gets the value of `cy` attribute.
+
+#### Vector.Path
+
+`Vector.Path` is a subclass of `Vector.Geometry`.<br/>
+
+Path is used to create complex shapes unlike Polyline.
+It wraps the `SVGPathElement` native interface. 
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var path = paper.path();
+path.d("M0,0H50A20,20,0,1,0,150,50v40C100,125,0,85,0,85z")
+    .attr("fill", "red")
+    .attr("stroke", "purple");
+     
+alert(path.length());
+```
+
+##### prototype.d()
+
+Sets and gets the path string i.e. the value of `d` attribute. 
+
+#### Vector.Line
+
+`Vector.Line` is a subclass of `Vector.Geometry`.<br/>
+
+Creates a straight line from one point to another point. It wraps the
+`SVGLineElement` native interface.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var line = paper.line();
+line.from(10, 100)
+    .to(200, 30)
+    .attr("fill", "red")
+    .attr("stroke", "purple");
+```
+
+##### prototype.x1()
+
+Sets and gets the value of `x1` attribute.
+
+##### prototype.y1()
+
+Sets ans gets the value of `y1` attribute.
+
+##### prototype.x2()
+
+Sets and gets the value of `x2` attribute.
+
+##### prototype.y2()
+
+Sets and gets the value of `y2` attribute.
+
+##### prototype.from()
+
+Sets and gets the starting point of the line.
+
+It is equivalent to:
+
+```javascript
+line.x1(50).y1(60);
+```
+##### prototype.to()
+
+Sets and gets the destination point of the line.
+
+Equivalent to the following:
+
+```javascript
+line.x2(100).y2(150);
+```
+
+#### Vector.Ellipse
+
+`Vector.Ellipse` is a subclass of `Vector.Geometry`.<br/>
+
+Creates a basic ellipse shape, to get rotated ellipse please use transform.
+It wraps the `SVGEllipseElement` native interface.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+g.attr("fill", "none")
+ .attr("stroke", "purple");
+ 
+g.ellipse(60, 30)
+ .cx(70)
+ .cy(50)
+ // To create a rotated ellipse
+ .attr("transform", "rotate(45, 70, 50)");
+```
+
+##### prototype.rx()
+
+Sets and gets the value of `rx` attribute.
+
+##### prototype.ry()
+
+Sets and gets the value of `ry` attribute.
+
+##### prototype.cx()
+
+Sets and gets the value of `cx` attribute.
+
+##### prototype.cy()
+
+Sets and gets the value of `cy` attribute.
+
+#### Vector.Polygon
+
+`Vector.Polygon` is a subclass of `Vector.Geometry`.<br/>
+
+The polygon element defines a closed shape consisting of a set of
+connected straight line segments.
+It wraps the `SVGPolygonElement` native interface.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var polygon = paper.polygon();
+polygon.points("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40")
+       .attr("fill", "purple");
+```
+
+##### prototype.points()
+
+Sets and gets the polygon point-string i.e. the value of `points`
+attribute.
+
+
+#### Polyline
+
+`Vector.Polyline` is a subclass of `Vector.Geometry`.<br/>
+
+Polyline element defines a set of connected straight line segments.
+Typically, polyline elements define open shapes.
+It wraps the `SVGPolylineElement` native interface.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var polyline = paper.polyline();
+polyline.points("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40")
+       .attr("fill", "none")
+       .attr("stroke", "purple");
+```
+
+##### prototype.points()
+
+Sets and gets the polyline point-string i.e. the value of `points`
+attribute.
 
 ### Containers
      
