@@ -814,7 +814,492 @@ paper.use()
 
 ### `Vector` Global
 
+#### The `Vector()` function
 
+This function is called before any drawing. It returns a `Element.SVGDoc` instance 
+and provides a drawing paper to draw on it.
+
+The syntax is:
+
+```javascript
+var paper = Vector(container, width, height);
+```
+
+Where,
+
+* `container` : Its value can be a `Element.SVGDoc` object or `window.SVGSVGElement` object or
+`window.HTMLElement` object or a string `id`. For others value it returns a 
+`SVGDoc` instance which is not attached to the document DOM tree initially, and 
+it can be attached by calling `paper.container()` method.
+
+* `width` : The width of the newly created svg document. Default value is `100%`,
+
+* `hieght` : The height of the newly created svg document. Default value is `100%`.
+
+
+Example:
+
+```javascript
+var container = document.getElementById("paper");
+var paper = Vector(container, 600, 300);
+
+paper.circle(100)
+     .attr("fill", "purple")
+     .cx(150)
+     .cy(150);
+```
+
+If `container` is not given,
+
+```javascript
+var paper = Vector().size(600, 300);
+
+paper.circle(100)
+     .attr("fill", "purple")
+     .cx(150)
+     .cy(150);
+     
+var container = document.getElementById("paper");
+paper.container(container);
+```
+
+#### `Vector.merge()`
+
+This method copies all own properties(enumerable and non-enumerable)
+carefully with descriptors from source objects to target object and merges them.
+It does not make deep copy of properties.
+
+The syntax is:
+
+```javascript
+var target = Vector.merge(target, sourceObjects);
+```
+
+Where,
+
+* `target` : Target object which will be merged by sources,
+
+* `sourceObjects` : The source objects
+
+It returns `target` object.
+
+Example:
+
+```javascript
+var source1 = {};
+var source2 = {
+    a: 999,
+    b: 1223
+};
+
+Object.defineProperties(source1, {
+    x: {
+        get: function () {
+            return 90;
+        },
+        configurable: true,
+        enumerable: true
+    },
+
+    y: {
+        get: function () {
+            return 888;
+        },
+        configurable: true,
+        enumerable: true
+    }
+});
+
+// Now all the properties of source1 and source2 will be copied
+// into the target object with descriptors.
+var target = Vector.merge({}, source1, source2);
+
+alert(Object.getOwnPropertyNames(target));
+```
+
+#### `Vector.createElement()`
+
+Creates a SVG element for the specified tag name and returns the actual DOM Node,
+not the wrapper one.
+
+The syntax is:
+
+```javascript
+var element = Vector.createElement(tagName);
+```
+
+Where,
+
+* `tagName` : The tag name of the svg element that will be created.
+
+It returns the newly created svg dom node.
+
+Example:
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = Vector.wrap(Vector.createElement("rect"));
+rect.size(100, 100)
+    .attr("fill", "purple");
+
+paper.insert(rect);
+```
+
+#### `Vector.setAttribute()`
+
+Sets attribute to a SVG DOM Element.
+
+The syntax is:
+
+```javascript
+Vector.setAttribute(svgDomNode, name, value, namespace);
+```
+
+Where,
+
+* `svgDomNode` : Any SVG dom element,
+
+* `name` : Attribute name,
+
+* `value` : Attribute value,
+
+* `namespece` : Namespace URI. Default value is `null`.
+
+#### `Vector.setAttributes()`
+
+Sets multiple attributes to a SVG DOM Element.
+
+The syntax is:
+
+```javascript
+Vector.setAttributes(svgDomNode, attrs, namespace);
+```
+
+Where,
+
+* `svgDomNode` : Any SVG dom element,
+
+* `attrs` : An object containing attributes in key-value pairs,
+
+* `namespece` : Namespace URI. Default value is `null`.
+
+#### `Vector.hasAttribute()`
+
+Checks whether the attribute exists in a SVG DOM Element or not.
+
+The syntax is:
+
+```javascript
+var hasAttr = Vector.hasAttribute(svgDomNode, name, namespace);
+```
+
+Where,
+
+* `svgDomNode` : Any SVG dom element,
+
+* `name` : Attribute name to be checked,
+
+* `namespece` : Namespace URI. Default value is `null`.
+
+It returns true or false.
+
+#### `Vector.getAttribute()`
+
+Returns attribute value from a SVG DOM element in string.
+
+The syntax is:
+
+```javascript
+var attrValue = Vector.getAttribute(svgDomNode, name, namespace);
+```
+
+Where,
+
+* `svgDomNode` : Any SVG dom element,
+
+* `name` : Attribute name,
+
+* `namespece` : Namespace URI. Default value is `null`.
+
+It returns attribute value in string.
+
+### `Vector.removeAttribute()`
+
+Deletes a attribute from a SVG DOM Element.
+
+The syntax is:
+
+```javascript
+Vector.removeAttribute(svgDomNode, name, namespace);
+```
+
+Where,
+
+* `svgDomNode` : Any SVG dom element,
+
+* `name` : Attribute name to be removed,
+
+* `namespece` : Namespace URI. Default value is `null`.
+
+#### `Vector.uuid()`
+
+It is a utility method. It generates RFC4122 version 4 compliant UUID.
+
+```javascript
+var uuid = Vector.uuid();
+
+alert(uuid);
+```
+
+#### `Vector.unique()`
+
+Returns an array of unique values from an array of values.
+Its time complexity is approx: O(n). It does not alter the main array.
+
+The syntax is:
+
+```javascript
+var uniqueVals = Vector.unique(arr);
+```
+
+Where,
+
+* `arr` : Any array or array-like object
+
+It returns a new array of unique values.
+
+Example:
+
+```javascript
+var obj1 = {};
+var obj2 = {};
+var values = [100, -22, 56, -22, 5, 100, "abc", obj1, null, undefined, obj2, obj1, obj2, "abc"];
+
+var uniqueValues = Vector.unique(values);
+
+alert(uniqueValues);
+```
+
+#### `Vector.wrap()`
+
+It wraps a existing SVG DOM node with a wrapper class.
+
+The syntax is:
+
+```javascript
+var wrappedElem = Vector.wrap(svgDOMNode);
+```
+
+Where,
+
+* `svgDOMNode` : Any svg dom node
+
+If `svgDOMNode` is not a `SVGElement` then it returns null,
+and if `svgDOMNode` is already wrapped then previous wrapper will be returned,
+otherwise a new wrapper object will be returned with appropriate wrapper class.
+
+Example:
+
+```javascript
+var paper = Vector("paper", 600, 400);
+
+var rect = Vector.wrap(Vector.createElement("rect"));
+var title = Vector.wrap(Vector.createElement("title"));
+
+rect.size(100, 100)
+    .attr("fill", "purple")
+    .append(title.textContent("Vector.svg is amazing"));
+
+paper.append(rect);
+```
+
+#### `Vector.isWrapped()`
+
+Checks if a SVG dom element is wrapped or not.
+
+The syntax is:
+
+```javascript
+var isWrapped = Vector.isWrapped(svgDOMNode);
+```
+
+Where,
+
+* `svgDOMNode` : Any svg dom node
+
+It returns true or false.
+
+Example:
+
+```javascript
+var paper = Vector("paper", 600, 400);
+
+var rectNode = Vector.createElement("rect");
+
+alert(Vector.isWrapped(rectNode));
+
+Vector.wrap(rectNode);
+
+alert(Vector.isWrapped(rectNode));
+```
+
+#### `Vector.toIntLength()`
+
+It converts any value to Integer length (Positive Integer value).
+
+The syntax is:
+
+```javascript
+var length = Vector.toIntLength(value);
+```
+
+Where,
+
+* `value` : Any value
+
+It returns positive integer value.
+
+#### `Vector.unHoles()`
+
+It returns an array of values without holes from an array or array-like object.
+
+The syntax is:
+
+```javascript
+var arrWithoutHoles = Vector.unHoles(arr);
+```
+
+Where,
+
+* `arr` : Any array or array-like object
+
+It returns a new array, it does'nt alter the main array.
+
+Example:
+
+```javascript
+var arrWithHoles = [1, 2,,,, 3, 55, 22,,,99];
+var arrWithoutHoles = Vector.unHoles(arrWithHoles);
+alert(arrWithoutHoles);
+```
+
+#### `Vector.points()`
+
+It formats a pointString (the `points` attribute value of Polygon or Polyline) 
+as a array of points. Every point in array is a object containing `x`
+and `y` properties.
+
+The syntax is:
+
+```javascript
+var pointsArr = Vector.points(pointString);
+```
+
+Where,
+
+* `pointString` : A point-string value
+
+It returns a new array of points, every point is a object containing two
+coordinates `x` and `y`.
+
+Example:
+
+```javascript
+var pointString = "50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40";
+var pointArr = Vector.points(pointString);
+alert(pointArr);
+alert(pointArr[0].x + ", " + pointArr[0].y);
+```
+
+#### `Vector.pointString()`
+
+It formats an array of points to a point-string. If pointList is formatted
+like: `pointList = [{x: 12, y: 11}, {x: 11, y: 33}, {x: 111, y: 999}]`
+then it will be converted to a point string like `"12,11 11,33 111,999"`,
+otherwise if pointList is primitive(i.e. string) then it is passed to
+`Vector.points()` and then its output value is interpreted.
+
+The syntax is:
+
+```javascript
+var pointString = Vector.pointString(pointList);
+```
+
+Where,
+
+* `pointList` : A string of points or array or array-like object containing points
+
+It returns a formatted string of points like: `"12,22 34,55 11,44"`.
+
+#### `Vector.isIEOrEdgeBrowser()`
+
+Checks if the current browser is Internet Explorer or Edge or not.
+
+```javascript
+var v = Vector.isIEOrEdgeBrowser();
+alert("This browser is " + (v ? "" : "not ") + "IE or Edge");
+```
+
+#### `Vector.isFirefox()`
+
+Checks if the current browser is firefox or not.
+
+```javascript
+var v = Vector.isFirefox();
+alert("This browser is " + (v ? "" : "not ") + "firefox");
+```
+#### `Vector.distance()`
+
+Calculates distance between two points.
+
+The syntax is:
+
+```javascript
+var distance = Vector.distance(x1, y1, x2, y2);
+```
+
+Where,
+
+* `x1` : x coordinate of first point,
+
+* `y` : y coordinate of first point,
+
+* `x2` : x coordinate of second point,
+
+* `y2` : y coordinate of second point
+
+It returns the distance between two specified points.
+
+```javascript
+var distance = Vector.distance(129, 100, 34, 677);
+alert(distance);
+```
+
+#### `Vector.svgSupported`
+
+Detects current browser `svg` is supported or not.
+
+```javascript
+if(Vector.svgSupported)
+	alert("Yah! You can use Vector.svg in your browser");
+else
+	alert("Sorry! You can't use Vector.svg in your browser");
+```
+
+#### `Vector.ns`
+
+It is a object containing of necessary namespace URIs.
+
+* `ns.svg` : SVG namespace URI,
+
+* `ns.xlink` : XLink namespace URI,
+
+* `ns.ev` : XML-Event namespace URI,
+
+* `ns.xhtml` : XHTML namespace URI,
+
+* `ns.xml` : XML namespace URI
 
 ### Containers
 
