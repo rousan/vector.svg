@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Sat Jul 22 2017 16:53:18 GMT+0530 (IST)
+ * Date: Mon Jul 24 2017 01:15:11 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -107,7 +107,7 @@
 
     var isFirefox = function() {
         var ua = window.navigator.userAgent;
-        return (/Firefox/i.test(ua) || /Mozilla/i.test(ua));
+        return (/Firefox/i.test(ua) && /Mozilla/i.test(ua));
     };
 
     var isSVGSupported = function() {
