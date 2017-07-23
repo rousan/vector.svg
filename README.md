@@ -31,7 +31,7 @@ After downloading just insert it into your HTML page:
     * [Element](#vectorelement)
     * [Graphics](#vectorgraphics)
     * [Geometry](#vectorgeometry)
-    * [SVG](#vector.svg)
+    * [SVG](#vectorsvg-1)
     * [SVGDoc](#vectorsvgdoc)
     * [Rect](#vectorrect)
     * [Circle](#vectorcircle)
