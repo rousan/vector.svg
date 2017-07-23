@@ -189,6 +189,76 @@ svg.circle(40, 50, 50)
    .attr("fill", "purple")
    .attr("stroke", "green");
 ```
+##### prototype.x()
+
+Sets and gets the value of `x` attribute.
+
+##### prototype.y()
+
+Sets and gets the value of `y` attribute.
+
+##### prototype.width()
+
+Sets and gets the value of `width` attribute.
+
+##### prototype.height()
+
+Sets and gets the value of `height` attribute.
+
+##### prototype.size()
+
+Sets and gets the size of the `svg` in easy way.
+
+It is equivalent to:
+
+```javascript
+svg.width(w).height(h);
+```
+
+##### prototype.viewBox()
+
+Sets and gets the `viewBox` of the `svg` element.
+
+As a setter:
+
+```javascript
+var paper = Vector("paper", 600, 300);
+paper.viewBox(0, 0, 10, 10);
+
+paper.circle(4)
+     .cx(5)
+     .cy(5)
+     .attr("fill", "purple");
+```
+When it is called as getter, it returns a object containing of `x`, `y`, `width`
+and `height` properties.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+paper.viewBox(0, 0, 10, 10);
+
+paper.circle(4)
+     .cx(5)
+     .cy(5)
+     .attr("fill", "purple");
+     
+var v = paper.viewBox();
+alert(v.x + " " + v.y + " " + v.width + " " + v.height);
+```
+##### prototype.aspectRatio()
+
+Sets and gets the value of `preserveAspectRatio` attribute.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+paper.viewBox(0, 0, 400, 500);
+paper.aspectRatio("xMinYMin meet");
+
+paper.circle(70)
+     .cx(100)
+     .cy(100)
+     .attr("fill", "purple");
+```
 
 #### Vector.SVGDoc
 
@@ -199,6 +269,20 @@ the SVG document i.e. the outer most `<svg>` element.
 
 ```javascript
 var paper = Vector("paper", 400, 300);
+```
+
+##### prototype.container()
+
+Changes the container element for the SVG document.
+
+```javascript
+var paper = Vector(null, 600, 300); // Creates a paper without container
+paper.container("paper"); // Now sets the container element by its id or dom instance.
+
+paper.circle(70)
+     .cx(100)
+     .cy(100)
+     .attr("fill", "purple");
 ```
 
 #### Vector.Rect
@@ -414,7 +498,7 @@ Sets and gets the polygon point-string i.e. the value of `points`
 attribute.
 
 
-#### Polyline
+#### Vector.Polyline
 
 `Vector.Polyline` is a subclass of `Vector.Geometry`.<br/>
 
@@ -427,14 +511,44 @@ var paper = Vector("paper", 600, 300);
 
 var polyline = paper.polyline();
 polyline.points("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40")
-       .attr("fill", "none")
-       .attr("stroke", "purple");
+        .attr("fill", "none")
+        .attr("stroke", "purple");
 ```
 
 ##### prototype.points()
 
 Sets and gets the polyline point-string i.e. the value of `points`
 attribute.
+
+#### Vector.Defs
+
+`Vector.Defs` is a subclass of `Vector.Graphics`.<br/>
+
+The `<defs>` element is a container element for referenced elements.
+Elements that are descendants of a `<defs>` are not rendered directly.
+For understandability and accessibility reasons, it is recommended that, 
+whenever possible, referenced elements be defined inside of the `<defs>` element.
+There is only one `<defs>` element for every SVG document and that resides
+as the direct child of the the outer most `<svg>` element.
+This instance can be accessed by `defs()` method on the `Vector.SVDoc` instance.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+// Access <defs> element and add a circle into this.
+var circle = paper.defs().circle(50, 60, 60);
+
+// reference that circle by <use> element.
+paper.use(circle)
+     .attr("fill", "purple");
+```
+
+The `defs` instance can also be accessed from any element throught `doc()` method.
+
+```javascript
+circle.doc().defs();
+```
+
 
 ### Containers
      
