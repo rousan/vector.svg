@@ -46,7 +46,7 @@ For VanillaJS, just insert it into your HTML page:
     * [G](#vectorg)
     * [Symbol](#vectorsymbol)
     * [Use](#vectoruse)
-* [Vector Global](#vector-global)
+* [`Vector` Global](#vector-global)
 * [Containers](#containers)
     * [Container](#container)
     * [GenericContainer](#genericcontainer)
@@ -812,7 +812,7 @@ paper.use()
      .y(20);
 ```
 
-### Vector Global
+### `Vector` Global
 
 
 
