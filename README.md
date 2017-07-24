@@ -2199,7 +2199,7 @@ paper.use(circle)
 
    * [Rousan Ali](https://github.com/ariyankhan)
    
-   Contributions are welcome
+   Contributions are always welcome.
    
 ## License
 
