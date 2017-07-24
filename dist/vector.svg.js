@@ -1,14 +1,14 @@
 /*!
- * Vector.svg v1.2.0
+ * Vector.svg v1.4.0
  * A Javascript library for creating vector graphics using SVG.
  * It uses the SVG W3C Recommendation.
  * It provides SVG DOM manipulation, data binding and animation functionality.
  *
- * @license Copyright (c) 2017 Ariyan Khan, MIT License
+ * @license Copyright (c) 2017 Rousan Ali, MIT License
  *
  * Codebase: https://github.com/ariyankhan/vector.svg
  * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Mon Jul 24 2017 01:18:11 GMT+0530 (IST)
+ * Date: Tue Jul 25 2017 03:57:05 GMT+0530 (IST)
  */
 
 (function(root, factory) {
