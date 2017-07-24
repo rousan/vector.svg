@@ -1,6 +1,6 @@
 {
   "name": "vector.svg",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "url": "https://github.com/ariyankhan/vector.svg",
   "description": "A Javascript library for manipulating and animating SVG",
   "main": "./dist/vector.svg.js",
@@ -19,9 +19,10 @@
     "graphics",
     "svg-animations",
     "animate",
-    "svg-manipulating"
+    "svg-manipulating",
+    "data-binding"
   ],
-  "author": "Ariyan Khan",
+  "author": "Rousan Ali",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ariyankhan/vector.svg/issues"
