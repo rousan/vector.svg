@@ -104,6 +104,8 @@ attached.
 
 #### `Vector.Element`
 
+`Vector.Element` implements `Container` and `GenericContainer` classes.
+
 The `Vector.Element` class is the Base class for all the SVG DOM wrapper elements. This class
 is used to wrap `SVGElement` native interface and its subclasses.
 This class provides some basic methods that all the wrappers inherit.
@@ -306,6 +308,7 @@ alert(rect.length());
 #### `Vector.SVG`
 
 `Vector.SVG` is a subclass of `Vector.Graphics`.<br/>
+It implements `ShapeContainer` and `StructuralContainer` classes.<br/>
 
 This class represents the inner `<svg>` element i.e. nested svg document.
 
@@ -659,6 +662,7 @@ attribute.
 #### `Vector.Defs`
 
 `Vector.Defs` is a subclass of `Vector.Graphics`.<br/>
+It implements `ShapeContainer` and `StructuralContainer` classes.<br/>
 
 It wraps `<defs>` elements. The `<defs>` element is a container element for referenced elements.
 Elements that are descendants of a `<defs>` are not rendered directly.
@@ -687,6 +691,7 @@ circle.doc().defs();
 #### `Vector.G`
 
 `Vector.G` is a subclass of `Vector.Graphics`.<br/>
+It implements `ShapeContainer` and `StructuralContainer` classes.<br/>
 
 This class wraps `<g>` elements. The `<g>` element is a container element for
 grouping together related graphics elements. Grouping elements can be useful
@@ -711,6 +716,7 @@ g.append(circle);
 #### `Vector.Symbol`
 
 `Vector.Symbol` is a subclass of `Vector.Element`.<br/>
+It implements `ShapeContainer` and `StructuralContainer` classes.<br/>
 
 It wraps the `<symbol>` elements. The `<symbol>` element is used to define graphical 
 template objects which can be instantiated by a `<use>` element.
