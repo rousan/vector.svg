@@ -1308,19 +1308,6 @@ It is a object containing of necessary namespace URIs.
 
 * `ns.xml` : XML namespace URI
 
-### Containers
-
-Note: The following Containers APIs are internal part of this library and not exported
-to `Vector` global object. If you are interested to contribute to this project
-you should know these APIs.
-
-#### `Container`
-
-This class is the super class of all the containers.
-These containers provide container based methods to add elements and
-these methods are copied to actual svg wrapper class, so remember
-these containers are not in the prototype chain of actual svg wrapper classes.
-
 
 ### SVG DOM
 
@@ -1333,6 +1320,389 @@ these containers are not in the prototype chain of actual svg wrapper classes.
 ### Data Binding
 
 
+
+### Containers
+
+Note: The following Container classes are internal part of this library and not exported
+to `Vector` global object. If you are interested to contribute to this project
+you should know these APIs.
+
+#### `Container`
+
+This class is the super class of all the containers.
+These containers provide container based methods to add elements and
+these methods are merged to actual svg wrapper class, so remember
+these containers are not in the prototype chain of actual svg wrapper classes.
+
+##### `makeInheritance()`
+
+Merges all the exported container methods from container's `prototype.exports` object
+to the wrapper class's `prototype` object, that's why wrapper elements can
+call `rect()`, `circle()`, `line()`, `path()`, `g()` etc methods to insert
+a new element.
+
+##### `prototype.exports`
+
+This object holds the container based methods that will be exported to wrapper
+class when `container.makeInheritance()` method is called.
+
+#### `GenericContainer`
+
+`GenericContainer` is a subclass of `Container`.<br/>
+
+This type of container provides capability of adding any svg element
+as `Vector.Element` wrapper class. This Interface is useful when a svg
+element has no wrapper class implemented yet in `Vector.svg`.
+In this case `Vector.Element` is used to wrap.
+
+##### `prototype.exports.element()`
+
+This method is used to add any svg element to a container and in this case
+`Vector.Element` is used to wrap. It adds the new element as last child.
+
+The syntax is:
+
+```javascript
+var elem = container.element(tagName);
+```
+
+Where,
+
+* `tagName` : The tag name of svg element that will be created
+
+It returns a new instance of `Vector.Element`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var desc = paper.element("desc");
+desc.textContent("Vector.svg is a SVG manipulation library. \
+I love Vector.svg");
+
+alert(paper.textContent());
+```
+
+#### `ShapeContainer`
+
+`ShapeContainer` is a subclass of `Container`.<br/>
+
+This type of container can add shape elements i.e.
+`<path>`, `<rect>`, `<circle>` etc.
+
+##### `prototype.exports.rect()`
+
+Appends a new `<rect>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var rect = container.rect(width, height, x, y, rx, ry);
+```
+
+Where,
+
+* `width` : width of the rect,
+
+* `height` : height of the rect,
+
+* `x` : x coordinate of top-left corner,
+
+* `y` : y coordinate of top-left corner,
+
+* `rx` : horizontal corner radius of the rect,
+
+* `ry` : vertical corner radius of the rect
+
+It returns a new instance of `Vector.Rect`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(160, 150, 50, 50, 10, 10);
+rect.attr("fill", "purple");
+```
+
+##### `prototype.exports.circle()`
+
+Appends a new `<circle>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var circle = container.circle(r, cx, cy);
+```
+
+Where,
+
+* `r` : radius of the circle,
+
+* `cx` : x coordinate of the centre of the circle,
+
+* `cy` : y coordinate of the centre of the circle
+
+It returns a new instance of `Vector.Circle`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var circle = paper.circle(50, 100, 100);
+circle.attr("fill", "purple");
+```
+
+##### `prototype.exports.ellipse()`
+
+Appends a new `<ellipse>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var ellipse = container.ellipse(rx, ry, cx, cy);
+```
+
+Where,
+
+* `rx` : x-radius of the ellipse,
+
+* `ry` : y-radius of the ellipse,
+
+* `cx` : x coordinate of the centre of the ellipse,
+
+* `cy` : y coordinate of the centre of the ellipse
+
+It returns a new instance of `Vector.Ellipse`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var ellipse = paper.ellipse(70, 50, 100, 100);
+ellipse.attr("fill", "purple");
+```
+
+##### `prototype.exports.line()`
+
+Appends a new `<line>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var line = container.line(x1, y1, x2, y2);
+```
+
+Where,
+
+* `x1` : x coordinate of the starting point,
+
+* `y1` : y coordinate of the starting point,
+
+* `x2` : x coordinate of the end point,
+
+* `y2` : y coordinate of the end point
+
+It returns a new instance of `Vector.Line`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var line = paper.line(0, 0, 300, 300);
+line.attr("stroke", "purple");
+```
+
+##### `prototype.exports.path()`
+
+Appends a new `<path>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var path = container.path(d);
+```
+
+Where,
+
+* `d` : path string of the path,
+
+It returns a new instance of `Vector.Path`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var path = paper.path("M0,0H50A20,20,0,1,0,150,50v40C100,125,0,85,0,85z");
+path.attr("stroke", "purple")
+    .attr("fill", "none");
+```
+
+##### `prototype.exports.polygon()`
+
+Appends a new `<polygon>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var polygon = container.polygon(points);
+```
+
+Where,
+
+* `points` : point string of the polygon,
+
+It returns a new instance of `Vector.Polygon`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var polygon = paper.polygon("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40");
+polygon.attr("stroke", "purple")
+       .attr("fill", "none");
+```
+
+##### `prototype.exports.polyline()`
+
+Appends a new `<polyline>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var polyline = container.polyline(points);
+```
+
+Where,
+
+* `points` : point string of the polyline,
+
+It returns a new instance of `Vector.Polyline`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var polyline = paper.polyline("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40");
+polyline.attr("stroke", "purple")
+        .attr("fill", "none");
+```
+
+#### `StructuralContainer`
+
+`StructuralContainer` is a subclass of `Container`.<br/>
+
+This type of container can contain structural elements i.e
+`<defs>`, `<g>`, `<svg>`, `<symbol>`, `<use>`.
+
+Note: Only `SVGDoc` wrapper can contain `<defs>` element by `defs()` method.
+
+##### `prototype.exports.g()`
+
+Appends a new `<g>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var group = container.g();
+```
+
+It returns a new instance of `Vector.G`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+g.attr("fill", "purple")
+ .attr("transform", "translate(80, 80)")
+ .circle(20, 30, 30);
+
+// Nested groups
+var g1 = g.g();
+g1.attr("fill", "red")
+  .attr("transform", "translate(80, 80)")
+  .circle(20, 30, 30);
+```
+
+##### `prototype.exports.svg()`
+
+Appends a new `<svg>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var svg = container.svg(width, height, x, y);
+```
+
+Where,
+
+* `width` : width of the svg doc viewport,
+
+* `height` : height of the svg doc viewport,
+
+* `x` : x coordinate of top-left corner,
+
+* `y` : y coordinate of top-left corner
+
+It returns a new instance of `Vector.SVG`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var svg = paper.svg(100, 100, 10, 10);
+
+svg.circle(40, 50, 50)
+   .attr("fill", "purple")
+   .attr("stroke", "green");
+```
+
+##### `prototype.exports.symbol()`
+
+Appends a new `<symbol>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var symbol = container.symbol();
+```
+
+It returns a new instance of `Vector.Symbol`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var symbol = paper.defs().symbol();
+symbol.rect(100, 100)
+      .attr("fill", "red");
+      
+paper.use(symbol);
+```
+
+##### `prototype.exports.use()`
+
+Appends a new `<use>` element to a container to the end.
+
+The syntax is:
+
+```javascript
+var use = container.use(elem, width, height, x, y);
+```
+
+Where,
+
+* `elem` : wrapper element or any URL or null to remove,
+
+* `width` : width of the use element,
+
+* `height` : height of the use element,
+
+* `x` : x coordinate of top-left corner,
+
+* `y` : y coordinate of top-left corner
+
+It returns a new instance of `Vector.Use`.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var circle = paper.defs().circle(15);
+
+paper.use(circle)
+     .attr("fill", "purple")
+     .x(20)
+     .y(20);
+```
 
 ## Contributors
 
