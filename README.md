@@ -1712,7 +1712,7 @@ paper.use(circle)
 
 ## Contributors
 
-   * [Ariyan Khan](https://github.com/ariyankhan)
+   * [Rousan Ali](https://github.com/ariyankhan)
    
    Contributions are welcome
    
@@ -1720,7 +1720,7 @@ paper.use(circle)
 
 MIT License
 
-Copyright (c) 2017 Ariyan Khan
+Copyright (c) 2017 Rousan Ali
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
