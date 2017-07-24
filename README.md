@@ -1469,7 +1469,284 @@ It returns itself for chaining.
 
 ### Events
 
+These are SVG DOM event APIs and are available to all svg
+wrapper elements.
 
+#### `Element.prototype.on()`
+
+Adds event listener to an element. You can even add multiple listeners on a single
+event type and also you can attach any custom events.
+
+The syntax is:
+
+```javascript
+var elem = elem.on(eventName, listener, context, useCapture);
+```
+
+Where,
+
+* `eventName` : a string representing the event name,
+
+* `listener` : a Javascript function which receives a `window.Event` object when event is fired,
+
+* `context` : `this` value when listener is called. Default value is element itself,
+
+* `useCapture` : a `Boolean` value indicating that events of this type will be dispatched to the registered 
+listener before being dispatched to any `EventTarget` beneath it in the DOM tree.
+
+Note: Old `IE` browsers does'nt support `useCapture` parameter.
+
+It returns itself for chaining.
+
+Example:
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(200, 200, 0, 0);
+rect.attr("fill", "purple")
+    .on("click", function(e) {
+    	  alert("You just clicked on this rect.");
+     })
+    .on("click", function(e) {
+          alert("Multiple listener on single event type is also supported.");
+     })
+    .on("my-event", function(e) {
+          alert("You also can use your own custom event types.");
+     });
+```
+
+#### `Element.prototype.off()`
+
+Removes listeners which was previously added via `on()` method.
+
+The syntax is:
+
+```javascript
+var elem = elem.off(eventName, listener, useCapture);
+```
+
+Where,
+
+* `eventName` : a string representing the event name,
+
+* `listener` : the listener reference that was added before,
+
+* `useCapture` : the useCapture option that was used previously
+
+Note: If only `eventName` is passed then all listeners for that event 
+type will be removed, and if no argument is passed then it removes 
+all the listeners for all event types.
+
+It returns itself for chaining.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(200, 200, 0, 0);
+var callback = function() {
+    alert("It will not be called!");
+};
+rect.attr("fill", "purple")
+    .on("click", function(e) {
+        this.attr("fill", "green");
+     })
+    .on("click", callback)
+    .on("mouseover", function(e) {
+        this.x(this.x() + 10);
+    })
+    .on("dblclick", function fn() {
+    	this.off("click"); // removes click events
+        this.off(); // removes all events
+    });
+    
+rect.off("click", callback); // removes callback listener for click event
+```
+
+#### `Element.prototype.once()`
+
+Adds event listener to an element, but the listener would be invoked 
+at most once after being added. The listener would be automatically 
+removed after it is invoked.
+
+The syntax is:
+
+```javascript
+var elem = elem.once(eventName, listener, context, useCapture);
+```
+
+Where,
+
+* `eventName` : a string representing the event name,
+
+* `listener` : a Javascript function which receives a `window.Event` object when event is fired,
+
+* `context` : `this` value when listener is called. Default value is element itself,
+
+* `useCapture` : a `Boolean` value indicating that events of this type will be dispatched to the registered 
+listener before being dispatched to any `EventTarget` beneath it in the DOM tree.
+
+Note: Old `IE` browsers does'nt support `useCapture` parameter.
+
+It returns itself for chaining.
+
+````javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(200, 200, 0, 0);
+rect.attr("fill", "purple")
+    .once("click", function() {
+    	alert("Next time it will not be called!");
+    });
+````
+
+#### `Element.prototype.emit()`
+
+It fires any event on an element. It passes a `window.CustomEvent` object to 
+the listeners, so this method is useful for firing custom events.
+If it is needed to emit `click` or `dblclick` events, then please
+use `elem.click()` or `elem.dblclick()` methods instead of this.
+
+The syntax is:
+
+```javascript
+var elem = elem.emit(eventName, data, bubbles);
+```
+
+Where,
+
+* `eventName` : a string representing the event name,
+
+* `data` : any data that will be passed to the listener,
+
+* `bubbles` : a boolean value that says event is bubbles or not
+
+It returns itself for chaining.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(200, 200, 0, 0);
+rect.attr("fill", "purple")
+    .on("my-event", function(e) {
+    	alert("I got my data: " + e.detail.data);
+    })
+    .on("click", function() {
+    	setTimeout(function() {
+        	this.emit("my-event", {data: "my own data"});
+        }.bind(this), 1000);
+    });
+```
+
+#### Event Attributes
+
+You also can attach attribute events to an element for basic event types like `click`, 
+`dblclick`, `mouseover` etc.
+
+##### `Element.prototype.onclick()`
+
+Sets an event listener to the `onclick` event attribute.
+
+The syntax is:
+
+```javascript
+var elem = elem.onclick(listener, context);
+```
+
+where,
+
+* `listener` : a Javascript function or null to remove previous listener,
+
+* `context` : `this` value when listener is called. Default value is element itself,
+
+If no argument is passed then previously attached listener will be returned
+otherwise it returns itself for chaining.
+
+Note: All available event attributes in `Vector.svg` are: `onclick()`, `ondblclick()`, `onmousedown()`,
+`onmousemove()`, `onmouseout()`, `onmouseover()`, `onmouseup()`, `onmouseenter()`, `onmouseleave()`,
+`ontouchstart()`, `ontouchend()`, `ontouchmove()`, `ontouchcancel()`, `ondrag()`, `ondragend()`, 
+`ondragenter()`, `ondragleave()`, `ondragover()`, `ondragstart()`, `ondrop()`, `onblur()`, `onfocus()`, 
+`oncontextmenu()`, `onkeydown()`, `onkeypress()`, `onkeyup()`. 
+
+The syntax for others event attributes methods is same as above `onclick()` method.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(200, 200, 0, 0);
+rect.attr("fill", "purple")
+    .onclick(function() {
+    	this.attr("fill", "red");
+        this.onclick(null);
+        alert("Next time it will not be called!");
+    })
+    .onmousemove(function() {
+        this.x(this.x() + 1);
+    });
+```
+
+##### Firing basic events
+
+You can use `emit()` method to emit any event but this method is not recommended for firing
+basic events like `click`, `dblclick` etc.
+The `Vector.svg` provides some efficient methods to invoke those events.
+
+For example, To invoke `click` event just call `elem.click()`.
+
+All available methods to emit basic events are: `click()`, `dblclick()`, `focus()`, 
+`blur()`, `focusin()`, `focuseout()`, `mousedown()`, `mouseup()`, `mousemove()`, 
+`mouseout()`, `mouseover()`, `mouseenter()`, `mouseleave()`, `keydown()`,
+`keypress()`, `keyup()`.
+
+````javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(200, 200, 0, 0);
+rect.attr("fill", "purple")
+	.on("click", function() {
+    	alert("Click event is fired");
+    })
+    .onclick(function() {
+        alert("Event attribute listener is also called!");
+    });
+    
+setTimeout(function() {
+	rect.click();
+}, 1000);    
+````
+
+##### Custom Events
+
+You can also use your own events. You can add, remove and emit your own events.
+For this case the listener will receive a `window.CustomEvent` object when fired.
+
+Simply add an event listener for your custom event:
+
+```javascript
+elem.on("my-event", function() {
+  alert("Your event is called!");
+})
+```
+
+Now you are ready to emit the event whenever you want by `emit()` method:
+
+```javascript
+function somethingHappens() {
+    element.emit("my-event")
+}
+```
+
+You can even pass some data to the event:
+
+```javascript
+function somethingHappens() {
+    element.emit("my-event", {data: "my own data"});
+}
+
+element.on("my-event", function(e) {
+    alert("I got my data: " + e.detail.data);
+ })
+```
 
 ### Data Binding
 
