@@ -48,10 +48,10 @@ For VanillaJS, just insert it into your HTML page:
     * [`Use`](#vectoruse)
 * [`Vector` Global](#vector-global)
 * [Containers](#containers)
-    * [Container](#container)
-    * [GenericContainer](#genericcontainer)
-    * [ShapeContainer](#shapecontainer)
-    * [StructuralContainer](#structuralcontainer)
+    * [`Container`](#container)
+    * [`GenericContainer`](#genericcontainer)
+    * [`ShapeContainer`](#shapecontainer)
+    * [`StructuralContainer`](#structuralcontainer)
 * [SVG DOM](#svg-dom)
 * [Events](#events)
 * [Data Binding](#data-binding)
@@ -102,7 +102,7 @@ attached.
 
 ### Elements
 
-#### Vector.Element
+#### `Vector.Element`
 
 The `Vector.Element` class is the Base class for all the SVG DOM wrapper elements. This class
 is used to wrap `SVGElement` native interface and its subclasses.
@@ -122,7 +122,7 @@ var title = rect.element("title");
 title.textContent("This is 100x100 rect");
 ```
 
-##### prototype.attr()
+##### `prototype.attr()`
 
 This method is frequently used to manipulate attributes of the element. 
 
@@ -182,7 +182,7 @@ alert(fill);
 alert(href);
 ```
 
-##### prototype.node()
+##### `prototype.node()`
 
 Returns the underlying DOM element of the wrapper object. Remember after creating a wrapper, 
 you should not change the underlying dom element, if necessary then create a new wrapper.
@@ -197,7 +197,7 @@ node.style.fill = "purple";
 node.style.stroke = "red";
 ```
 
-##### prototype.doc()
+##### `prototype.doc()`
 
 Returns the SVG document to which current element belongs, as `SVGDoc` instance.
 
@@ -209,7 +209,7 @@ var rect = paper.rect(100, 100).x(10).y(10);
 alert(rect.doc() === paper);
 ```
 
-##### prototype.id()
+##### `prototype.id()`
 
 Returns the `id` attribute, if the `id` attribute does not exist then a new random id
 will be created and returns it.
@@ -224,7 +224,7 @@ rect.id();
 alert(rect.id());
 ```
 
-##### prototype.tag
+##### `prototype.tag`
 
 Returns the tag name of the underlying SVG dom element.
 
@@ -236,7 +236,7 @@ var rect = paper.rect(100, 100).x(10).y(10);
 alert(rect.tag);
 ```
 
-#### Vector.Graphics
+#### `Vector.Graphics`
 
 `Vector.Graphics` is a subclass of `Vector.Element`. <br/>
 
@@ -244,18 +244,18 @@ This class represents the native interface `SVGGraphicsElement`. This class norm
 does nothing, but it is useful when you want to add your own methods to all
 the graphics elements by extending it.
 
-#### Vector.Geometry
+#### `Vector.Geometry`
 
 `Vector.Geometry` is a subclass of `Vector.Graphics`.<br/>
 
 It wraps the `SVGGeometryElement` native interface. It provides some useful methods
 to all the shape elements i.e. `Rect`, `Circle`, `Path` etc.
 
-##### prototype.pathLength()
+##### `prototype.pathLength()`
 
 Sets and gets the value of `pathLength` attribute.
 
-##### prototype.length()
+##### `prototype.length()`
 
 It returns the user agent's computed value for the total length of 
 the shape in user units.
@@ -303,7 +303,7 @@ rect.x("5%")
 alert(rect.length());
 ```
 
-#### Vector.SVG
+#### `Vector.SVG`
 
 `Vector.SVG` is a subclass of `Vector.Graphics`.<br/>
 
@@ -318,23 +318,23 @@ svg.circle(40, 50, 50)
    .attr("fill", "purple")
    .attr("stroke", "green");
 ```
-##### prototype.x()
+##### `prototype.x()`
 
 Sets and gets the value of `x` attribute.
 
-##### prototype.y()
+##### `prototype.y()`
 
 Sets and gets the value of `y` attribute.
 
-##### prototype.width()
+##### `prototype.width()`
 
 Sets and gets the value of `width` attribute.
 
-##### prototype.height()
+##### `prototype.height()`
 
 Sets and gets the value of `height` attribute.
 
-##### prototype.size()
+##### `prototype.size()`
 
 Sets and gets the size of the `<svg>` element in shortcut.
 
@@ -344,7 +344,7 @@ It is equivalent to:
 svg.width(w).height(h);
 ```
 
-##### prototype.viewBox()
+##### `prototype.viewBox()`
 
 Sets and gets the `viewBox` of the `<svg>` element.
 
@@ -374,7 +374,7 @@ paper.circle(4)
 var v = paper.viewBox();
 alert(v.x + " " + v.y + " " + v.width + " " + v.height);
 ```
-##### prototype.aspectRatio()
+##### `prototype.aspectRatio()`
 
 Sets and gets the value of `preserveAspectRatio` attribute.
 
@@ -389,7 +389,7 @@ paper.circle(70)
      .attr("fill", "purple");
 ```
 
-#### Vector.SVGDoc
+#### `Vector.SVGDoc`
 
 `Vector.SVGDoc` is a subclass of `Vector.SVG`.<br/>
 
@@ -400,7 +400,7 @@ the SVG document i.e. the outer most `<svg>` element.
 var paper = Vector("paper", 400, 300);
 ```
 
-##### prototype.container()
+##### `prototype.container()`
 
 Changes the container element for the SVG document.
 
@@ -414,7 +414,7 @@ paper.circle(70)
      .attr("fill", "purple");
 ```
 
-##### prototype.defs()
+##### `prototype.defs()`
 
 There is only one `<defs>` element for every SVG document and that resides
 as the direct child of the the outer most `<svg>` element.
@@ -424,7 +424,7 @@ This instance can be accessed by `defs()` method.
 var defs = paper.defs();
 ```
 
-#### Vector.Rect
+#### `Vector.Rect`
 
 `Vector.Rect` is a subclass of `Vector.Geometry`.<br/>
 
@@ -443,23 +443,23 @@ paper.rect()
      .attr("stroke", "purple");
 ```
 
-##### prototype.x()
+##### `prototype.x()`
 
 Sets and gets the value of `x` attribute.
 
-##### prototype.y()
+##### `prototype.y()`
 
 Sets and gets the value of `y` attribute.
 
-##### prototype.width()
+##### `prototype.width()`
 
 Sets and gets the value of `width` attribute.
 
-##### prototype.height()
+##### `prototype.height()`
 
 Sets and gets the value of `height` attribute.
 
-##### prototype.size()
+##### `prototype.size()`
 
 Sets and gets the size of the `<rect>` element in shortcut.
 
@@ -468,15 +468,15 @@ It is equivalent to:
 ```javascript
 rect.width(w).height(h);
 ```
-##### prototype.rx()
+##### `prototype.rx()`
 
 Sets and gets the value of `rx` attribute.
 
-##### prototype.ry()
+##### `prototype.ry()`
 
 Sets and gets the value of `ry` attribute.
 
-#### Vector.Circle
+#### `Vector.Circle`
 
 `Vector.Circle` is a subclass of `Vector.Geometry`.<br/>
 
@@ -491,19 +491,19 @@ paper.circle(100)
      .attr("fill", "red")
      .attr("stroke", "purple");
 ```
-##### prototype.r()
+##### `prototype.r()`
 
 Sets and gets the value of `r` attribute.
 
-##### prototype.cx()
+##### `prototype.cx()`
 
 Sets and gets the value of `cx` attribute.
 
-##### prototype.cy()
+##### `prototype.cy()`
 
 Sets and gets the value of `cy` attribute.
 
-#### Vector.Path
+#### `Vector.Path`
 
 `Vector.Path` is a subclass of `Vector.Geometry`.<br/>
 
@@ -520,11 +520,11 @@ path.d("M0,0H50A20,20,0,1,0,150,50v40C100,125,0,85,0,85z")
     .attr("stroke", "purple");
 ```
 
-##### prototype.d()
+##### `prototype.d()`
 
 Sets and gets the path string i.e. the value of `d` attribute. 
 
-#### Vector.Line
+#### `Vector.Line`
 
 `Vector.Line` is a subclass of `Vector.Geometry`.<br/>
 
@@ -541,23 +541,23 @@ line.from(10, 100)
     .attr("stroke", "purple");
 ```
 
-##### prototype.x1()
+##### `prototype.x1()`
 
 Sets and gets the value of `x1` attribute.
 
-##### prototype.y1()
+##### `prototype.y1()`
 
 Sets ans gets the value of `y1` attribute.
 
-##### prototype.x2()
+##### `prototype.x2()`
 
 Sets and gets the value of `x2` attribute.
 
-##### prototype.y2()
+##### `prototype.y2()`
 
 Sets and gets the value of `y2` attribute.
 
-##### prototype.from()
+##### `prototype.from()`
 
 Sets and gets the starting point of the line.
 
@@ -566,7 +566,7 @@ It is equivalent to:
 ```javascript
 line.x1(50).y1(60);
 ```
-##### prototype.to()
+##### `prototype.to()`
 
 Sets and gets the end point of the line.
 
@@ -576,7 +576,7 @@ Equivalent to the following:
 line.x2(100).y2(150);
 ```
 
-#### Vector.Ellipse
+#### `Vector.Ellipse`
 
 `Vector.Ellipse` is a subclass of `Vector.Geometry`.<br/>
 
@@ -597,23 +597,23 @@ g.ellipse(60, 30)
  .attr("transform", "rotate(45, 70, 50)");
 ```
 
-##### prototype.rx()
+##### `prototype.rx()`
 
 Sets and gets the value of `rx` attribute.
 
-##### prototype.ry()
+##### `prototype.ry()`
 
 Sets and gets the value of `ry` attribute.
 
-##### prototype.cx()
+##### `prototype.cx()`
 
 Sets and gets the value of `cx` attribute.
 
-##### prototype.cy()
+##### `prototype.cy()`
 
 Sets and gets the value of `cy` attribute.
 
-#### Vector.Polygon
+#### `Vector.Polygon`
 
 `Vector.Polygon` is a subclass of `Vector.Geometry`.<br/>
 
@@ -629,12 +629,12 @@ polygon.points("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40")
        .attr("fill", "purple");
 ```
 
-##### prototype.points()
+##### `prototype.points()`
 
 Sets and gets the polygon point-string i.e. the value of `points`
 attribute.
 
-#### Vector.Polyline
+#### `Vector.Polyline`
 
 `Vector.Polyline` is a subclass of `Vector.Geometry`.<br/>
 
@@ -651,12 +651,12 @@ polyline.points("50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40")
         .attr("stroke", "purple");
 ```
 
-##### prototype.points()
+##### `prototype.points()`
 
 Sets and gets the polyline point-string i.e. the value of `points`
 attribute.
 
-#### Vector.Defs
+#### `Vector.Defs`
 
 `Vector.Defs` is a subclass of `Vector.Graphics`.<br/>
 
@@ -684,7 +684,7 @@ The `<defs>` instance can also be accessed from any element through `doc()` meth
 ```javascript
 circle.doc().defs();
 ```
-#### Vector.G
+#### `Vector.G`
 
 `Vector.G` is a subclass of `Vector.Graphics`.<br/>
 
@@ -708,7 +708,7 @@ circle.attr("fill", "purple");
 g.append(circle);
 ```
 
-#### Vector.Symbol
+#### `Vector.Symbol`
 
 `Vector.Symbol` is a subclass of `Vector.Element`.<br/>
 
@@ -727,15 +727,15 @@ symbol.rect(100, 100)
 paper.use(symbol);
 ```
 
-##### prototype.viewBox()
+##### `prototype.viewBox()`
 
 Sets and gets the value of `viewBox` attribute.
 
-##### prototype.aspectRatio()
+##### `prototype.aspectRatio()`
 
 Sets and gets the value of `preserveAspectRatio` attribute.
 
-#### Vector.Use
+#### `Vector.Use`
 
 `Vector.Use` is a subclass of `Vector.Graphics`.<br/>
 
@@ -764,23 +764,23 @@ paper.use(circle)
      .y(140);
 ```
 
-##### prototype.x()
+##### `prototype.x()`
 
 Sets and gets the value of `x` attribute.
 
-##### prototype.y()
+##### `prototype.y()`
 
 Sets and gets the value of `y` attribute.
 
-##### prototype.width()
+##### `prototype.width()`
 
 Sets and gets the value of `width` attribute.
 
-##### prototype.height()
+##### `prototype.height()`
 
 Sets and gets the value of `height` attribute.
 
-##### prototype.href()
+##### `prototype.href()`
 
 Sets and gets the value of the `xlink:href` attribute.
 
