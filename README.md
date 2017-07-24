@@ -47,14 +47,14 @@ For VanillaJS, just insert it into your HTML page:
     * [`Symbol`](#vectorsymbol)
     * [`Use`](#vectoruse)
 * [`Vector` Global](#vector-global)
+* [SVG DOM](#svg-dom)
+* [Events](#events)
+* [Data Binding](#data-binding)
 * [Containers](#containers)
     * [`Container`](#container)
     * [`GenericContainer`](#genericcontainer)
     * [`ShapeContainer`](#shapecontainer)
     * [`StructuralContainer`](#structuralcontainer)
-* [SVG DOM](#svg-dom)
-* [Events](#events)
-* [Data Binding](#data-binding)
 
 
 
@@ -124,7 +124,7 @@ title.textContent("This is 100x100 rect");
 
 ##### `prototype.attr()`
 
-This method is frequently used to manipulate attributes of the element. 
+This method is frequently used to manipulate attributes of a element. 
 
 All the forms are:
 
@@ -211,7 +211,7 @@ alert(rect.doc() === paper);
 
 ##### `prototype.id()`
 
-Returns the `id` attribute, if the `id` attribute does not exist then a new random id
+Sets and gets the `id` attribute. When called as `getter` if the `id` attribute does not exist then a new random id
 will be created and returns it.
 
 ```javascript
@@ -1310,8 +1310,18 @@ It is a object containing of necessary namespace URIs.
 
 ### Containers
 
+Note: The following Containers APIs are internal part of this library and not exported
+to `Vector` global object. If you are interested to contribute to this project
+you should know these APIs.
 
-     
+#### `Container`
+
+This class is the super class of all the containers.
+These containers provide container based methods to add elements and
+these methods are copied to actual svg wrapper class, so remember
+these containers are not in the prototype chain of actual svg wrapper classes.
+
+
 ### SVG DOM
 
 
