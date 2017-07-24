@@ -111,7 +111,7 @@ is used to wrap `SVGElement` native interface and its subclasses.
 This class provides some basic methods that all the wrappers inherit.
 
 For those elements which has no wrapper implemented yet in `Vector.svg`, the
-`Vector.Element` interface is useful.
+`Vector.Element` interface is used as wrapper class.
 
 ```javascript
 var paper = Vector("paper", 400, 300);
