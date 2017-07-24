@@ -1317,7 +1317,155 @@ It is a object containing of necessary namespace URIs.
 
 ### SVG DOM
 
+These are SVG Document Tree manipulation APIs and are available to all svg
+wrapper elements. 
 
+#### `Element.prototype.children()`
+
+Returns all direct child svg elements as an array of wrappers.
+
+The syntax is:
+
+```javascript
+var children = elem.children();
+```
+
+It returns an array of wrapper objects.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+g.attr("fill", "purple");
+
+var rect = g.rect(100, 100);
+var circle = g.circle(50, 150, 150);
+
+alert(g.children().length);
+alert(g.children()[0] === rect);
+alert(g.children()[1] === circle);
+```
+
+#### `Element.prototype.insert()`
+
+Inserts an element at the specified index.
+
+The syntax is:
+
+```javascript
+var parent = parent.insert(newElem, index);
+```
+
+Where,
+
+* `newElem` : new element to be added,
+
+* `index` : index at which `newElem` will be added
+
+It returns itself for chaining.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+
+g.insert(paper.rect(100, 100).attr("fill", "purple"))
+ .insert(paper.circle(50, 100, 100).attr("fill", "red"), 0)
+ .insert(paper.ellipse(70, 30, 140, 60).attr("fill", "green"), 1);
+```
+
+#### `Element.prototype.append()`
+
+Inserts an element at the end.
+
+The syntax is:
+
+```javascript
+var parent = parent.append(newElem);
+```
+
+Where,
+
+* `newElem` : new element to be added,
+
+It returns itself for chaining.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var g = paper.g();
+
+g.append(paper.rect(100, 100).attr("fill", "purple"))
+ .append(paper.circle(50, 100, 100).attr("fill", "red"))
+ .append(paper.ellipse(70, 30, 140, 60).attr("fill", "green"));
+```
+
+#### `Element.prototype.remove()`
+
+Removes an element or an element of the given index from parent.
+
+The syntax is:
+
+```javascript
+var parent = parent.remove(elem);
+```
+
+Where,
+
+* `elem` : child element or index of the element
+
+It returns itself for chaining.
+
+#### `Element.prototype.has()`
+
+Checks whether a element is a child of the parent.
+
+The syntax is:
+
+```javascript
+var isChild = parent.has(elem);
+```
+
+Where,
+
+* `elem` : child element to be checked
+
+It returns true or false.
+
+#### `Element.prototype.replace()`
+
+Replaces an existing child element with a new element.
+
+The syntax is:
+
+```javascript
+var parent = parent.replace(newElem, oldElem);
+```
+
+Where,
+
+* `newElem` : new element,
+
+* `oldElem` : existing child element
+
+It returns itself for chaining.
+
+#### `Element.prototype.textContent()`
+
+Sets text content of any node.
+It is useful for `<title>` or `<desc>` elements.
+
+The syntax is:
+
+```javascript
+var parent = parent.textContent(text);
+```
+
+Where,
+
+* `text` : texts that will be added
+
+It returns itself for chaining.
 
 ### Events
 
