@@ -130,16 +130,16 @@ This method is frequently used to manipulate attributes of a element.
 
 All the forms are:
 
-* `attr(attrName, value, namespace)` : Sets the attribute and returns itself,
+* `attr(attrName, value, namespace)` : Sets the attribute and returns element itself,
 
 * `attr(attrName, value)` : Equivalent to `attr(attrName, value, null)`,
 
-* `attr(attrName, null, namespace)` : Deletes the attribute and returns itself,
+* `attr(attrName, null, namespace)` : Deletes the attribute and returns element itself,
 
 * `attr(attrName, null)` : Equivalent `attr(attrName, null, null)`,
 
 * `attr(attrObject, namespace)` : Sets and deletes (if `null` is passed as value) multiple
-attributes at once with the specified namespace and returns itself,
+attributes at once with the specified namespace and returns element itself,
 
 * `attr(attrObject)` : Equivalent to `attr(attrObject, null)`
 
