@@ -1,4 +1,4 @@
-# Vector.SVG
+# Vector.svg
 
 A Javascript library for creating vector graphics using SVG. It uses the SVG W3C Recommendation
 and written in pure ES5. It provides `SVG DOM manipulation`, `data binding` and `animation` functionality.
