@@ -24,7 +24,7 @@ For VanillaJS, just insert it into your HTML page:
 
 ## Demo
 
-[This](http://byter.in/) is a simple Drawing Pad built with `Vector.svg` library.
+[This](https://ariyankhan.github.io/vector.svg/) is a simple Drawing Pad built with `Vector.svg` library.
 
 ## Documentation
 
