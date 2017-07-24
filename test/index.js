@@ -8,17 +8,16 @@ var body = document.body,
     clearBtn = document.getElementById("clear"),
     undoBtn = document.getElementById("undo"),
     redoBtn = document.getElementById("redo"),
-    paper = Vector("drawing", "100%", "100%");
+
+    paper = Vector("drawing", "100%", "100%"),
+    isDrawing = false,
+    currentDrawing = null,
+    undidDraws = [];
 
 body.style.width = window.innerWidth + "px";
 body.style.height = window.innerHeight + "px";
 
 resetValues();
-
-var isDrawing = false;
-var currentDrawing = null;
-
-var undidDraw = [];
 
 resetBtn.onclick = function () {
     resetValues();
@@ -39,14 +38,14 @@ undoBtn.onclick = function () {
         }
     });
     if (draws.length >= 1) {
-        undidDraw.push(draws[0]);
+        undidDraws.push(draws[0]);
         paper.remove(draws[0]);
     }
 };
 
 redoBtn.onclick = function () {
-    if (undidDraw.length >= 1) {
-        paper.append(undidDraw.pop());
+    if (undidDraws.length >= 1) {
+        paper.append(undidDraws.pop());
     }
 };
 
