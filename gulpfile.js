@@ -16,7 +16,7 @@ var header = [
     "* It uses the SVG W3C Recommendation.",
     "* It provides SVG DOM manipulation, data binding and animation functionality.",
     "*",
-    "* @license Copyright (c) 2017 Ariyan Khan, <%= pkg.license %> License",
+    "* @license Copyright (c) 2017 Rousan Ali, <%= pkg.license %> License",
     "*",
     "* Codebase: <%= pkg.url %>",
     "* Homepage: <%= pkg.homepage %>",
