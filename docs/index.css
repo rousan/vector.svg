@@ -1,0 +1,42 @@
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+#drawing {
+    width: 85%;
+    height: 100%;
+    border-right: 1px solid pink;
+}
+
+#controls {
+    width: 15%;
+    height: 100%;
+    background-color: #f1f0f4;
+    padding: 100px 10px 10px 30px;
+}
+
+.section {
+    float: left;
+    box-sizing: border-box;
+}
+
+#controls label {
+    font-size: 15px;
+}
+
+#controls input {
+    display: block;
+    width: 100px;
+}
+
+#controls div.inp {
+    margin-top: 10px;
+}
