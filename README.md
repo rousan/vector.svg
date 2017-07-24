@@ -47,7 +47,7 @@ For VanillaJS, just insert it into your HTML page:
     * [`Symbol`](#vectorsymbol)
     * [`Use`](#vectoruse)
 * [`Vector` Global](#vector-global)
-* [SVG DOM](#svg-dom)
+* [DOM Manipulation](#dom-manipulation)
 * [Events](#events)
 * [Data Binding](#data-binding)
 * [Containers](#containers)
@@ -1315,7 +1315,7 @@ It is a object containing of necessary namespace URIs.
 * `ns.xml` : XML namespace URI
 
 
-### SVG DOM
+### DOM Manipulation
 
 These are SVG Document Tree manipulation APIs and are available to all svg
 wrapper elements. 
