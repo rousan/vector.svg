@@ -5,8 +5,8 @@ and written in pure ES5. It provides `SVG DOM manipulation`, `data binding` and 
 
 ## Install
 
-If you use NPM, run the following command, Otherwise download the latest release from Github. It supports UMD module loader i.e.
-AMD, CommonJS, and VanillaJS environments. In VanillaJS, a `Vector` global object is exported:
+If you use NPM, run the following command, Otherwise download the latest release from Github. It uses `UMD` module definition i.e.
+It supports AMD, CommonJS, and VanillaJS module loader environments. In VanillaJS, a `Vector` global object is exported:
 
 `npm install vector.svg`
 
