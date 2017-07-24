@@ -1100,7 +1100,7 @@ Where,
 
 * `svgDOMNode` : Any svg dom node
 
-If `svgDOMNode` is not a `SVGElement` then it returns null,
+If `svgDOMNode` is not a `SVGElement` then it returns `null`,
 and if `svgDOMNode` is already wrapped then previous wrapper will be returned,
 otherwise a new wrapper object will be returned of appropriate wrapper class.
 
@@ -1362,7 +1362,7 @@ Where,
 
 * `index` : index at which `newElem` will be added
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 ```javascript
 var paper = Vector("paper", 600, 300);
@@ -1388,7 +1388,7 @@ Where,
 
 * `newElem` : new element to be added,
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 ```javascript
 var paper = Vector("paper", 600, 300);
@@ -1414,7 +1414,7 @@ Where,
 
 * `elem` : child element or index of the element
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 #### `Element.prototype.has()`
 
@@ -1448,7 +1448,7 @@ Where,
 
 * `oldElem` : existing child element
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 #### `Element.prototype.textContent()`
 
@@ -1465,7 +1465,7 @@ Where,
 
 * `text` : texts that will be added
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 ### Events
 
@@ -1496,7 +1496,7 @@ listener before being dispatched to any `EventTarget` beneath it in the DOM tree
 
 Note: Old `IE` browsers does'nt support `useCapture` parameter.
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 Example:
 
@@ -1538,7 +1538,7 @@ Note: If only `eventName` is passed then all listeners for that event
 type will be removed, and if no argument is passed then it removes 
 all the listeners for all event types.
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 ```javascript
 var paper = Vector("paper", 600, 300);
@@ -1588,7 +1588,7 @@ listener before being dispatched to any `EventTarget` beneath it in the DOM tree
 
 Note: Old `IE` browsers does'nt support `useCapture` parameter.
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 ````javascript
 var paper = Vector("paper", 600, 300);
@@ -1621,7 +1621,7 @@ Where,
 
 * `bubbles` : a boolean value that says event is bubbles or not
 
-It returns itself for chaining.
+It returns current element for chaining.
 
 ```javascript
 var paper = Vector("paper", 600, 300);
@@ -1655,12 +1655,12 @@ var elem = elem.onclick(listener, context);
 
 where,
 
-* `listener` : a Javascript function or null to remove previous listener,
+* `listener` : a Javascript function or `null` to remove previous listener,
 
 * `context` : `this` value when listener is called. Default value is element itself,
 
 If no argument is passed then previously attached listener will be returned
-otherwise it returns itself for chaining.
+otherwise it returns current element for chaining.
 
 Note: All available event attributes in `Vector.svg` are: `onclick()`, `ondblclick()`, `onmousedown()`,
 `onmousemove()`, `onmouseout()`, `onmouseover()`, `onmouseup()`, `onmouseenter()`, `onmouseleave()`,
@@ -1750,7 +1750,67 @@ element.on("my-event", function(e) {
 
 ### Data Binding
 
+The `Vector.svg` library provides some functions by which you can bind your data
+to svg document and visualize your data easily.
 
+#### `Element.prototype.binder()`
+
+This method is the first step in data-binding. Just attach the 
+binder function by this method and that will be called every time when the
+`elem.bind()` method is called and the data passed to `bind()` method
+will be passed to that binder function.
+
+The syntax is:
+
+```javascript
+var elem = elem.binder(binderFn, thisArg);
+```
+
+where,
+
+* `binderFn` : the binder function that receives data when `bind` 
+method is called or `null` to reset,
+
+* `thisArg` :  `this` value of the `binderFn` argument. Default value is element itself
+
+Note: At a time, a single binder function can be attached i.e. setting a new 
+binder replaces the previous one. Pass `null` as first argument resets 
+the binder function and sets it to `null` value.
+
+It returns current element for chaining.
+
+#### `Element.prototype.bind()`
+
+This method updates the data and calls the binder function with 
+the specified new data. If the binder function is not set then it does nothing.
+
+The syntax is:
+
+```javascript
+var elem = elem.bind(data);
+```
+
+where,
+
+* `data` : The updated data that will be bound to the binder function
+
+It returns current element for chaining.
+
+```javascript
+var paper = Vector("paper", 600, 300);
+
+var rect = paper.rect(100, 10, 0, 0);
+rect.attr("fill", "purple")
+     // Attach a binder
+    .binder(function(data) {
+    	this.width(data.value);
+     });
+
+setInterval(function() {
+    // Update data after every 1 second
+    rect.bind({value: Math.random() * 200});
+}, 1000);
+```
 
 ### Containers
 
@@ -2112,7 +2172,7 @@ var use = container.use(elem, width, height, x, y);
 
 Where,
 
-* `elem` : wrapper element or any URL or null to remove,
+* `elem` : wrapper element or any URL or `null` to remove,
 
 * `width` : width of the use element,
 
