@@ -1489,7 +1489,7 @@ Where,
 
 * `listener` : a Javascript function which receives a `window.Event` object when event is fired,
 
-* `context` : `this` value when listener is called. Default value is element itself,
+* `context` : `this` value when the listener is called. Default value is element itself,
 
 * `useCapture` : a `Boolean` value indicating that events of this type will be dispatched to the registered 
 listener before being dispatched to any `EventTarget` beneath it in the DOM tree.
@@ -1532,7 +1532,7 @@ Where,
 
 * `listener` : the listener reference that was added before,
 
-* `useCapture` : the useCapture option that was used previously
+* `useCapture` : the `useCapture` option that was used previously
 
 Note: If only `eventName` is passed then all listeners for that event 
 type will be removed, and if no argument is passed then it removes 
@@ -1581,7 +1581,7 @@ Where,
 
 * `listener` : a Javascript function which receives a `window.Event` object when event is fired,
 
-* `context` : `this` value when listener is called. Default value is element itself,
+* `context` : `this` value when the listener is called. Default value is element itself,
 
 * `useCapture` : a `Boolean` value indicating that events of this type will be dispatched to the registered 
 listener before being dispatched to any `EventTarget` beneath it in the DOM tree.
@@ -1633,14 +1633,14 @@ rect.attr("fill", "purple")
     })
     .on("click", function() {
     	setTimeout(function() {
-        	this.emit("my-event", {data: "my own data"});
+    	    this.emit("my-event", {data: "my own data"});
         }.bind(this), 1000);
     });
 ```
 
 #### Event Attributes
 
-You also can attach attribute events to an element for basic event types like `click`, 
+You also can attach event attributes to an element for basic event types like `click`, 
 `dblclick`, `mouseover` etc.
 
 ##### `Element.prototype.onclick()`
@@ -1703,12 +1703,12 @@ var paper = Vector("paper", 600, 300);
 
 var rect = paper.rect(200, 200, 0, 0);
 rect.attr("fill", "purple")
-	.on("click", function() {
+    .on("click", function() {
     	alert("Click event is fired");
-    })
+     })
     .onclick(function() {
         alert("Event attribute listener is also called!");
-    });
+     });
     
 setTimeout(function() {
 	rect.click();
@@ -1717,7 +1717,7 @@ setTimeout(function() {
 
 ##### Custom Events
 
-You can also use your own events. You can add, remove and emit your own events.
+You can also use your own custom events. You can add, remove and emit your own events.
 For this case the listener will receive a `window.CustomEvent` object when fired.
 
 Simply add an event listener for your custom event:
