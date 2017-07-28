@@ -66,6 +66,24 @@ paper.onmousemove(function (e) {
     }
 });
 
+paper.ontouchstart(function (e) {
+    e.preventDefault();
+    var firstTouch = e.changedTouches[0];
+    drawStart(firstTouch.clientX, firstTouch.clientY);
+});
+
+paper.ontouchmove(function (e) {
+    e.preventDefault();
+    var firstTouch = e.changedTouches[0];
+    draw(firstTouch.clientX, firstTouch.clientY);
+});
+
+paper.ontouchend(function (e) {
+    e.preventDefault();
+    var firstTouch = e.changedTouches[0];
+    drawEnd(firstTouch.clientX, firstTouch.clientY);
+});
+
 function drawStart(x, y) {
     currentDrawing = paper.path("M" + x + "," + y);
     currentDrawing.attr({
