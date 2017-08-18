@@ -29,7 +29,7 @@ For VanillaJS, just insert it into your HTML page:
 ## Documentation
 
 * [Getting Started](#getting-started)
-* [Elements](#elements)
+* [Elements](#elements) 
     * [`Element`](#vectorelement)
     * [`Graphics`](#vectorgraphics)
     * [`Geometry`](#vectorgeometry)
