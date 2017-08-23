@@ -208,7 +208,7 @@ Vector.merge(Vector, {
             if (isObject(val)) {
                 // Check val is extensible or not
                 if (Object.isExtensible(val)) {
-                    // Make a link in val to get maximum running speed
+                    // Make a link in val to get minimum running time
                     if (val[randomProp] === undefined) {
                         out.push(val);
                         val[randomProp] = anyValue;
