@@ -32,7 +32,7 @@ var Vector = function Vector(container, width, height) {
 
 /**
  * This method copies all own properties(enumerable and non-enumerable)
- * carefully with descriptors from source objects to target and merges them.
+ * carefully with descriptors from source objects to target object and merges them.
  * It does not make deep copy of properties.
  *
  * @param target object which will be merged by sources
