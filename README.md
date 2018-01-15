@@ -24,7 +24,7 @@ For VanillaJS, just insert it into your HTML page:
 
 ## Demo
 
-[This](https://ariyankhan.github.io/vector.svg/drawing-pad/) is a simple Drawing Pad built with `Vector.svg` library.
+[This](https://rousan.github.io/vector.svg/drawing-pad/) is a simple Drawing Pad built with `Vector.svg` library.
 
 ## Documentation
 
@@ -94,9 +94,9 @@ rect.attr("stroke", "purple")
     .attr("fill", "green");
 ```
 
-That's it, isn't it so simple? [Here](https://jsfiddle.net/ariyankhan/u25uoLny/) is the fiddling.
+That's it, isn't it so simple? [Here](https://jsfiddle.net/rousan/u25uoLny/) is the fiddling.
 
-Test all the following code snippets [Here](https://jsfiddle.net/ariyankhan/zdw1z7ns/). Just
+Test all the following code snippets [Here](https://jsfiddle.net/rousan/zdw1z7ns/). Just
 copy and paste into the fiddling editor and run it. All the necessary files are already
 attached.
 
