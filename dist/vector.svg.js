@@ -1,14 +1,14 @@
 /*!
- * Vector.svg v1.4.0
+ * Vector.svg v1.5.0
  * A Javascript library for creating vector graphics using SVG.
  * It uses the SVG W3C Recommendation.
  * It provides SVG DOM manipulation, data binding and animation functionality.
  *
- * @license Copyright (c) 2017 Rousan Ali, MIT License
+ * @license Copyright (c) 2017-2018 Rousan Ali, MIT License
  *
- * Codebase: https://github.com/ariyankhan/vector.svg
- * Homepage: https://github.com/ariyankhan/vector.svg#readme
- * Date: Fri Jul 28 2017 18:04:48 GMT+0530 (IST)
+ * Codebase: https://github.com/rousan/vector.svg
+ * Homepage: https://github.com/rousan/vector.svg#readme
+ * Date: Sun Jan 28 2018 03:56:33 GMT+0530 (IST)
  */
 
 (function(root, factory) {
@@ -165,7 +165,7 @@
 
     /**
      * This method copies all own properties(enumerable and non-enumerable)
-     * carefully with descriptors from source objects to target and merges them.
+     * carefully with descriptors from source objects to target object and merges them.
      * It does not make deep copy of properties.
      *
      * @param target object which will be merged by sources
@@ -341,7 +341,7 @@
                 if (isObject(val)) {
                     // Check val is extensible or not
                     if (Object.isExtensible(val)) {
-                        // Make a link in val to get maximum running speed
+                        // Make a link in val to get minimum running time
                         if (val[randomProp] === undefined) {
                             out.push(val);
                             val[randomProp] = anyValue;
@@ -3467,18 +3467,6 @@
         }
 
     });
-
-    Vector.merge(Element.prototype, {
-
-        data: function() {
-
-        }
-
-    });
-
-
-
-
 
     return Vector;
 });
