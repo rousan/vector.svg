@@ -1,1 +1,4 @@
 theme: jekyll-theme-cayman
+title: "Vector.svg"
+description: "A Javascript library for manipulating and animating SVG"
+show_downloads: "true"
