@@ -1,4 +1,3 @@
-
 var gulp = require("gulp"),
     gulpWrap = require("gulp-wrap"),
     gulpUglify = require("gulp-uglify"),
@@ -16,7 +15,7 @@ var header = [
     "* It uses the SVG W3C Recommendation.",
     "* It provides SVG DOM manipulation, data binding and animation functionality.",
     "*",
-    "* @license Copyright (c) 2017 Rousan Ali, <%= pkg.license %> License",
+    "* @license Copyright (c) 2017-2018 Rousan Ali, <%= pkg.license %> License",
     "*",
     "* Codebase: <%= pkg.url %>",
     "* Homepage: <%= pkg.homepage %>",
@@ -52,11 +51,7 @@ var parts = [
     "./src/element/defs.js",
     "./src/element/symbol.js",
     "./src/element/use.js",
-    "./src/data/data-binding.js",
-    "./src/data/data.js",
-    "./src/utility/color.js",
-    "./src/utility/matrix.js",
-    "./src/animation/*.js"
+    "./src/data/data-binding.js"
 ];
 
 pkg["buildDate"] = new Date();
