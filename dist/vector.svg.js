@@ -8,7 +8,7 @@
  *
  * Codebase: https://github.com/rousan/vector.svg
  * Homepage: https://github.com/rousan/vector.svg#readme
- * Date: Sun Jan 28 2018 03:46:58 GMT+0530 (IST)
+ * Date: Sun Jan 28 2018 03:54:14 GMT+0530 (IST)
  */
 
 (function(root, factory) {
