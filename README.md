@@ -68,24 +68,4 @@ rect.attr("stroke", "purple")
 
 That's it. [Here](https://jsfiddle.net/rousan/u25uoLny/) is the `JSFiddle` link.
 
-## Contributing
-
-Your PRs and stars are always welcome.
-
-Please, try to follow:
-
-* Clone the repository.
-* Checkout `develop` branch.
-* Install dependencies.
-* Add your new features or fixes.
-* Build the project.
-
-```sh
-$ git clone https://github.com/rousan/vector.svg.git
-$ cd vector.svg
-$ git checkout develop
-$ npm i
-$ npm run build
-```
-
 ### [Documentation and Wiki](https://github.com/rousan/vector.svg/wiki/Docs)
