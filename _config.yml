@@ -2,3 +2,7 @@ theme: jekyll-theme-cayman
 title: "Vector.svg"
 description: "A Javascript library for manipulating and animating SVG"
 show_downloads: "true"
+google_analytics: UA-114357378-1
+github:
+  zip_url: https://github.com/rousan/vector.svg/zipball/master
+  tar_url: https://github.com/rousan/vector.svg/tarball/master
